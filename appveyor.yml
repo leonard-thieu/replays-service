@@ -1,6 +1,9 @@
 version: 2.0.{build}
 image: Visual Studio 2017
 
+artifacts:
+  - path: Installer\bin\$(configuration)\toofz-replays-service-v$(APPVEYOR_BUILD_VERSION).msi
+    name: toofz Replays Service
 configuration:
   - Release
 cache:
