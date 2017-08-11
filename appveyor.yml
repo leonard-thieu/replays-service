@@ -9,8 +9,8 @@ environment:
   COVERALLS_REPO_TOKEN:
     secure: L38QT8owBrci3+aHCjNUkOdToxGlK2aL+ApnPlvwyQyYHFFvBE3CqAiRrmc9j3mP
 artifacts:
-  - path: Installer\bin\$(configuration)\toofz-replays-service-v$(APPVEYOR_BUILD_VERSION).msi
-    name: toofz Replays Service
+  - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
+    name: ReplaysService
 cache:
   - packages -> **\packages.config
 notifications:
@@ -72,3 +72,9 @@ after_test:
 
         Write-Output 'Code coverage results have been uploaded.'
       }
+
+deploy:
+  - provider: Environment
+    name: production
+    on:
+      appveyor_repo_tag: true
