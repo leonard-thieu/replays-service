@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<?include ..\Installer\Code\Configuration.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define ComponentRules="OneToOne"?>
-  <!-- SourceDir instructs IsWiX the location of the directory that contains files for this merge module -->
-  <?define SourceDir="..\Deploy"?>
+  <?define SourceDir="..\toofz.NecroDancer.Leaderboards.ReplaysService\bin\Debug"?>
+  <?define SourceDir="$(var.toofz.NecroDancer.Leaderboards.ReplaysService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
-    <Package Id="f3260955-a738-4bb3-b92a-a40154bad09a" Manufacturer="toofz" InstallerVersion="200" />
+    <Package Id="f3260955-a738-4bb3-b92a-a40154bad09a" Manufacturer="$(var.Manufacturer)" InstallerVersion="200" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="MergeRedirectFolder">
         <Component Id="owc73F0394A22FE8E3A382B6736AF24B1B5" Guid="5d1a8002-e826-eacb-b930-577135fd067e">
@@ -78,8 +79,8 @@
         </Component>
         <Component Id="owcCD62D949CF4EB05A6A3ED5BCFE52C978" Guid="f0e13060-9d4e-b205-3cde-dfeb91bbee29">
           <File Id="owfCD62D949CF4EB05A6A3ED5BCFE52C978" Source="$(var.SourceDir)\ReplaysService.exe" KeyPath="yes" />
-          <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="toofz Replays Service" DisplayName="toofz Replays Service" Description="Provides data for Crypt of the NecroDancer replays." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
-          <ServiceControl Id="sc00053F5D2667FBB6583E1D208507FBEF" Name="toofz Replays Service" Start="install" Stop="both" Remove="both" Wait="yes" />
+          <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
+          <ServiceControl Id="sc00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
         </Component>
         <Component Id="owc91FCC4586B173E3BCA775794089C4F29" Guid="dcbd0c88-2b43-c2fa-b07f-8755b24a6fe4">
           <File Id="owf91FCC4586B173E3BCA775794089C4F29" Source="$(var.SourceDir)\ReplaysService.exe.config" KeyPath="yes" />

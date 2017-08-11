@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<?define ProductName='toofz Replays Service'?>
+<?include Configuration.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -11,7 +11,7 @@
         </Directory>
       </Directory>
     </Directory>
-    <Feature Id="Installer" Title="$(var.ProductName)" Description="Installs all the files needed for [ProductName]" Level="1" AllowAdvertise="no" ConfigurableDirectory="INSTALLLOCATION" Absent="disallow">
+    <Feature Id="Installer" Title="$(var.ProductName)" Description="Installs all the files needed for $(var.ProductName)." Level="1" AllowAdvertise="no" ConfigurableDirectory="INSTALLLOCATION" Absent="disallow">
       <MergeRef Id="InstallerMM" />
     </Feature>
   </Fragment>
