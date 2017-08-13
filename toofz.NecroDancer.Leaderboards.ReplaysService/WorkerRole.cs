@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +42,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         protected override void OnStartOverride()
         {
             oAuth2Handler = new OAuth2Handler();
-            apiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
+            apiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            }, new DelegatingHandler[]
             {
                 new LoggingHandler(),
                 new HttpRequestStatusHandler(),
