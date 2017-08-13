@@ -13,6 +13,7 @@ using toofz.NecroDancer.Leaderboards.Services.Common;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
+using System.Net;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
@@ -41,7 +42,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         protected override void OnStartOverride()
         {
             oAuth2Handler = new OAuth2Handler();
-            apiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
+            apiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            }, new DelegatingHandler[]
             {
                 new LoggingHandler(),
                 new HttpRequestStatusHandler(),
