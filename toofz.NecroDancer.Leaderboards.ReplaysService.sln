@@ -10,8 +10,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{1A1128BE-B026-45D7-ABD8-FC286A540723}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		Install-AzureStorageEmulator.ps1 = Install-AzureStorageEmulator.ps1
 		NuGet.Config = NuGet.Config
 		README.md = README.md
+		Submit-CodeCoverageResults.ps1 = Submit-CodeCoverageResults.ps1
+		Test-Project.ps1 = Test-Project.ps1
 	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerMM", "InstallerMM\InstallerMM.wixproj", "{6E22376F-E48D-4F14-AB77-1408C46CF0F4}"
