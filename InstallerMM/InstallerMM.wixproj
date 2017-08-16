@@ -24,8 +24,8 @@
     <Compile Include="InstallerMMcustom.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\toofz.NecroDancer.Leaderboards.ReplaysService\toofz.NecroDancer.Leaderboards.ReplaysService.csproj">
-      <Name>toofz.NecroDancer.Leaderboards.ReplaysService</Name>
+    <ProjectReference Include="..\ReplaysService\ReplaysService.csproj">
+      <Name>ReplaysService</Name>
       <Project>{a1dcec28-3283-4953-bd44-105dccbb04ce}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>

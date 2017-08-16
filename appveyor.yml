@@ -4,7 +4,7 @@ image: Visual Studio 2017
 configuration:
   - Release
 environment:
-  PROJECT: toofz.NecroDancer.Leaderboards.ReplaysService
+  PROJECT: ReplaysService
   PROJECT_PACKAGE: toofz-replays-service-v%APPVEYOR_BUILD_VERSION%.msi
   COVERALLS_REPO_TOKEN:
     secure: L38QT8owBrci3+aHCjNUkOdToxGlK2aL+ApnPlvwyQyYHFFvBE3CqAiRrmc9j3mP
@@ -12,7 +12,7 @@ environment:
   COVERALLS_SERVICE_JOB_ID: '%APPVEYOR_JOB_ID%'
 artifacts:
   - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
-    name: ReplaysService
+    name: $(PROJECT)
 cache:
   - packages -> **\packages.config
 notifications:
@@ -31,7 +31,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - ps: .\Scripts\Test-Project.ps1 -Assembly ReplaysService
+  - ps: .\Scripts\Test-Project.ps1 -Assembly $env:PROJECT
 after_test:
   - ps: .\Scripts\Submit-CodeCoverageResults.ps1
 
