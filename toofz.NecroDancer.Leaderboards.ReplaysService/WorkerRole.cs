@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CredentialManagement;
 using log4net;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -55,11 +56,40 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
-            oAuth2Handler.UserName = Util.GetEnvVar("ReplaysUserName");
-            oAuth2Handler.Password = Util.GetEnvVar("ReplaysPassword");
             var apiBaseAddress = Util.GetEnvVar("toofzApiBaseAddress");
-            var steamWebApiKey = Util.GetEnvVar("SteamWebApiKey");
-            var storageConnectionString = Util.GetEnvVar("toofzStorageConnectionString");
+
+            string steamWebApiKey;
+            using (var cred = new Credential { Target = "toofz/SteamWebApiKey" })
+            {
+                if (!cred.Load())
+                {
+                    throw new InvalidOperationException("Could not load credentials for 'toofz/SteamWebApiKey'.");
+                }
+
+                steamWebApiKey = cred.Password;
+            }
+
+            using (var cred = new Credential { Target = "toofz/ReplaysService" })
+            {
+                if (!cred.Load())
+                {
+                    throw new InvalidOperationException("Could not load credentials for 'toofz/ReplaysService'.");
+                }
+
+                oAuth2Handler.UserName = cred.Username;
+                oAuth2Handler.Password = cred.Password;
+            }
+
+            string storageConnectionString;
+            using (var cred = new Credential { Target = "toofz/StorageConnectionString" })
+            {
+                if (!cred.Load())
+                {
+                    throw new InvalidOperationException("Could not load credentials for 'toofz/StorageConnectionString'.");
+                }
+
+                storageConnectionString = cred.Password;
+            }
 
             var steamApiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
             {
