@@ -1,4 +1,4 @@
-﻿using toofz.NecroDancer.Leaderboards.Services.Common;
+﻿using toofz.NecroDancer.Leaderboards.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {

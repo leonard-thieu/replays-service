@@ -11,7 +11,7 @@ using CredentialManagement;
 using log4net;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using toofz.NecroDancer.Leaderboards.Services.Common;
+using toofz.NecroDancer.Leaderboards.Services;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
