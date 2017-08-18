@@ -6,13 +6,6 @@ configuration:
 environment:
   PROJECT: ReplaysService
   PROJECT_PACKAGE: toofz-replays-service-v%APPVEYOR_BUILD_VERSION%.msi
-  COVERALLS_REPO_TOKEN:
-    secure: L38QT8owBrci3+aHCjNUkOdToxGlK2aL+ApnPlvwyQyYHFFvBE3CqAiRrmc9j3mP
-  COVERALLS_SERVICE_NAME: appveyor
-  COVERALLS_SERVICE_JOB_ID: '%APPVEYOR_JOB_ID%'
-artifacts:
-  - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
-    name: $(PROJECT)
 cache:
   - packages -> **\packages.config
 notifications:
@@ -23,6 +16,9 @@ assembly_info:
   patch: true
   file: AssemblyInfo.cs
   assembly_version: $(appveyor_build_version)
+artifacts:
+  - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
+    name: $(PROJECT)
 
 install:
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
@@ -30,14 +26,16 @@ install:
 
 before_build:
   - appveyor-retry nuget restore -DisableParallelProcessing
+  - choco install opencover.portable
+  - choco install codecov
 build:
   project: $(PROJECT).sln
   verbosity: minimal
 
 test_script:
-  - ps: .\Scripts\Test-Project.ps1 -Assembly $env:PROJECT
+  - ps: .\Scripts\Test-Project.ps1
 after_test:
-  - ps: .\Scripts\Submit-CodeCoverageResults.ps1
+  - codecov --file results.xml
 
 deploy:
   - provider: Environment
