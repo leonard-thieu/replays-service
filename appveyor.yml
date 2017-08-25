@@ -25,9 +25,7 @@ install:
   - ps: .\Scripts\Install-AzureStorageEmulator.ps1
 
 before_build:
-  - appveyor-retry nuget restore -DisableParallelProcessing
-  - choco install opencover.portable
-  - choco install codecov
+  - appveyor-retry nuget restore -Verbosity quiet
 build:
   project: $(PROJECT).sln
   verbosity: minimal
@@ -35,7 +33,7 @@ build:
 test_script:
   - ps: .\Scripts\Test-Project.ps1
 after_test:
-  - codecov --file results.xml
+  - ps: .\Scripts\Submit-CodeCoverageResults.ps1
 
 deploy:
   - provider: Environment
