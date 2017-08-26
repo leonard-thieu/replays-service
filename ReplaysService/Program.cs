@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
-using toofz.NecroDancer.Leaderboards.Services;
+using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
@@ -9,17 +12,33 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Log.Debug("Initialized logging.");
-            var instrumentationKey = Environment.GetEnvironmentVariable("ReplaysInstrumentationKey", EnvironmentVariableTarget.Machine);
-            if (instrumentationKey != null) { TelemetryConfiguration.Active.InstrumentationKey = instrumentationKey; }
+            Secrets.Iterations = 200000;
+
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            var settings = Settings.Default;
+
+            // Args are only allowed while running as a console as they may require user input.
+            if (Environment.UserInteractive && args.Any())
+            {
+                var parser = new ReplaysArgsParser(Console.In, Console.Out, Console.Error);
+
+                return parser.Parse(args, settings);
+            }
+
+            var instrumentationKey = settings.InstrumentationKey;
+            if (!string.IsNullOrEmpty(instrumentationKey)) { TelemetryConfiguration.Active.InstrumentationKey = instrumentationKey; }
             else
             {
-                Log.Warn($"The environment variable 'ReplaysInstrumentationKey' is not set. Telemetry is disabled.");
+                Log.Warn($"The setting 'ReplaysInstrumentationKey' is not set. Telemetry is disabled.");
                 TelemetryConfiguration.Active.DisableTelemetry = true;
             }
-            Application.Run<WorkerRole, ReplaySettings>();
+
+            Application.Run<WorkerRole, IReplaysSettings>();
+
+            return 0;
         }
     }
 }
