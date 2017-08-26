@@ -39,105 +39,81 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             #region ReplaysPerUpdate
 
-            if (options.ReplaysPerUpdate != null)
+            var replaysPerUpdate = options.ReplaysPerUpdate;
+            if (replaysPerUpdate != null)
             {
-                settings.ReplaysPerUpdate = options.ReplaysPerUpdate.Value;
+                settings.ReplaysPerUpdate = replaysPerUpdate.Value;
             }
 
             #endregion
 
             #region ToofzApiBaseAddress
 
-            if (!string.IsNullOrEmpty(options.ToofzApiBaseAddress))
+            var toofzApiBaseAddress = options.ToofzApiBaseAddress;
+            if (!string.IsNullOrEmpty(toofzApiBaseAddress))
             {
-                settings.ToofzApiBaseAddress = options.ToofzApiBaseAddress;
+                settings.ToofzApiBaseAddress = toofzApiBaseAddress;
             }
 
             #endregion
 
             #region ToofzApiUserName
 
-            if (!string.IsNullOrEmpty(options.ToofzApiUserName))
+            var toofzApiUserName = options.ToofzApiUserName;
+            if (!string.IsNullOrEmpty(toofzApiUserName))
             {
-                settings.ToofzApiUserName = options.ToofzApiUserName;
+                settings.ToofzApiUserName = toofzApiUserName;
             }
-
-            while (string.IsNullOrEmpty(settings.ToofzApiUserName))
+            else if (string.IsNullOrEmpty(settings.ToofzApiUserName))
             {
-                OutWriter.Write("toofz API user name: ");
-                settings.ToofzApiUserName = InReader.ReadLine();
+                settings.ToofzApiUserName = ReadOption("toofz API user name");
             }
 
             #endregion
 
             #region ToofzApiPassword
 
-            if (!string.IsNullOrEmpty(options.ToofzApiPassword))
+            var toofzApiPassword = options.ToofzApiPassword;
+            if (ShouldPromptForRequiredSetting(toofzApiPassword, settings.ToofzApiPassword))
             {
-                settings.ToofzApiPassword = new EncryptedSecret(options.ToofzApiPassword, iterations);
+                toofzApiPassword = ReadOption("toofz API password");
             }
 
-            // When options.ToofzApiPassword == null, the user has indicated that they wish to be 
-            // prompted to enter their toofz API password.
-            while (settings.ToofzApiPassword == null || options.ToofzApiPassword == null)
+            if (toofzApiPassword != "")
             {
-                OutWriter.Write("toofz API password: ");
-                options.ToofzApiPassword = InReader.ReadLine();
-                if (!string.IsNullOrEmpty(options.ToofzApiPassword))
-                {
-                    settings.ToofzApiPassword = new EncryptedSecret(options.ToofzApiPassword, iterations);
-                }
+                settings.ToofzApiPassword = new EncryptedSecret(toofzApiPassword, iterations);
             }
 
             #endregion
 
             #region SteamWebApiKey
 
-            if (!string.IsNullOrEmpty(options.SteamWebApiKey))
+            var steamWebApiKey = options.SteamWebApiKey;
+            if (ShouldPromptForRequiredSetting(steamWebApiKey, settings.SteamWebApiKey))
             {
-                settings.SteamWebApiKey = new EncryptedSecret(options.SteamWebApiKey, iterations);
+                steamWebApiKey = ReadOption("Steam Web API key");
             }
 
-            // When options.SteamWebApiKey == null, the user has indicated that they wish to be 
-            // prompted to enter their Steam Web API key.
-            while (settings.SteamWebApiKey == null || options.SteamWebApiKey == null)
+            if (steamWebApiKey != "")
             {
-                OutWriter.Write("Steam Web API key: ");
-                options.SteamWebApiKey = InReader.ReadLine();
-                if (!string.IsNullOrEmpty(options.SteamWebApiKey))
-                {
-                    settings.SteamWebApiKey = new EncryptedSecret(options.SteamWebApiKey, iterations);
-                }
+                settings.SteamWebApiKey = new EncryptedSecret(steamWebApiKey, iterations);
             }
 
             #endregion
 
             #region AzureStorageConnectionString
 
-            if (!string.IsNullOrEmpty(options.AzureStorageConnectionString))
+            var azureStorageConnectionString = options.AzureStorageConnectionString;
+            if (!string.IsNullOrEmpty(azureStorageConnectionString))
             {
-                settings.AzureStorageConnectionString = new EncryptedSecret(options.AzureStorageConnectionString, iterations);
+                settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, iterations);
             }
-            else
+            else if (settings.AzureStorageConnectionString == null)
             {
-                if (options.AzureStorageConnectionString == "" && settings.AzureStorageConnectionString == null)
-                {
-                    settings.AzureStorageConnectionString = new EncryptedSecret(DefaultAzureStorageConnectionString, iterations);
-                }
-                else
-                {
-                    // When options.AzureStorageConnectionString == null, the user has indicated that they wish to be 
-                    // prompted to enter their Azure Storage connection string.
-                    while (options.AzureStorageConnectionString == null)
-                    {
-                        OutWriter.Write("Azure Storage connection string: ");
-                        options.AzureStorageConnectionString = InReader.ReadLine();
-                        if (!string.IsNullOrEmpty(options.AzureStorageConnectionString))
-                        {
-                            settings.AzureStorageConnectionString = new EncryptedSecret(options.AzureStorageConnectionString, iterations);
-                        }
-                    }
-                }
+                azureStorageConnectionString = azureStorageConnectionString == "" ?
+                    DefaultAzureStorageConnectionString :
+                    ReadOption("Azure Storage connection string");
+                settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, iterations);
             }
 
             #endregion

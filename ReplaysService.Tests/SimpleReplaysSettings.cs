@@ -8,10 +8,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
         public int ReplaysPerUpdate { get; set; }
         public string ToofzApiBaseAddress { get; set; }
-        public string ToofzApiUserName { get; set; } = "myUserName";
-        public EncryptedSecret ToofzApiPassword { get; set; } = new EncryptedSecret("a", Constants.Iterations);
-        public EncryptedSecret SteamWebApiKey { get; set; } = new EncryptedSecret("a", Constants.Iterations);
-        public EncryptedSecret AzureStorageConnectionString { get; set; } = new EncryptedSecret("a", Constants.Iterations);
+        public string ToofzApiUserName { get; set; }
+        public EncryptedSecret ToofzApiPassword { get; set; }
+        public EncryptedSecret SteamWebApiKey { get; set; }
+        public EncryptedSecret AzureStorageConnectionString { get; set; }
         public TimeSpan UpdateInterval { get; set; }
         public TimeSpan DelayBeforeGC { get; set; }
         public string InstrumentationKey { get; set; }
