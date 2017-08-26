@@ -24,7 +24,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             optionSet.Add("username=", GetDescription(settingsType, nameof(Settings.ToofzApiUserName)), username => options.ToofzApiUserName = username);
             optionSet.Add("password:", GetDescription(settingsType, nameof(Settings.ToofzApiPassword)), password => options.ToofzApiPassword = password);
             optionSet.Add("apikey:", GetDescription(settingsType, nameof(Settings.SteamWebApiKey)), apikey => options.SteamWebApiKey = apikey);
-            optionSet.Add("storage", GetDescription(settingsType, nameof(Settings.AzureStorageConnectionString)), storage => options.AzureStorageConnectionString = storage);
+            optionSet.Add("storage:", GetDescription(settingsType, nameof(Settings.AzureStorageConnectionString)), storage => options.AzureStorageConnectionString = storage);
         }
 
         protected override void OnParsed(ReplaysOptions options, IReplaysSettings settings)

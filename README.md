@@ -20,7 +20,7 @@ options:
   --username=VALUE    The user name used to log on to toofz API.
   --password[=VALUE]  The password used to log on to toofz API.
   --apikey[=VALUE]    A Steam Web API key.
-  --storage           An Azure Storage connection string.
+  --storage[=VALUE]   An Azure Storage connection string.
 ```
 
 ## Contributing
