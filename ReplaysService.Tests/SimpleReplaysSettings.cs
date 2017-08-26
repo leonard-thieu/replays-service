@@ -9,12 +9,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public int ReplaysPerUpdate { get; set; }
         public string ToofzApiBaseAddress { get; set; }
         public string ToofzApiUserName { get; set; } = "myUserName";
-        public EncryptedSecret ToofzApiPassword { get; set; } = new EncryptedSecret("a");
-        public EncryptedSecret SteamWebApiKey { get; set; } = new EncryptedSecret("a");
-        public EncryptedSecret AzureStorageConnectionString { get; set; } = new EncryptedSecret("a");
+        public EncryptedSecret ToofzApiPassword { get; set; } = new EncryptedSecret("a", Constants.Iterations);
+        public EncryptedSecret SteamWebApiKey { get; set; } = new EncryptedSecret("a", Constants.Iterations);
+        public EncryptedSecret AzureStorageConnectionString { get; set; } = new EncryptedSecret("a", Constants.Iterations);
         public TimeSpan UpdateInterval { get; set; }
         public TimeSpan DelayBeforeGC { get; set; }
         public string InstrumentationKey { get; set; }
+        public int KeyDerivationIterations { get; set; }
 
         public void Reload()
         {
@@ -27,6 +28,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             UpdateInterval = default(TimeSpan);
             DelayBeforeGC = default(TimeSpan);
             InstrumentationKey = default(string);
+            KeyDerivationIterations = default(int);
         }
 
         public void Save() { }

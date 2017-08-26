@@ -12,7 +12,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public Parse()
             {
                 inReader = mockInReader.Object;
-                parser = new ReplaysArgsParser(inReader, outWriter, errorWriter);
+                parser = new ReplaysArgsParser(inReader, outWriter, errorWriter, Constants.Iterations);
             }
 
             Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
@@ -69,7 +69,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 // Arrange
                 string[] args = new[] { "--password=myPassword" };
                 IReplaysSettings settings = new SimpleReplaysSettings();
-                var encrypted = new EncryptedSecret("myPassword");
+                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
 
                 // Act
                 parser.Parse(args, settings);
@@ -84,7 +84,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 // Arrange
                 string[] args = new[] { "--apikey=myApiKey" };
                 IReplaysSettings settings = new SimpleReplaysSettings();
-                var encrypted = new EncryptedSecret("myApiKey");
+                var encrypted = new EncryptedSecret("myApiKey", Constants.Iterations);
 
                 // Act
                 parser.Parse(args, settings);
@@ -102,11 +102,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 mockSettings
                     .SetupProperty(s => s.ToofzApiBaseAddress, "http://localhost/")
                     .SetupProperty(s => s.ToofzApiUserName, "myUserName")
-                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("myPassword"))
-                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("myApiKey"))
+                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("myPassword", Constants.Iterations))
+                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("myApiKey", Constants.Iterations))
                     .SetupProperty(s => s.AzureStorageConnectionString);
                 var settings = mockSettings.Object;
-                var encrypted = new EncryptedSecret(ReplaysArgsParser.DefaultAzureStorageConnectionString);
+                var encrypted = new EncryptedSecret(ReplaysArgsParser.DefaultAzureStorageConnectionString, Constants.Iterations);
 
                 // Act
                 parser.Parse(args, settings);

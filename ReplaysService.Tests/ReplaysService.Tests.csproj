@@ -143,14 +143,14 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
-    <Reference Include="toofz, Version=5.0.4.151, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.5.0.4\lib\net45\toofz.dll</HintPath>
+    <Reference Include="toofz, Version=6.0.0.156, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.6.0.0\lib\net45\toofz.dll</HintPath>
     </Reference>
     <Reference Include="toofz.NecroDancer.Leaderboards, Version=4.0.1.88, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.4.0.1\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.Services, Version=5.1.0.99, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.Services.5.1.0\lib\net45\toofz.Services.dll</HintPath>
+    <Reference Include="toofz.Services, Version=5.2.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Services.5.2.0\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
     <Reference Include="toofz.TestsShared, Version=2.0.2.64, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.TestsShared.2.0.2\lib\net45\toofz.TestsShared.dll</HintPath>
@@ -172,6 +172,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="ReplaysArgsParserTests.cs" />
     <Compile Include="SimpleReplaysSettings.cs" />
     <Compile Include="TestsSetup.cs" />

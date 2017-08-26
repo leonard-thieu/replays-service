@@ -15,7 +15,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         static int Main(string[] args)
         {
             Log.Debug("Initialized logging.");
-            Secrets.Iterations = 200000;
 
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             var settings = Settings.Default;
@@ -23,7 +22,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             // Args are only allowed while running as a console as they may require user input.
             if (Environment.UserInteractive && args.Any())
             {
-                var parser = new ReplaysArgsParser(Console.In, Console.Out, Console.Error);
+                var parser = new ReplaysArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations);
 
                 return parser.Parse(args, settings);
             }

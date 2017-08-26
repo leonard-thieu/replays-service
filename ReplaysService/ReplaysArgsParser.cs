@@ -11,7 +11,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         internal const string DefaultAzureStorageConnectionString = "UseDevelopmentStorage=true";
 
-        public ReplaysArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) : base(inReader, outWriter, errorWriter) { }
+        public ReplaysArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter, int iterations) :
+            base(inReader, outWriter, errorWriter)
+        {
+            this.iterations = iterations;
+        }
+
+        readonly int iterations;
 
         protected override string EntryAssemblyFileName { get; } = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
 
@@ -68,17 +74,18 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             if (!string.IsNullOrEmpty(options.ToofzApiPassword))
             {
-                settings.ToofzApiPassword = new EncryptedSecret(options.ToofzApiPassword);
+                settings.ToofzApiPassword = new EncryptedSecret(options.ToofzApiPassword, iterations);
             }
 
-            // When options.ToofzApiPassword == null, the user has indicated that they wish to be prompted to enter the password.
+            // When options.ToofzApiPassword == null, the user has indicated that they wish to be 
+            // prompted to enter their toofz API password.
             while (settings.ToofzApiPassword == null || options.ToofzApiPassword == null)
             {
                 OutWriter.Write("toofz API password: ");
                 options.ToofzApiPassword = InReader.ReadLine();
                 if (!string.IsNullOrEmpty(options.ToofzApiPassword))
                 {
-                    settings.ToofzApiPassword = new EncryptedSecret(options.ToofzApiPassword);
+                    settings.ToofzApiPassword = new EncryptedSecret(options.ToofzApiPassword, iterations);
                 }
             }
 
@@ -88,17 +95,18 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             if (!string.IsNullOrEmpty(options.SteamWebApiKey))
             {
-                settings.SteamWebApiKey = new EncryptedSecret(options.SteamWebApiKey);
+                settings.SteamWebApiKey = new EncryptedSecret(options.SteamWebApiKey, iterations);
             }
 
-            // When options.SteamWebApiKey == null, the user has indicated that they wish to be prompted to enter the password.
+            // When options.SteamWebApiKey == null, the user has indicated that they wish to be 
+            // prompted to enter their Steam Web API key.
             while (settings.SteamWebApiKey == null || options.SteamWebApiKey == null)
             {
                 OutWriter.Write("Steam Web API key: ");
                 options.SteamWebApiKey = InReader.ReadLine();
                 if (!string.IsNullOrEmpty(options.SteamWebApiKey))
                 {
-                    settings.SteamWebApiKey = new EncryptedSecret(options.SteamWebApiKey);
+                    settings.SteamWebApiKey = new EncryptedSecret(options.SteamWebApiKey, iterations);
                 }
             }
 
@@ -108,24 +116,25 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             if (!string.IsNullOrEmpty(options.AzureStorageConnectionString))
             {
-                settings.AzureStorageConnectionString = new EncryptedSecret(options.AzureStorageConnectionString);
+                settings.AzureStorageConnectionString = new EncryptedSecret(options.AzureStorageConnectionString, iterations);
             }
             else
             {
                 if (options.AzureStorageConnectionString == "" && settings.AzureStorageConnectionString == null)
                 {
-                    settings.AzureStorageConnectionString = new EncryptedSecret(DefaultAzureStorageConnectionString);
+                    settings.AzureStorageConnectionString = new EncryptedSecret(DefaultAzureStorageConnectionString, iterations);
                 }
                 else
                 {
-                    // When options.AzureStorageConnectionString == null, the user has indicated that they wish to be prompted to enter the connection string.
+                    // When options.AzureStorageConnectionString == null, the user has indicated that they wish to be 
+                    // prompted to enter their Azure Storage connection string.
                     while (options.AzureStorageConnectionString == null)
                     {
                         OutWriter.Write("Azure Storage connection string: ");
                         options.AzureStorageConnectionString = InReader.ReadLine();
                         if (!string.IsNullOrEmpty(options.AzureStorageConnectionString))
                         {
-                            settings.AzureStorageConnectionString = new EncryptedSecret(options.AzureStorageConnectionString);
+                            settings.AzureStorageConnectionString = new EncryptedSecret(options.AzureStorageConnectionString, iterations);
                         }
                     }
                 }

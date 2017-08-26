@@ -97,6 +97,22 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties {
         }
         
         /// <summary>
+        /// The number of rounds to execute a key derivation function.
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The number of rounds to execute a key derivation function.")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20000")]
+        public int KeyDerivationIterations {
+            get {
+                return ((int)(this["KeyDerivationIterations"]));
+            }
+            set {
+                this["KeyDerivationIterations"] = value;
+            }
+        }
+        
+        /// <summary>
         /// The number of replays to update.
         /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]

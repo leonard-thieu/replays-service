@@ -17,6 +17,9 @@
     <Setting Name="InstrumentationKey" Description="An Application Insights instrumentation key." GenerateDefaultValueInCode="false" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="KeyDerivationIterations" Description="The number of rounds to execute a key derivation function." Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20000</Value>
+    </Setting>
     <Setting Name="ReplaysPerUpdate" Description="The number of replays to update." Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
