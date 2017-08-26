@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
-using toofz.TestsShared;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
@@ -17,18 +15,15 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         [TestClass]
         public class UpdateReplaysAsync
         {
-            static CloudBlobDirectory GetReplaysCloudBlobDirectory()
+            public UpdateReplaysAsync()
             {
-                var storageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true");
-                var blobClient = storageAccount.CreateCloudBlobClient();
-                var container = blobClient.GetContainerReference("crypt");
-                container.CreateIfNotExists();
-                container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
-
-                return container.GetDirectoryReference("replays");
+                directory = WorkerRole.GetDirectory("UseDevelopmentStorage=true");
             }
 
+            CloudBlobDirectory directory;
+
             [TestMethod]
+            [TestCategory("Integration")]
             public async Task ApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -36,10 +31,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
-                var directory = GetReplaysCloudBlobDirectory();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateReplaysAsync(
                         null,
@@ -48,12 +42,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         directory,
                         1);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
+            [TestCategory("Integration")]
             public async Task SteamWebApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -61,10 +53,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
-                var directory = GetReplaysCloudBlobDirectory();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateReplaysAsync(
                         mockIToofzApiClient.Object,
@@ -73,12 +64,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         directory,
                         1);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
+            [TestCategory("Integration")]
             public async Task UgcHttpClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -86,10 +75,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
-                var directory = GetReplaysCloudBlobDirectory();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateReplaysAsync(
                         mockIToofzApiClient.Object,
@@ -98,9 +86,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         directory,
                         1);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
@@ -113,8 +98,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateReplaysAsync(
                         mockIToofzApiClient.Object,
@@ -123,13 +108,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         null,
                         1);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
-            public async Task NegativeLimit_ThrowsArgumentOutOfRangeException()
+            [TestCategory("Integration")]
+            public async Task LimitIsNegative_ThrowsArgumentOutOfRangeException()
             {
                 // Arrange
                 var workerRole = new WorkerRole();
@@ -137,10 +120,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
-                var directory = GetReplaysCloudBlobDirectory();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
                 {
                     return workerRole.UpdateReplaysAsync(
                         mockIToofzApiClient.Object,
@@ -149,13 +131,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         directory,
                         -1);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentOutOfRangeException));
             }
 
             [TestMethod]
-            public async Task ValidParams_UpdatesReplays()
+            [TestCategory("Integration")]
+            public async Task UpdatesReplays()
             {
                 // Arrange
                 var workerRole = new WorkerRole();
@@ -170,21 +150,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
-                var directory = GetReplaysCloudBlobDirectory();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
-                {
-                    return workerRole.UpdateReplaysAsync(
-                        mockIToofzApiClient.Object,
-                        mockISteamWebApiClient.Object,
-                        mockIUgcHttpClient.Object,
-                        directory,
-                        1);
-                });
-
-                // Assert
-                Assert.IsNull(ex, ex?.Message);
+                // Act -> Assert
+                await workerRole.UpdateReplaysAsync(
+                    mockIToofzApiClient.Object,
+                    mockISteamWebApiClient.Object,
+                    mockIUgcHttpClient.Object,
+                    directory,
+                    1);
             }
         }
     }

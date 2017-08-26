@@ -7,24 +7,22 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CredentialManagement;
 using log4net;
+using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using toofz.NecroDancer.Leaderboards.Services;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class WorkerRole : WorkerRoleBase<ReplaySettings>
+    sealed class WorkerRole : WorkerRoleBase<IReplaysSettings>
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        const uint AppId = 247080;
-
-        static CloudBlobDirectory GetDirectory(string connectionString)
+        internal static CloudBlobDirectory GetDirectory(string connectionString)
         {
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -35,66 +33,66 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             return container.GetDirectoryReference("replays");
         }
 
-        public WorkerRole() : base("toofz Replays Service") { }
+        public WorkerRole() : base("replays") { }
 
-        OAuth2Handler oAuth2Handler;
-        HttpMessageHandler apiHandlers;
+        TelemetryClient telemetryClient;
+        OAuth2Handler toofzOAuth2Handler;
+        HttpMessageHandler toofzApiHandlers;
 
-        protected override void OnStartOverride()
+        public override IReplaysSettings Settings => Properties.Settings.Default;
+
+        protected override void OnStart(string[] args)
         {
-            oAuth2Handler = new OAuth2Handler();
-            apiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler
+            telemetryClient = new TelemetryClient();
+            toofzOAuth2Handler = new OAuth2Handler();
+            toofzApiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             }, new DelegatingHandler[]
             {
                 new LoggingHandler(),
                 new HttpRequestStatusHandler(),
-                oAuth2Handler,
+                toofzOAuth2Handler,
             });
+
+            base.OnStart(args);
         }
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
-            var apiBaseAddress = Util.GetEnvVar("toofzApiBaseAddress");
-
-            string steamWebApiKey;
-            using (var cred = new Credential { Target = "toofz/SteamWebApiKey" })
+            if (string.IsNullOrEmpty(Settings.ToofzApiBaseAddress))
             {
-                if (!cred.Load())
-                {
-                    throw new InvalidOperationException("Could not load credentials for 'toofz/SteamWebApiKey'.");
-                }
-
-                steamWebApiKey = cred.Password;
+                throw new InvalidOperationException($"{nameof(Settings.ToofzApiBaseAddress)} is not set.");
             }
+            var toofzApiBaseAddress = Settings.ToofzApiBaseAddress;
 
-            using (var cred = new Credential { Target = "toofz/ReplaysService" })
+            if (Settings.SteamWebApiKey == null)
             {
-                if (!cred.Load())
-                {
-                    throw new InvalidOperationException("Could not load credentials for 'toofz/ReplaysService'.");
-                }
-
-                oAuth2Handler.UserName = cred.Username;
-                oAuth2Handler.Password = cred.Password;
+                throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
             }
+            var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
 
-            string storageConnectionString;
-            using (var cred = new Credential { Target = "toofz/StorageConnectionString" })
+            if (string.IsNullOrEmpty(Settings.ToofzApiUserName))
             {
-                if (!cred.Load())
-                {
-                    throw new InvalidOperationException("Could not load credentials for 'toofz/StorageConnectionString'.");
-                }
-
-                storageConnectionString = cred.Password;
+                throw new InvalidOperationException($"{nameof(Settings.ToofzApiUserName)} is not set.");
             }
+            toofzOAuth2Handler.UserName = Settings.ToofzApiUserName;
+            if (Settings.ToofzApiPassword == null)
+            {
+                throw new InvalidOperationException($"{nameof(Settings.ToofzApiPassword)} is not set.");
+            }
+            toofzOAuth2Handler.Password = Settings.ToofzApiPassword.Decrypt();
+
+            if (Settings.AzureStorageConnectionString == null)
+            {
+                throw new InvalidOperationException($"{nameof(Settings.AzureStorageConnectionString)} is not set.");
+            }
+            var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
 
             var steamApiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
             {
                 new LoggingHandler(),
-                new SteamWebApiTransientFaultHandler(Application.TelemetryClient),
+                new SteamWebApiTransientFaultHandler(telemetryClient),
             });
 
             var ugcHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
@@ -103,11 +101,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 new HttpRequestStatusHandler(),
             });
 
-            using (var toofzApiClient = new ToofzApiClient(apiHandlers))
+            using (var toofzApiClient = new ToofzApiClient(toofzApiHandlers))
             using (var steamWebApiClient = new SteamWebApiClient(steamApiHandlers))
             using (var ugcHttpClient = new UgcHttpClient(ugcHandlers))
             {
-                toofzApiClient.BaseAddress = new Uri(apiBaseAddress);
+                toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
 
                 steamWebApiClient.SteamWebApiKey = steamWebApiKey;
 
@@ -115,7 +113,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     toofzApiClient,
                     steamWebApiClient,
                     ugcHttpClient,
-                    GetDirectory(storageConnectionString),
+                    GetDirectory(azureStorageConnectionString),
                     Settings.ReplaysPerUpdate,
                     cancellationToken)
                     .ConfigureAwait(false);
@@ -133,13 +131,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (toofzApiClient == null)
-                throw new ArgumentNullException(nameof(toofzApiClient), $"{nameof(toofzApiClient)} is null.");
+                throw new ArgumentNullException(nameof(toofzApiClient));
             if (steamWebApiClient == null)
-                throw new ArgumentNullException(nameof(steamWebApiClient), $"{nameof(steamWebApiClient)} is null.");
+                throw new ArgumentNullException(nameof(steamWebApiClient));
             if (ugcHttpClient == null)
-                throw new ArgumentNullException(nameof(ugcHttpClient), $"{nameof(ugcHttpClient)} is null.");
+                throw new ArgumentNullException(nameof(ugcHttpClient));
             if (directory == null)
-                throw new ArgumentNullException(nameof(directory), $"{nameof(directory)} is null.");
+                throw new ArgumentNullException(nameof(directory));
             if (limit <= 0)
                 throw new ArgumentOutOfRangeException(nameof(limit));
 
@@ -173,7 +171,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                         try
                         {
-                            var ugcFileDetails = await steamWebApiClient.GetUgcFileDetailsAsync(AppId, ugcId, download.Progress, cancellationToken).ConfigureAwait(false);
+                            var ugcFileDetails = await steamWebApiClient.GetUgcFileDetailsAsync(Settings.AppId, ugcId, download.Progress, cancellationToken).ConfigureAwait(false);
                             try
                             {
                                 var ugcFile = await ugcHttpClient.GetUgcFileAsync(ugcFileDetails.Data.Url, download.Progress, cancellationToken).ConfigureAwait(false);

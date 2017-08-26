@@ -6,33 +6,29 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
     [TestClass]
     public class TestsSetup
     {
-        private static bool _wasUp;
+        static bool shouldStop;
 
         [AssemblyInitialize]
-        public static void StartAzureBeforeAllTestsIfNotUp(TestContext context)
+        public static void AssemblyInitialize(TestContext context)
         {
             if (!AzureStorageEmulatorManager.IsProcessStarted())
             {
                 AzureStorageEmulatorManager.StartStorageEmulator();
-                _wasUp = false;
+                shouldStop = true;
             }
             else
             {
-                _wasUp = true;
+                shouldStop = false;
             }
 
         }
 
         [AssemblyCleanup]
-        public static void StopAzureAfterAllTestsIfWasDown()
+        public static void AssemblyCleanup()
         {
-            if (!_wasUp)
+            if (shouldStop)
             {
                 AzureStorageEmulatorManager.StopStorageEmulator();
-            }
-            else
-            {
-                // Leave as it was before testing...
             }
         }
     }
