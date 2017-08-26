@@ -1,11 +1,27 @@
-# toofz Replays Service
-
-[![Build status](https://ci.appveyor.com/api/projects/status/xeoko709p63qf3jb/branch/master?svg=true)](https://ci.appveyor.com/project/leonard-thieu/replays-service/branch/master) [![codecov](https://codecov.io/gh/leonard-thieu/replays-service/branch/master/graph/badge.svg)](https://codecov.io/gh/leonard-thieu/replays-service)
+# toofz Replays Service [![Build status](https://ci.appveyor.com/api/projects/status/xeoko709p63qf3jb/branch/master?svg=true)](https://ci.appveyor.com/project/leonard-thieu/replays-service/branch/master) [![codecov](https://codecov.io/gh/leonard-thieu/replays-service/branch/master/graph/badge.svg)](https://codecov.io/gh/leonard-thieu/replays-service)
 
 ## Requirements
 
 * Windows 7 or later
 * .NET Framework 4.5
+
+## Usage
+
+```
+Usage: ReplaysService.exe [options]
+
+options:
+  --help              Shows usage information.
+  --interval=VALUE    The minimum amount of time that should pass between each cycle.
+  --delay=VALUE       The amount of time to wait after a cycle to perform garbage collection.
+  --ikey=VALUE        An Application Insights instrumentation key.
+  --replays=VALUE     The number of replays to update.
+  --toofz=VALUE       The base address of toofz API.
+  --username=VALUE    The user name used to log on to toofz API.
+  --password[=VALUE]  The password used to log on to toofz API.
+  --apikey[=VALUE]    A Steam Web API key.
+  --storage           An Azure Storage connection string.
+```
 
 ## Contributing
 
@@ -14,26 +30,8 @@
 #### Additional requirements
 
 * Visual Studio 2017
-* [Azure Storage Emulator](https://go.microsoft.com/fwlink/?linkid=717179&clcid=0x409)
+* [Azure Storage Emulator](https://go.microsoft.com/fwlink/?linkid=717179&clcid=0x409) Required to run certain tests.
+* [WiX toolset](http://wixtoolset.org/releases/) Required to work with the installer.
 * [toofz API](https://github.com/leonard-thieu/api.toofz.com)
-* [WiX toolset](http://wixtoolset.org/releases/) is only required if you want to work with the installer.
-
-The following environment variables and generic credentials must be set in order to run toofz Replays Service.
-
-* Environment variables
-  * `toofzApiBaseAddress` The address that toofz API is running at.
-  * `ReplaysInstrumentationKey` (optional) An [Application Insights](https://azure.microsoft.com/en-us/services/application-insights/) instrumentation key. If set, toofz Replays Service will transmit telemetry.
-* Generic credentials
-  * `toofz/SteamWebApiKey` A Steam Web API key. Used to access resources from [Steam Web API](https://steamcommunity.com/dev)
-  * `toofz/ReplaysService` User name and password for toofz API.
-  * `toofz/StorageConnectionString` An [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) connection string.
-
-A script ([Setup-Environment.ps1](ReplaysService/Setup-Environment.ps1)) is included that will initialize these to development-usable values. Note, a real Steam Web API key is required. You can obtain a Steam Web API key [by filling out this form](http://steamcommunity.com/dev/apikey).
-
-##### Syntax
-
-`Setup-Environment.ps1 [[-ToofzApiBaseAddress] <string>] [-SteamWebApiKey] <string> [[-ToofzApiUserName] <string>] [[-ToofzApiPassword] <string>] [[-StorageConnectionString] <string>] [-Overwrite] [<CommonParameters>]`
-
-##### Usage
-
-`.\Setup-Environment.ps1 -SteamWebApiKey 'MySteamWebApiKey'`
+* A Steam Web API key. Used to access resources from [Steam Web API](https://steamcommunity.com/dev)
+  * You can obtain a Steam Web API key [by filling out this form](http://steamcommunity.com/dev/apikey).
