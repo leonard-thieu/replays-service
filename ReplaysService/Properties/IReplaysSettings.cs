@@ -1,32 +1,36 @@
 ﻿using toofz.Services;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties
 {
-    sealed class ReplaysOptions : Options
+    public interface IReplaysSettings : ISettings
     {
+        /// <summary>
+        /// The product's application ID.
+        /// </summary>
+        uint AppId { get; }
         /// <summary>
         /// The number of replays to update.
         /// </summary>
-        public int? ReplaysPerUpdate { get; internal set; }
+        int ReplaysPerUpdate { get; set; }
         /// <summary>
         /// The base address of toofz API.
         /// </summary>
-        public string ToofzApiBaseAddress { get; internal set; }
+        string ToofzApiBaseAddress { get; set; }
         /// <summary>
         /// The user name used to log on to toofz API.
         /// </summary>
-        public string ToofzApiUserName { get; internal set; }
+        string ToofzApiUserName { get; set; }
         /// <summary>
         /// The password used to log on to toofz API.
         /// </summary>
-        public string ToofzApiPassword { get; internal set; } = "";
+        EncryptedSecret ToofzApiPassword { get; set; }
         /// <summary>
         /// A Steam Web API key.
         /// </summary>
-        public string SteamWebApiKey { get; internal set; } = "";
+        EncryptedSecret SteamWebApiKey { get; set; }
         /// <summary>
         /// An Azure Storage connection string.
         /// </summary>
-        public string AzureStorageConnectionString { get; internal set; } = "";
+        EncryptedSecret AzureStorageConnectionString { get; set; }
     }
 }

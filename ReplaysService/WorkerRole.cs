@@ -11,6 +11,7 @@ using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
@@ -33,13 +34,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             return container.GetDirectoryReference("replays");
         }
 
-        public WorkerRole() : base("replays") { }
+        public WorkerRole(IReplaysSettings settings) : base("replays", settings) { }
 
         TelemetryClient telemetryClient;
         OAuth2Handler toofzOAuth2Handler;
         HttpMessageHandler toofzApiHandlers;
-
-        public override IReplaysSettings Settings => Properties.Settings.Default;
 
         protected override void OnStart(string[] args)
         {
@@ -101,14 +100,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 new HttpRequestStatusHandler(),
             });
 
-            using (var toofzApiClient = new ToofzApiClient(toofzApiHandlers))
-            using (var steamWebApiClient = new SteamWebApiClient(steamApiHandlers))
+            using (var toofzApiClient = new ToofzApiClient(toofzApiHandlers) { BaseAddress = new Uri(toofzApiBaseAddress) })
+            using (var steamWebApiClient = new SteamWebApiClient(steamApiHandlers) { SteamWebApiKey = steamWebApiKey })
             using (var ugcHttpClient = new UgcHttpClient(ugcHandlers))
             {
-                toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
-
-                steamWebApiClient.SteamWebApiKey = steamWebApiKey;
-
                 await UpdateReplaysAsync(
                     toofzApiClient,
                     steamWebApiClient,
@@ -151,7 +146,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     .ConfigureAwait(false);
                 var ugcIds = (from r in response.replays
                               select r.id)
-                              .ToList();
+                             .ToList();
 
                 var replays = new ConcurrentBag<Replay>();
                 using (var download = new DownloadNotifier(Log, "replays"))
