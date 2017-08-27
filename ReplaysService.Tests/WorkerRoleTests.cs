@@ -27,7 +27,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task ApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleReplaysSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
@@ -49,7 +50,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task SteamWebApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleReplaysSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
@@ -71,7 +73,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task UgcHttpClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleReplaysSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
@@ -92,7 +95,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task DirectoryIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleReplaysSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
@@ -115,7 +119,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task LimitIsNegative_ThrowsArgumentOutOfRangeException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleReplaysSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
@@ -138,7 +143,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task UpdatesReplays()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleReplaysSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 mockIToofzApiClient

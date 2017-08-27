@@ -1,6 +1,6 @@
 ﻿using toofz.Services;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties
 {
     public interface IReplaysSettings : ISettings
     {

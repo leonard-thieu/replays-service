@@ -1,4 +1,5 @@
 ﻿using System;
+using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {

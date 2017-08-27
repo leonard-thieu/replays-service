@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using log4net;
-using Microsoft.ApplicationInsights.Extensibility;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.Services;
 
@@ -26,45 +23,17 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         {
             var settings = Settings.Default;
 
-            return MainImpl(
-                args,
-                Log,
-                new EnvironmentAdapter(),
-                new ReplaysArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations),
-                settings,
-                new Application());
-        }
-
-        internal static int MainImpl(
-            string[] args,
-            ILog log,
-            IEnvironment environment,
-            IArgsParser<IReplaysSettings> parser,
-            IReplaysSettings settings,
-            IApplication application)
-        {
-            log.Debug("Initialized logging.");
-
-            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-
-            // Args are only allowed while running as a console as they may require user input.
-            if (args.Any() && environment.UserInteractive)
+            using (var worker = new WorkerRole(settings))
             {
-                return parser.Parse(args, settings);
+                return Application.Run(
+                    args,
+                    new EnvironmentAdapter(),
+                    settings,
+                    worker,
+                    new ReplaysArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations),
+                    new ServiceBaseAdapter(),
+                    Log);
             }
-
-            if (string.IsNullOrEmpty(settings.InstrumentationKey))
-            {
-                log.Warn("The setting 'InstrumentationKey' is not set. Telemetry is disabled.");
-            }
-            else
-            {
-                TelemetryConfiguration.Active.InstrumentationKey = settings.InstrumentationKey;
-            }
-
-            application.Run<WorkerRole, IReplaysSettings>();
-
-            return 0;
         }
     }
 }
