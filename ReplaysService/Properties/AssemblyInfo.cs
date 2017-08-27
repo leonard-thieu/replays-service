@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using log4net.Config;
 
 [assembly: AssemblyVersion("3.0.0.0")]
 
@@ -13,4 +14,4 @@ using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("ReplaysService.Tests")]
 
-[assembly: log4net.Config.XmlConfigurator(Watch = true, ConfigFile = "log.config")]
+[assembly: XmlConfigurator(Watch = true, ConfigFile = "log.config")]

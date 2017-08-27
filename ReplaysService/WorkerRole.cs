@@ -33,13 +33,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             return container.GetDirectoryReference("replays");
         }
 
-        public WorkerRole() : base("replays") { }
+        public WorkerRole() : base("replays", Properties.Settings.Default) { }
 
         TelemetryClient telemetryClient;
         OAuth2Handler toofzOAuth2Handler;
         HttpMessageHandler toofzApiHandlers;
-
-        public override IReplaysSettings Settings => Properties.Settings.Default;
 
         protected override void OnStart(string[] args)
         {
@@ -151,7 +149,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     .ConfigureAwait(false);
                 var ugcIds = (from r in response.replays
                               select r.id)
-                              .ToList();
+                             .ToList();
 
                 var replays = new ConcurrentBag<Replay>();
                 using (var download = new DownloadNotifier(Log, "replays"))

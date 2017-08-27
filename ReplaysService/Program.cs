@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using log4net;
@@ -12,30 +13,56 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
+        /// <summary>
+        /// The main entry point of the application.
+        /// </summary>
+        /// <param name="args">Arguments passed in.</param>
+        /// <returns>
+        /// 0 - The application ran successfully.
+        /// 1 - There was an error parsing <paramref name="args"/>.
+        /// </returns>
+        [ExcludeFromCodeCoverage]
         static int Main(string[] args)
         {
-            Log.Debug("Initialized logging.");
-
-            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             var settings = Settings.Default;
 
-            // Args are only allowed while running as a console as they may require user input.
-            if (Environment.UserInteractive && args.Any())
-            {
-                var parser = new ReplaysArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations);
+            return MainImpl(
+                args,
+                Log,
+                new EnvironmentAdapter(),
+                new ReplaysArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations),
+                settings,
+                new Application());
+        }
 
+        internal static int MainImpl(
+            string[] args,
+            ILog log,
+            IEnvironment environment,
+            IArgsParser<IReplaysSettings> parser,
+            IReplaysSettings settings,
+            IApplication application)
+        {
+            log.Debug("Initialized logging.");
+
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
+            // Args are only allowed while running as a console as they may require user input.
+            if (args.Any() && environment.UserInteractive)
+            {
                 return parser.Parse(args, settings);
             }
 
-            var instrumentationKey = settings.InstrumentationKey;
-            if (!string.IsNullOrEmpty(instrumentationKey)) { TelemetryConfiguration.Active.InstrumentationKey = instrumentationKey; }
+            if (string.IsNullOrEmpty(settings.InstrumentationKey))
+            {
+                log.Warn("The setting 'InstrumentationKey' is not set. Telemetry is disabled.");
+            }
             else
             {
-                Log.Warn($"The setting 'ReplaysInstrumentationKey' is not set. Telemetry is disabled.");
-                TelemetryConfiguration.Active.DisableTelemetry = true;
+                TelemetryConfiguration.Active.InstrumentationKey = settings.InstrumentationKey;
             }
 
-            Application.Run<WorkerRole, IReplaysSettings>();
+            application.Run<WorkerRole, IReplaysSettings>();
 
             return 0;
         }
