@@ -13,5 +13,6 @@ using log4net.Config;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("ReplaysService.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 [assembly: XmlConfigurator(Watch = true, ConfigFile = "log.config")]
