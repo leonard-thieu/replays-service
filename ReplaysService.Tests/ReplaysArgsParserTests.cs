@@ -35,7 +35,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 parser.Parse(args, settings);
 
                 // Assert
-                AssertHelper.NormalizedAreEqual(@"
+                Assert.That.NormalizedAreEqual(@"
 Usage: ReplaysService.exe [options]
 
 options:

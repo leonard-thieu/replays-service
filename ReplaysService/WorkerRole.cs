@@ -12,6 +12,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
+using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
@@ -42,15 +43,23 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         protected override void OnStart(string[] args)
         {
+            if (string.IsNullOrEmpty(Settings.ToofzApiUserName))
+                throw new InvalidOperationException($"{nameof(Settings.ToofzApiUserName)} is not set.");
+            if (Settings.ToofzApiPassword == null)
+                throw new InvalidOperationException($"{nameof(Settings.ToofzApiPassword)} is not set.");
+
+            var toofzApiUserName = Settings.ToofzApiUserName;
+            var toofzApiPassword = Settings.ToofzApiPassword.Decrypt();
+
             telemetryClient = new TelemetryClient();
-            toofzOAuth2Handler = new OAuth2Handler();
+            toofzOAuth2Handler = new OAuth2Handler(toofzApiUserName, toofzApiPassword);
             toofzApiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             }, new DelegatingHandler[]
             {
                 new LoggingHandler(),
-                new HttpRequestStatusHandler(),
+                new ToofzHttpErrorHandler(),
                 toofzOAuth2Handler,
             });
 
@@ -60,32 +69,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(Settings.ToofzApiBaseAddress))
-            {
                 throw new InvalidOperationException($"{nameof(Settings.ToofzApiBaseAddress)} is not set.");
-            }
-            var toofzApiBaseAddress = Settings.ToofzApiBaseAddress;
-
             if (Settings.SteamWebApiKey == null)
-            {
                 throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
-            }
-            var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
-
-            if (string.IsNullOrEmpty(Settings.ToofzApiUserName))
-            {
-                throw new InvalidOperationException($"{nameof(Settings.ToofzApiUserName)} is not set.");
-            }
-            toofzOAuth2Handler.UserName = Settings.ToofzApiUserName;
-            if (Settings.ToofzApiPassword == null)
-            {
-                throw new InvalidOperationException($"{nameof(Settings.ToofzApiPassword)} is not set.");
-            }
-            toofzOAuth2Handler.Password = Settings.ToofzApiPassword.Decrypt();
-
             if (Settings.AzureStorageConnectionString == null)
-            {
                 throw new InvalidOperationException($"{nameof(Settings.AzureStorageConnectionString)} is not set.");
-            }
+
+            var toofzApiBaseAddress = Settings.ToofzApiBaseAddress;
+            var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
             var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
 
             var steamApiHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
@@ -97,13 +88,16 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             var ugcHandlers = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
             {
                 new LoggingHandler(),
-                new HttpRequestStatusHandler(),
+                new HttpErrorHandler(),
             });
 
-            using (var toofzApiClient = new ToofzApiClient(toofzApiHandlers) { BaseAddress = new Uri(toofzApiBaseAddress) })
-            using (var steamWebApiClient = new SteamWebApiClient(steamApiHandlers) { SteamWebApiKey = steamWebApiKey })
+            using (var toofzApiClient = new ToofzApiClient(toofzApiHandlers))
+            using (var steamWebApiClient = new SteamWebApiClient(steamApiHandlers))
             using (var ugcHttpClient = new UgcHttpClient(ugcHandlers))
             {
+                toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
+                steamWebApiClient.SteamWebApiKey = steamWebApiKey;
+
                 await UpdateReplaysAsync(
                     toofzApiClient,
                     steamWebApiClient,
@@ -144,8 +138,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                         Limit = limit,
                     }, cancellationToken)
                     .ConfigureAwait(false);
-                var ugcIds = (from r in response.replays
-                              select r.id)
+                var ugcIds = (from r in response.Replays
+                              select r.Id)
                              .ToList();
 
                 var replays = new ConcurrentBag<Replay>();
@@ -227,7 +221,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 {
                     // TODO: Add rollback to stored replays in case this fails
                     var bulkStore = await toofzApiClient.PostReplaysAsync(replays, cancellationToken).ConfigureAwait(false);
-                    activity.Progress.Report(bulkStore.rows_affected);
+                    activity.Progress.Report(bulkStore.RowsAffected);
                 }
             }
         }

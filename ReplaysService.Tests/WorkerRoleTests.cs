@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
+using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
 
@@ -149,10 +150,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var mockIToofzApiClient = new Mock<IToofzApiClient>();
                 mockIToofzApiClient
                     .Setup(toofzApiClient => toofzApiClient.GetReplaysAsync(It.IsAny<GetReplaysParams>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(new Replays()));
+                    .Returns(Task.FromResult(new ReplaysEnvelope()));
                 mockIToofzApiClient
                     .Setup(toofzApiClient => toofzApiClient.PostReplaysAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(new BulkStore()));
+                    .Returns(Task.FromResult(new BulkStoreDTO()));
 
                 var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
                 var mockIUgcHttpClient = new Mock<IUgcHttpClient>();

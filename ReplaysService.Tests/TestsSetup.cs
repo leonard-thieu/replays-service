@@ -11,9 +11,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
-            if (!AzureStorageEmulatorManager.IsProcessStarted())
+            if (!AzureStorageEmulatorManager.IsStarted())
             {
-                AzureStorageEmulatorManager.StartStorageEmulator();
+                AzureStorageEmulatorManager.Start();
                 shouldStop = true;
             }
             else
@@ -28,7 +28,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         {
             if (shouldStop)
             {
-                AzureStorageEmulatorManager.StopStorageEmulator();
+                AzureStorageEmulatorManager.Stop();
             }
         }
     }
