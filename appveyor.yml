@@ -23,6 +23,7 @@ artifacts:
 
 install:
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
+  - ps: .\Scripts\Install-AzureStorageEmulator.ps1
 
 before_build:
   - appveyor-retry nuget restore -Verbosity quiet

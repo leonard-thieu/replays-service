@@ -19,7 +19,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class WorkerRole : WorkerRoleBase<IReplaysSettings>
+    class WorkerRole : WorkerRoleBase<IReplaysSettings>
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 

@@ -8,11 +8,202 @@ using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.toofz;
+using toofz.TestsShared;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
     class WorkerRoleTests
     {
+        [TestClass]
+        public class GetDirectoryMethod
+        {
+            public GetDirectoryMethod()
+            {
+                if (!AzureStorageEmulatorManager.IsStarted())
+                {
+                    AzureStorageEmulatorManager.Start();
+                    shouldStop = true;
+                }
+                else
+                {
+                    shouldStop = false;
+                }
+            }
+
+            bool shouldStop;
+
+            [TestCleanup]
+            public void TestCleanup()
+            {
+                if (shouldStop)
+                {
+                    AzureStorageEmulatorManager.Stop();
+                }
+            }
+
+            [TestMethod]
+            public void ReturnsCloudBlobDirectory()
+            {
+                // Arrange
+                var connectionString = "UseDevelopmentStorage=true";
+
+                // Act
+                var directory = WorkerRole.GetDirectory(connectionString);
+
+                // Assert
+                Assert.IsInstanceOfType(directory, typeof(ICloudBlobDirectory));
+            }
+        }
+
+        [TestClass]
+        public class OnStartMethod
+        {
+            [TestMethod]
+            public void ToofzApiUserNameIsNull_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiUserName = null,
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                };
+                var workerRole = new WorkerRole(settings);
+
+                // Act -> Assert
+                Assert.ThrowsException<InvalidOperationException>(() =>
+                {
+                    workerRole.Start();
+                });
+            }
+
+            [TestMethod]
+            public void ToofzApiUserNameIsEmpty_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiUserName = "",
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                };
+                var workerRole = new WorkerRole(settings);
+
+                // Act -> Assert
+                Assert.ThrowsException<InvalidOperationException>(() =>
+                {
+                    workerRole.Start();
+                });
+            }
+
+            [TestMethod]
+            public void ToofzApiPasswordIsNull_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiUserName = "a",
+                    ToofzApiPassword = null,
+                };
+                var workerRole = new WorkerRole(settings);
+
+                // Act -> Assert
+                Assert.ThrowsException<InvalidOperationException>(() =>
+                {
+                    workerRole.Start();
+                });
+            }
+        }
+
+        [TestClass]
+        public class RunAsyncOverrideMethod
+        {
+            [TestMethod]
+            public async Task ToofzApiBaseAddressIsNull_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiBaseAddress = null,
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    AzureStorageConnectionString = new EncryptedSecret("a", 1),
+                };
+                var workerRole = new WorkerRoleAdapter(settings);
+                var cancellationToken = CancellationToken.None;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                {
+                    return workerRole.PublicRunAsyncOverride(cancellationToken);
+                });
+            }
+
+            [TestMethod]
+            public async Task ToofzApiBaseAddressIsEmpty_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiBaseAddress = "",
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    AzureStorageConnectionString = new EncryptedSecret("a", 1),
+                };
+                var workerRole = new WorkerRoleAdapter(settings);
+                var cancellationToken = CancellationToken.None;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                {
+                    return workerRole.PublicRunAsyncOverride(cancellationToken);
+                });
+            }
+
+            [TestMethod]
+            public async Task SteamWebApiKeyIsNull_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiBaseAddress = "a",
+                    SteamWebApiKey = null,
+                    AzureStorageConnectionString = new EncryptedSecret("a", 1),
+                };
+                var workerRole = new WorkerRoleAdapter(settings);
+                var cancellationToken = CancellationToken.None;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                {
+                    return workerRole.PublicRunAsyncOverride(cancellationToken);
+                });
+            }
+
+            [TestMethod]
+            public async Task AzureStorageConnectionStringIsNull_ThrowsInvalidOperationException()
+            {
+                // Arrange
+                var settings = new StubReplaysSettings
+                {
+                    ToofzApiBaseAddress = "a",
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    AzureStorageConnectionString = null,
+                };
+                var workerRole = new WorkerRoleAdapter(settings);
+                var cancellationToken = CancellationToken.None;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                {
+                    return workerRole.PublicRunAsyncOverride(cancellationToken);
+                });
+            }
+
+            class WorkerRoleAdapter : WorkerRole
+            {
+                public WorkerRoleAdapter(IReplaysSettings settings) : base(settings) { }
+
+                public Task PublicRunAsyncOverride(CancellationToken cancellationToken) => RunAsyncOverride(cancellationToken);
+            }
+        }
+
         [TestClass]
         public class UpdateReplaysAsyncMethod
         {
