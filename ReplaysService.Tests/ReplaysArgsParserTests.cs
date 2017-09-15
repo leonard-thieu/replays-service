@@ -14,7 +14,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public Parse()
             {
                 inReader = mockInReader.Object;
-                parser = new ReplaysArgsParser(inReader, outWriter, errorWriter, Constants.Iterations);
+                parser = new ReplaysArgsParser(inReader, outWriter, errorWriter);
             }
 
             Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
@@ -63,8 +63,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
@@ -86,8 +87,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
@@ -109,8 +111,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
@@ -128,8 +131,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = null,
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -150,8 +154,9 @@ options:
                 var mockSettings = new Mock<IReplaysSettings>();
                 mockSettings
                     .SetupProperty(s => s.ToofzApiUserName, "myUserName")
-                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", Constants.Iterations))
-                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.KeyDerivationIterations, 1);
                 var settings = mockSettings.Object;
 
                 // Act
@@ -173,15 +178,16 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myPassword", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.ToofzApiPassword.Decrypt());
             }
 
@@ -193,8 +199,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -204,7 +211,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myPassword", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.ToofzApiPassword.Decrypt());
             }
 
@@ -217,7 +224,8 @@ options:
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = null,
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -227,7 +235,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myPassword", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.ToofzApiPassword.Decrypt());
             }
 
@@ -239,8 +247,9 @@ options:
                 var mockSettings = new Mock<IReplaysSettings>();
                 mockSettings
                     .SetupProperty(s => s.ToofzApiUserName, "myUserName")
-                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", Constants.Iterations))
-                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.KeyDerivationIterations, 1);
                 var settings = mockSettings.Object;
 
                 // Act
@@ -262,15 +271,16 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myApiKey", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myApiKey", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.SteamWebApiKey.Decrypt());
             }
 
@@ -282,8 +292,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -293,7 +304,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myApiKey", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myApiKey", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.SteamWebApiKey.Decrypt());
             }
 
@@ -305,8 +316,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
                     SteamWebApiKey = null,
+                    KeyDerivationIterations = 1,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -316,7 +328,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myApiKey", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myApiKey", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.SteamWebApiKey.Decrypt());
             }
 
@@ -328,8 +340,9 @@ options:
                 var mockSettings = new Mock<IReplaysSettings>();
                 mockSettings
                     .SetupProperty(s => s.ToofzApiUserName, "myUserName")
-                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", Constants.Iterations))
-                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.KeyDerivationIterations, 1);
                 var settings = mockSettings.Object;
 
                 // Act
@@ -351,15 +364,16 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myConnectionString", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myConnectionString", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.AzureStorageConnectionString.Decrypt());
             }
 
@@ -371,8 +385,9 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -382,7 +397,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myConnectionString", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myConnectionString", 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.AzureStorageConnectionString.Decrypt());
             }
 
@@ -394,15 +409,16 @@ options:
                 IReplaysSettings settings = new SimpleReplaysSettings
                 {
                     ToofzApiUserName = "a",
-                    ToofzApiPassword = new EncryptedSecret("a", Constants.Iterations),
-                    SteamWebApiKey = new EncryptedSecret("a", Constants.Iterations),
+                    ToofzApiPassword = new EncryptedSecret("a", 1),
+                    SteamWebApiKey = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret(ReplaysArgsParser.DefaultAzureStorageConnectionString, Constants.Iterations);
+                var encrypted = new EncryptedSecret(ReplaysArgsParser.DefaultAzureStorageConnectionString, 1);
                 Assert.AreEqual(encrypted.Decrypt(), settings.AzureStorageConnectionString.Decrypt());
             }
 
@@ -414,9 +430,9 @@ options:
                 var mockSettings = new Mock<IReplaysSettings>();
                 mockSettings
                     .SetupProperty(s => s.ToofzApiUserName, "myUserName")
-                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", Constants.Iterations))
-                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", Constants.Iterations))
-                    .SetupProperty(s => s.AzureStorageConnectionString, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.ToofzApiPassword, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.SteamWebApiKey, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.AzureStorageConnectionString, new EncryptedSecret("a", 1));
                 var settings = mockSettings.Object;
 
                 // Act

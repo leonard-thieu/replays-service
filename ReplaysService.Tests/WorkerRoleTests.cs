@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
@@ -16,79 +15,60 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         [TestClass]
         public class UpdateReplaysAsync
         {
-            public UpdateReplaysAsync()
-            {
-                directory = WorkerRole.GetDirectory("UseDevelopmentStorage=true");
-            }
-
-            CloudBlobDirectory directory;
-
             [TestMethod]
-            [TestCategory("Integration")]
             public async Task ApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 var settings = new SimpleReplaysSettings();
                 var workerRole = new WorkerRole(settings);
-
-                var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
-                var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
+                IToofzApiClient toofzApiClient = null;
+                var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var limit = 1;
 
                 // Act -> Assert
                 await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
-                    return workerRole.UpdateReplaysAsync(
-                        null,
-                        mockISteamWebApiClient.Object,
-                        mockIUgcHttpClient.Object,
-                        directory,
-                        1);
+                    return workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, directory, limit);
                 });
             }
 
             [TestMethod]
-            [TestCategory("Integration")]
             public async Task SteamWebApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 var settings = new SimpleReplaysSettings();
                 var workerRole = new WorkerRole(settings);
-
-                var mockIToofzApiClient = new Mock<IToofzApiClient>();
-                var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
+                var toofzApiClient = Mock.Of<IToofzApiClient>();
+                ISteamWebApiClient steamWebApiClient = null;
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var limit = 1;
 
                 // Act -> Assert
                 await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
-                    return workerRole.UpdateReplaysAsync(
-                        mockIToofzApiClient.Object,
-                        null,
-                        mockIUgcHttpClient.Object,
-                        directory,
-                        1);
+                    return workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, directory, limit);
                 });
             }
 
             [TestMethod]
-            [TestCategory("Integration")]
             public async Task UgcHttpClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 var settings = new SimpleReplaysSettings();
                 var workerRole = new WorkerRole(settings);
-
-                var mockIToofzApiClient = new Mock<IToofzApiClient>();
-                var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
+                var toofzApiClient = Mock.Of<IToofzApiClient>();
+                var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
+                IUgcHttpClient ugcHttpClient = null;
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var limit = 1;
 
                 // Act -> Assert
                 await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
-                    return workerRole.UpdateReplaysAsync(
-                        mockIToofzApiClient.Object,
-                        mockISteamWebApiClient.Object,
-                        null,
-                        directory,
-                        1);
+                    return workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, directory, limit);
                 });
             }
 
@@ -98,73 +78,59 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 // Arrange
                 var settings = new SimpleReplaysSettings();
                 var workerRole = new WorkerRole(settings);
-
-                var mockIToofzApiClient = new Mock<IToofzApiClient>();
-                var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
-                var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
+                var toofzApiClient = Mock.Of<IToofzApiClient>();
+                var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                ICloudBlobDirectory directory = null;
+                var limit = 1;
 
                 // Act -> Assert
                 await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
-                    return workerRole.UpdateReplaysAsync(
-                        mockIToofzApiClient.Object,
-                        mockISteamWebApiClient.Object,
-                        mockIUgcHttpClient.Object,
-                        null,
-                        1);
+                    return workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, directory, limit);
                 });
             }
 
             [TestMethod]
-            [TestCategory("Integration")]
             public async Task LimitIsNegative_ThrowsArgumentOutOfRangeException()
             {
                 // Arrange
                 var settings = new SimpleReplaysSettings();
                 var workerRole = new WorkerRole(settings);
-
-                var mockIToofzApiClient = new Mock<IToofzApiClient>();
-                var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
-                var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
+                var toofzApiClient = Mock.Of<IToofzApiClient>();
+                var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var limit = -1;
 
                 // Act -> Assert
                 await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
                 {
-                    return workerRole.UpdateReplaysAsync(
-                        mockIToofzApiClient.Object,
-                        mockISteamWebApiClient.Object,
-                        mockIUgcHttpClient.Object,
-                        directory,
-                        -1);
+                    return workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, directory, limit);
                 });
             }
 
             [TestMethod]
-            [TestCategory("Integration")]
             public async Task UpdatesReplays()
             {
                 // Arrange
                 var settings = new SimpleReplaysSettings();
                 var workerRole = new WorkerRole(settings);
-
-                var mockIToofzApiClient = new Mock<IToofzApiClient>();
-                mockIToofzApiClient
-                    .Setup(toofzApiClient => toofzApiClient.GetReplaysAsync(It.IsAny<GetReplaysParams>(), It.IsAny<CancellationToken>()))
+                var mockToofzApiClient = new Mock<IToofzApiClient>();
+                mockToofzApiClient
+                    .Setup(t => t.GetReplaysAsync(It.IsAny<GetReplaysParams>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(new ReplaysEnvelope()));
-                mockIToofzApiClient
-                    .Setup(toofzApiClient => toofzApiClient.PostReplaysAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<CancellationToken>()))
+                mockToofzApiClient
+                    .Setup(tootzApiClient => tootzApiClient.PostReplaysAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(new BulkStoreDTO()));
-
-                var mockISteamWebApiClient = new Mock<ISteamWebApiClient>();
-                var mockIUgcHttpClient = new Mock<IUgcHttpClient>();
+                var toofzApiClient = mockToofzApiClient.Object;
+                var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var limit = 1;
 
                 // Act -> Assert
-                await workerRole.UpdateReplaysAsync(
-                    mockIToofzApiClient.Object,
-                    mockISteamWebApiClient.Object,
-                    mockIUgcHttpClient.Object,
-                    directory,
-                    1);
+                await workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, directory, limit);
             }
         }
     }
