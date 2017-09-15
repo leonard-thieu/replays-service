@@ -139,6 +139,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class DownloadReplaysAndStoreReplayFilesAsyncMethod
         {
             [TestMethod]
+            [Ignore]
             public async Task ReturnsReplays()
             {
                 // Arrange
