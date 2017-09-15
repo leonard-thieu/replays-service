@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
@@ -60,7 +61,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--replays=10" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -84,7 +85,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--toofz=http://localhost/" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -108,7 +109,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--username=myUserName" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -128,7 +129,7 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = null,
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -175,7 +176,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--password=myPassword" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -196,7 +197,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--password" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -220,7 +221,7 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = null,
@@ -268,7 +269,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--apikey=myApiKey" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -289,7 +290,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--apikey" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -313,7 +314,7 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -361,7 +362,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--storage=myConnectionString" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -382,7 +383,7 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--storage" };
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -406,7 +407,7 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                IReplaysSettings settings = new SimpleReplaysSettings
+                IReplaysSettings settings = new StubReplaysSettings
                 {
                     ToofzApiUserName = "a",
                     ToofzApiPassword = new EncryptedSecret("a", 1),
@@ -443,6 +444,26 @@ options:
             }
 
             #endregion
+
+            class StubReplaysSettings : IReplaysSettings
+            {
+                public uint AppId => 247080;
+
+                public int ReplaysPerUpdate { get; set; }
+                public string ToofzApiBaseAddress { get; set; }
+                public string ToofzApiUserName { get; set; }
+                public EncryptedSecret ToofzApiPassword { get; set; }
+                public EncryptedSecret SteamWebApiKey { get; set; }
+                public EncryptedSecret AzureStorageConnectionString { get; set; }
+                public TimeSpan UpdateInterval { get; set; }
+                public TimeSpan DelayBeforeGC { get; set; }
+                public string InstrumentationKey { get; set; }
+                public int KeyDerivationIterations { get; set; }
+
+                public void Reload() { }
+
+                public void Save() { }
+            }
         }
     }
 }

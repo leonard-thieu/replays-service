@@ -143,27 +143,39 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 var staleReplays = await GetStaleReplaysAsync(toofzApiClient, limit, cancellationToken).ConfigureAwait(false);
 
-                var replayNetwork = new ReplayDataflowNetwork(steamWebApiClient, Settings.AppId, ugcHttpClient, directory, cancellationToken);
-
-                var downloadReplayTasks = new List<Task<Replay>>(staleReplays.Count());
-                var storeReplayFileTasks = new List<Task<Uri>>(staleReplays.Count());
-                foreach (var staleReplay in staleReplays)
-                {
-                    replayNetwork.Post(staleReplay.Id);
-
-                    var downloadReplayTask = replayNetwork.DownloadReplay.ReceiveAsync(cancellationToken);
-                    downloadReplayTasks.Add(downloadReplayTask);
-
-                    var storeReplayFileTask = replayNetwork.StoreReplayFile.ReceiveAsync(cancellationToken);
-                    storeReplayFileTasks.Add(storeReplayFileTask);
-                }
-                replayNetwork.Complete();
-
-                var replays = await Task.WhenAll(downloadReplayTasks).ConfigureAwait(false);
-                var replayFileUris = await Task.WhenAll(storeReplayFileTasks).ConfigureAwait(false);
+                var replays = await DownloadReplaysAndStoreReplayFilesAsync(steamWebApiClient, ugcHttpClient, directory, staleReplays, cancellationToken);
 
                 await StoreReplaysAsync(toofzApiClient, replays, cancellationToken).ConfigureAwait(false);
             }
+        }
+
+        internal async Task<IEnumerable<Replay>> DownloadReplaysAndStoreReplayFilesAsync(
+            ISteamWebApiClient steamWebApiClient,
+            IUgcHttpClient ugcHttpClient,
+            ICloudBlobDirectory directory,
+            IEnumerable<ReplayDTO> staleReplays,
+            CancellationToken cancellationToken)
+        {
+            var replayNetwork = new ReplayDataflowNetwork(steamWebApiClient, Settings.AppId, ugcHttpClient, directory, cancellationToken);
+
+            var downloadReplayTasks = new List<Task<Replay>>(staleReplays.Count());
+            var storeReplayFileTasks = new List<Task<Uri>>(staleReplays.Count());
+            foreach (var staleReplay in staleReplays)
+            {
+                replayNetwork.Post(staleReplay.Id);
+
+                var downloadReplayTask = replayNetwork.DownloadReplay.ReceiveAsync(cancellationToken);
+                downloadReplayTasks.Add(downloadReplayTask);
+
+                var storeReplayFileTask = replayNetwork.StoreReplayFile.ReceiveAsync(cancellationToken);
+                storeReplayFileTasks.Add(storeReplayFileTask);
+            }
+            replayNetwork.Complete();
+
+            var replays = await Task.WhenAll(downloadReplayTasks).ConfigureAwait(false);
+            await Task.WhenAll(storeReplayFileTasks).ConfigureAwait(false);
+
+            return replays;
         }
 
         internal static async Task<IEnumerable<ReplayDTO>> GetStaleReplaysAsync(

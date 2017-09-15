@@ -158,6 +158,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Resources\RawReplayData.dat" />
+    <None Include="Resources\StaleReplays.json" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -168,7 +169,6 @@
   <ItemGroup>
     <Compile Include="ReplayDataflowNetworkTests.cs" />
     <Compile Include="ReplaysArgsParserTests.cs" />
-    <Compile Include="SimpleReplaysSettings.cs" />
     <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
