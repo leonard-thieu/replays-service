@@ -11,13 +11,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         internal const string DefaultAzureStorageConnectionString = "UseDevelopmentStorage=true";
 
-        public ReplaysArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter, int iterations) :
-            base(inReader, outWriter, errorWriter)
-        {
-            this.iterations = iterations;
-        }
-
-        readonly int iterations;
+        public ReplaysArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) : base(inReader, outWriter, errorWriter) { }
 
         protected override string EntryAssemblyFileName { get; } = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
 
@@ -36,6 +30,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         protected override void OnParsed(ReplaysOptions options, IReplaysSettings settings)
         {
             base.OnParsed(options, settings);
+
+            var iterations = settings.KeyDerivationIterations;
 
             #region ReplaysPerUpdate
 

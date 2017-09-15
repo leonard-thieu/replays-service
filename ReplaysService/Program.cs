@@ -30,7 +30,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     new EnvironmentAdapter(),
                     settings,
                     worker,
-                    new ReplaysArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations),
+                    new ReplaysArgsParser(Console.In, Console.Out, Console.Error),
                     new ServiceBaseAdapter(),
                     Log);
             }
