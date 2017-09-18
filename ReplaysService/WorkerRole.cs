@@ -123,7 +123,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 var staleReplays = await GetStaleReplaysAsync(toofzApiClient, limit, cancellationToken).ConfigureAwait(false);
 
                 var container = blobClient.GetContainerReference("crypt");
-                await container.CreateIfNotExistsAsync(cancellationToken).ConfigureAwait(false);
+                var containerExists = await container.ExistsAsync(cancellationToken).ConfigureAwait(false);
+                if (!containerExists)
+                {
+                    await container.CreateAsync(cancellationToken).ConfigureAwait(false);
+                }
                 await container.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob }, cancellationToken);
                 var directory = container.GetDirectoryReference("replays");
 
