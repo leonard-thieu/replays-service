@@ -264,11 +264,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             CancellationToken = cancellationToken,
         };
 
-        GroupingDataflowBlockOptions GetDefaultGroupingDataflowBlockOptions() => new GroupingDataflowBlockOptions
-        {
-            CancellationToken = cancellationToken,
-        };
-
         ExecutionDataflowBlockOptions GetNetworkBoundExecutionDataflowBlockOptions() => new ExecutionDataflowBlockOptions
         {
             MaxDegreeOfParallelism = Environment.ProcessorCount * 8,

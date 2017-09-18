@@ -385,6 +385,27 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         }
 
         [TestClass]
+        public class CreateReplayWithoutUgcFileDetailsMethod
+        {
+            [TestMethod]
+            public async Task SetsReplayWithErrorCodeSetTo1xxx()
+            {
+                // Arrange
+                var ugcId = 849347241492683863;
+                HttpRequestStatusException httpEx = await GetHttpRequestStatusExceptionAsync(HttpStatusCode.NotFound);
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileDetailsException = httpEx };
+
+                // Act
+                var context2 = ReplayDataflowNetwork.CreateReplayWithoutUgcFileDetails(context);
+
+                // Assert
+                var replay = context2.Replay;
+                Assert.IsInstanceOfType(replay, typeof(Replay));
+                Assert.AreEqual(1404, replay.ErrorCode);
+            }
+        }
+
+        [TestClass]
         public class CreateReplayWithoutUgcFileMethod
         {
             [TestMethod]
@@ -392,18 +413,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             {
                 // Arrange
                 var ugcId = 849347241492683863;
-                var mockHandler = new MockHttpMessageHandler();
-                mockHandler.When("*").Respond(HttpStatusCode.NotFound, new StringContent(""));
-                var handler = new HttpMessageHandlerAdapter(new HttpErrorHandler { InnerHandler = mockHandler });
-                HttpRequestStatusException httpEx = null;
-                try
-                {
-                    await handler.PublicSendAsync(Mock.Of<HttpRequestMessage>());
-                }
-                catch (HttpRequestStatusException ex)
-                {
-                    httpEx = ex;
-                }
+                HttpRequestStatusException httpEx = await GetHttpRequestStatusExceptionAsync(HttpStatusCode.NotFound);
                 var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileException = httpEx };
 
                 // Act
@@ -475,6 +485,24 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 // Assert
                 mockBlob.Verify(b => b.UploadFromStreamAsync(It.IsAny<Stream>(), cancellationToken), Times.Once);
             }
+        }
+
+        static async Task<HttpRequestStatusException> GetHttpRequestStatusExceptionAsync(HttpStatusCode statusCode)
+        {
+            var mockHandler = new MockHttpMessageHandler();
+            mockHandler.When("*").Respond(statusCode, new StringContent(""));
+            var handler = new HttpMessageHandlerAdapter(new HttpErrorHandler { InnerHandler = mockHandler });
+            HttpRequestStatusException httpEx = null;
+            try
+            {
+                await handler.PublicSendAsync(Mock.Of<HttpRequestMessage>());
+            }
+            catch (HttpRequestStatusException ex)
+            {
+                httpEx = ex;
+            }
+
+            return httpEx;
         }
     }
 }
