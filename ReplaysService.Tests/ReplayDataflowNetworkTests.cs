@@ -1,16 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
+using RichardSzalay.MockHttp;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
 using toofz.NecroDancer.Replays;
+using toofz.TestsShared;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
@@ -150,10 +154,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         }
 
         [TestClass]
-        public class PostMethod
+        public class SendAsyncMethod
         {
             [TestMethod]
-            public void AcceptsItem()
+            public async Task AcceptsItem()
             {
                 // Arrange
                 var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
@@ -165,7 +169,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var ugcId = 849347241492683863;
 
                 // Act
-                var accepted = network.Post(ugcId);
+                var accepted = await network.SendAsync(ugcId, cancellationToken);
 
                 // Assert
                 Assert.IsTrue(accepted);
@@ -176,7 +180,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class CompleteMethod
         {
             [TestMethod]
-            public void SignalsCompletion()
+            public async Task SignalsCompletion()
             {
                 // Arrange
                 var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
@@ -185,14 +189,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var directory = Mock.Of<ICloudBlobDirectory>();
                 var cancellationToken = CancellationToken.None;
                 var network = new ReplayDataflowNetwork(steamWebApiClient, appId, ugcHttpClient, directory, cancellationToken);
-                var ugcId = 849347241492683863;
 
                 // Act
                 network.Complete();
 
                 // Assert
-                var accepted = network.Post(ugcId);
-                Assert.IsFalse(accepted);
+                var completion = Task.WhenAll(network.DownloadReplay.Completion, network.StoreReplayFile.Completion);
+                await completion;
+                Assert.IsTrue(completion.IsCompleted);
             }
         }
 
@@ -200,7 +204,35 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class GetUgcFileDetailsAsyncMethod
         {
             [TestMethod]
-            public async Task ReturnsUgcFileDetails()
+            public async Task GetUgcFileDetailsAsyncThrowsHttpRequestStatusException_SetsUgcFileDetailsException()
+            {
+                // Arrange
+                var appId = 247080U;
+                var ugcId = 849347241492683863;
+                var cancellationToken = CancellationToken.None;
+                var steamWebApiClientHandler = new MockHttpMessageHandler();
+                steamWebApiClientHandler.When("*").Respond(HttpStatusCode.BadRequest);
+                var steamWebApiClientHandlers = HttpClientFactory.CreatePipeline(steamWebApiClientHandler, new DelegatingHandler[]
+                {
+                    new SteamWebApiTransientFaultHandler(),
+                });
+                var steamWebApiClient = new SteamWebApiClient(steamWebApiClientHandlers) { SteamWebApiKey = "mySteamWebApiKey" };
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var network = new ReplayDataflowNetwork(steamWebApiClient, appId, ugcHttpClient, directory, cancellationToken);
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId);
+
+                // Act
+                var context2 = await network.GetUgcFileDetailsAsync(context);
+
+                // Assert
+                var ex = context2.UgcFileDetailsException;
+                Assert.IsNotNull(ex);
+                Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            }
+
+            [TestMethod]
+            public async Task SetsUgcFileDetails()
             {
                 // Arrange
                 var appId = 247080U;
@@ -222,12 +254,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var ugcHttpClient = Mock.Of<IUgcHttpClient>();
                 var directory = Mock.Of<ICloudBlobDirectory>();
                 var network = new ReplayDataflowNetwork(steamWebApiClient, appId, ugcHttpClient, directory, cancellationToken);
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId);
 
                 // Act
-                var ugcFileDetails = await network.GetUgcFileDetailsAsync(ugcId);
+                var context2 = await network.GetUgcFileDetailsAsync(context);
 
                 // Assert
-                Assert.AreEqual("http://cloud-3.steamusercontent.com/ugc/849347241492683863/9AC1027041B31DBC1EED3E1A709D6930D7165BEA/", ugcFileDetails.Data.Url);
+                Assert.AreEqual("http://cloud-3.steamusercontent.com/ugc/849347241492683863/9AC1027041B31DBC1EED3E1A709D6930D7165BEA/", context2.UgcFileDetails.Data.Url);
             }
         }
 
@@ -235,10 +268,48 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class GetUgcFileAsyncMethod
         {
             [TestMethod]
-            public async Task ReturnsUgcFile()
+            public async Task GetUgcFileAsyncThrowsHttpRequestStatusException_SetsUgcFileException()
             {
                 // Arrange
                 var appId = 247080U;
+                var ugcId = 849347241492683863;
+                var cancellationToken = CancellationToken.None;
+                var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
+                var ugcHttpClientHandler = new MockHttpMessageHandler();
+                ugcHttpClientHandler.When("*").Respond(HttpStatusCode.BadRequest, new StringContent(""));
+                var ugcHttpClientHandlers = HttpClientFactory.CreatePipeline(ugcHttpClientHandler, new DelegatingHandler[]
+                {
+                    new HttpErrorHandler(),
+                });
+                var ugcHttpClient = new UgcHttpClient(ugcHttpClientHandlers);
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var network = new ReplayDataflowNetwork(steamWebApiClient, appId, ugcHttpClient, directory, cancellationToken);
+                var ugcFileDetails = new UgcFileDetailsEnvelope
+                {
+                    Data = new UgcFileDetails
+                    {
+                        FileName = "DLC HARDCORE All Chars DLC_PROD_SCORE134377_ZONE11_LEVEL1",
+                        Url = "http://cloud-3.steamusercontent.com/ugc/849347241492683863/9AC1027041B31DBC1EED3E1A709D6930D7165BEA/",
+                        Size = 999,
+                    },
+                };
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileDetails = ugcFileDetails };
+
+                // Act
+                var context2 = await network.GetUgcFileAsync(context);
+
+                // Assert
+                var ex = context2.UgcFileException;
+                Assert.IsNotNull(ex);
+                Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            }
+
+            [TestMethod]
+            public async Task SetsUgcFile()
+            {
+                // Arrange
+                var appId = 247080U;
+                var ugcId = 849347241492683863;
                 var cancellationToken = CancellationToken.None;
                 var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
                 var mockUgcHttpClient = new Mock<IUgcHttpClient>();
@@ -257,12 +328,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         Size = 999,
                     },
                 };
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileDetails = ugcFileDetails };
 
                 // Act
-                var ugcFile = await network.GetUgcFileAsync(ugcFileDetails);
+                var context2 = await network.GetUgcFileAsync(context);
 
                 // Assert
-                Assert.AreEqual(999, ugcFile.Length);
+                Assert.AreEqual(999, context2.UgcFile.Length);
             }
         }
 
@@ -270,17 +342,19 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class ReadReplayDataMethod
         {
             [TestMethod]
-            public void ReturnsReplayData()
+            public void SetsReplayData()
             {
                 // Arrange
+                var ugcId = 849347241492683863;
                 var rawReplayData = Resources.RawReplayData;
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFile = rawReplayData };
 
                 // Act
-                var replayData = ReplayDataflowNetwork.ReadReplayData(rawReplayData);
+                var context2 = ReplayDataflowNetwork.ReadReplayData(context);
 
                 // Assert
-                Assert.AreEqual(94, replayData.Header.Version);
-                Assert.AreEqual("LIGHT MINOTAUR", replayData.Header.KilledBy);
+                Assert.AreEqual(94, context2.ReplayData.Header.Version);
+                Assert.AreEqual("LIGHT MINOTAUR", context2.ReplayData.Header.KilledBy);
             }
         }
 
@@ -288,7 +362,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class CreateReplayMethod
         {
             [TestMethod]
-            public void ReturnsReplay()
+            public void SetsReplay()
             {
                 // Arrange
                 var ugcId = 849347241492683863;
@@ -300,12 +374,74 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                         KilledBy = "LIGHT MINOTAUR",
                     },
                 };
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { ReplayData = replayData };
 
                 // Act
-                var replay = ReplayDataflowNetwork.CreateReplay(ugcId, replayData);
+                var context2 = ReplayDataflowNetwork.CreateReplay(context);
 
                 // Assert
+                Assert.IsInstanceOfType(context2.Replay, typeof(Replay));
+            }
+        }
+
+        [TestClass]
+        public class CreateReplayWithoutUgcFileDetailsMethod
+        {
+            [TestMethod]
+            public async Task SetsReplayWithErrorCodeSetTo1xxx()
+            {
+                // Arrange
+                var ugcId = 849347241492683863;
+                HttpRequestStatusException httpEx = await GetHttpRequestStatusExceptionAsync(HttpStatusCode.NotFound);
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileDetailsException = httpEx };
+
+                // Act
+                var context2 = ReplayDataflowNetwork.CreateReplayWithoutUgcFileDetails(context);
+
+                // Assert
+                var replay = context2.Replay;
                 Assert.IsInstanceOfType(replay, typeof(Replay));
+                Assert.AreEqual(1404, replay.ErrorCode);
+            }
+        }
+
+        [TestClass]
+        public class CreateReplayWithoutUgcFileMethod
+        {
+            [TestMethod]
+            public async Task SetsReplayWithErrorCodeSetTo2xxx()
+            {
+                // Arrange
+                var ugcId = 849347241492683863;
+                HttpRequestStatusException httpEx = await GetHttpRequestStatusExceptionAsync(HttpStatusCode.NotFound);
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileException = httpEx };
+
+                // Act
+                var context2 = ReplayDataflowNetwork.CreateReplayWithoutUgcFile(context);
+
+                // Assert
+                var replay = context2.Replay;
+                Assert.IsInstanceOfType(replay, typeof(Replay));
+                Assert.AreEqual(2404, replay.ErrorCode);
+            }
+        }
+
+        [TestClass]
+        public class GetReplayMethod
+        {
+            [TestMethod]
+            public void ReturnsReplay()
+            {
+                // Arrange
+                var ugcId = 849347241492683863;
+                var replay = new Replay();
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { Replay = replay };
+
+                // Act
+                var replay2 = ReplayDataflowNetwork.GetReplay(context);
+
+                // Assert
+                Assert.AreSame(replay, replay2);
             }
         }
 
@@ -318,6 +454,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 // Arrange
                 var steamWebApiClient = Mock.Of<ISteamWebApiClient>();
                 var appId = 247080U;
+                var ugcId = 849347241492683863;
                 var ugcHttpClient = Mock.Of<IUgcHttpClient>();
                 var mockBlob = new Mock<ICloudBlockBlob>();
                 mockBlob
@@ -336,13 +473,36 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                     Header = new Header(),
                 };
                 var replay = new Replay();
+                var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId)
+                {
+                    ReplayData = replayData,
+                    Replay = replay,
+                };
 
                 // Act
-                await network.StoreUgcFileAsync(replayData, replay);
+                await network.StoreUgcFileAsync(context);
 
                 // Assert
                 mockBlob.Verify(b => b.UploadFromStreamAsync(It.IsAny<Stream>(), cancellationToken), Times.Once);
             }
+        }
+
+        static async Task<HttpRequestStatusException> GetHttpRequestStatusExceptionAsync(HttpStatusCode statusCode)
+        {
+            var mockHandler = new MockHttpMessageHandler();
+            mockHandler.When("*").Respond(statusCode, new StringContent(""));
+            var handler = new HttpMessageHandlerAdapter(new HttpErrorHandler { InnerHandler = mockHandler });
+            HttpRequestStatusException httpEx = null;
+            try
+            {
+                await handler.PublicSendAsync(Mock.Of<HttpRequestMessage>());
+            }
+            catch (HttpRequestStatusException ex)
+            {
+                httpEx = ex;
+            }
+
+            return httpEx;
         }
     }
 }
