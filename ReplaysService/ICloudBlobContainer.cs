@@ -7,19 +7,25 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     interface ICloudBlobContainer
     {
         /// <summary>
-        /// Initiates an asynchronous operation that creates the container if it does not 
-        /// already exist.
+        /// Initiates an asynchronous operation that checks whether the container exists.
         /// </summary>
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken"/> to observe while waiting for a task to complete.
         /// </param>
         /// <returns>
-        /// A <see cref="Task{TResult}"/> object that represents the asynchronous operation.
+        ///  A <see cref="Task{TResult}"/> object that represents the asynchronous operation.
         /// </returns>
-        /// <remarks>
-        /// This API requires Create or Write permissions.
-        /// </remarks>
-        Task<bool> CreateIfNotExistsAsync(CancellationToken cancellationToken);
+        Task<bool> ExistsAsync(CancellationToken cancellationToken);
+        /// <summary>
+        /// Initiates an asynchronous operation that creates a container.
+        /// </summary>
+        /// <param name="cancellationToken">
+        /// A <see cref="CancellationToken"/> to observe while waiting for a task to complete.
+        /// </param>
+        /// <returns>
+        ///  A <see cref="Task{TResult}"/> object that represents the asynchronous operation.
+        /// </returns>
+        Task CreateAsync(CancellationToken cancellationToken);
         /// <summary>
         /// Initiates an asynchronous operation that sets permissions for the container.
         /// </summary>

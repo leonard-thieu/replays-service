@@ -14,21 +14,31 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         readonly CloudBlobContainer container;
 
         /// <summary>
-        /// Initiates an asynchronous operation that creates the container if it does not 
-        /// already exist.
+        /// Initiates an asynchronous operation that checks whether the container exists.
         /// </summary>
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken"/> to observe while waiting for a task to complete.
         /// </param>
         /// <returns>
-        /// A <see cref="Task{TResult}"/> object that represents the asynchronous operation.
+        ///  A <see cref="Task{TResult}"/> object that represents the asynchronous operation.
         /// </returns>
-        /// <remarks>
-        /// This API requires Create or Write permissions.
-        /// </remarks>
-        public Task<bool> CreateIfNotExistsAsync(CancellationToken cancellationToken)
+        public Task<bool> ExistsAsync(CancellationToken cancellationToken)
         {
-            return container.CreateIfNotExistsAsync(cancellationToken);
+            return container.ExistsAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Initiates an asynchronous operation that creates a container.
+        /// </summary>
+        /// <param name="cancellationToken">
+        /// A <see cref="CancellationToken"/> to observe while waiting for a task to complete.
+        /// </param>
+        /// <returns>
+        ///  A <see cref="Task{TResult}"/> object that represents the asynchronous operation.
+        /// </returns>
+        public Task CreateAsync(CancellationToken cancellationToken)
+        {
+            return container.CreateAsync(cancellationToken);
         }
 
         /// <summary>
