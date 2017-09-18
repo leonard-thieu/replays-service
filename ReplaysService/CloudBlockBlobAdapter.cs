@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    [ExcludeFromCodeCoverage]
     sealed class CloudBlockBlobAdapter : ICloudBlockBlob
     {
         public CloudBlockBlobAdapter(CloudBlockBlob cloudBlockBlob)

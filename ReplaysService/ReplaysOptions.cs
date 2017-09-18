@@ -7,26 +7,26 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         /// <summary>
         /// The number of replays to update.
         /// </summary>
-        public int? ReplaysPerUpdate { get; internal set; }
+        public int? ReplaysPerUpdate { get; set; }
         /// <summary>
         /// The base address of toofz API.
         /// </summary>
-        public string ToofzApiBaseAddress { get; internal set; }
+        public string ToofzApiBaseAddress { get; set; }
         /// <summary>
         /// The user name used to log on to toofz API.
         /// </summary>
-        public string ToofzApiUserName { get; internal set; }
+        public string ToofzApiUserName { get; set; }
         /// <summary>
         /// The password used to log on to toofz API.
         /// </summary>
-        public string ToofzApiPassword { get; internal set; } = "";
+        public string ToofzApiPassword { get; set; } = "";
         /// <summary>
         /// A Steam Web API key.
         /// </summary>
-        public string SteamWebApiKey { get; internal set; } = "";
+        public string SteamWebApiKey { get; set; } = "";
         /// <summary>
         /// An Azure Storage connection string.
         /// </summary>
-        public string AzureStorageConnectionString { get; internal set; } = "";
+        public string AzureStorageConnectionString { get; set; } = "";
     }
 }
