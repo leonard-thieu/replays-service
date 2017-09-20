@@ -169,6 +169,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
+    <None Include="ReplaysService.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICloudBlockBlob.cs" />
