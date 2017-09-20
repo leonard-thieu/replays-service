@@ -22,7 +22,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         /// <summary>
         /// Gets the blob's URI for the primary location.
         /// </summary>
-        public Uri Uri { get; }
+        public Uri Uri { get => cloudBlockBlob.Uri; }
 
         /// <summary>
         /// Initiates an asynchronous operation to upload a stream to a block blob. If the 
