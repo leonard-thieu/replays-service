@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -13,8 +14,8 @@ using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
+using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
-using toofz.TestsShared;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
@@ -388,11 +389,12 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class CreateReplayWithoutUgcFileDetailsMethod
         {
             [TestMethod]
-            public async Task SetsReplayWithErrorCodeSetTo1xxx()
+            public void SetsReplayWithErrorCodeSetTo1xxx()
             {
                 // Arrange
                 var ugcId = 849347241492683863;
-                HttpRequestStatusException httpEx = await GetHttpRequestStatusExceptionAsync(HttpStatusCode.NotFound);
+                var requestUri = new Uri("http://localhost/");
+                var httpEx = new HttpRequestStatusException(HttpStatusCode.NotFound, requestUri);
                 var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileDetailsException = httpEx };
 
                 // Act
@@ -409,11 +411,12 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class CreateReplayWithoutUgcFileMethod
         {
             [TestMethod]
-            public async Task SetsReplayWithErrorCodeSetTo2xxx()
+            public void SetsReplayWithErrorCodeSetTo2xxx()
             {
                 // Arrange
                 var ugcId = 849347241492683863;
-                HttpRequestStatusException httpEx = await GetHttpRequestStatusExceptionAsync(HttpStatusCode.NotFound);
+                var requestUri = new Uri("http://localhost/");
+                var httpEx = new HttpRequestStatusException(HttpStatusCode.NotFound, requestUri);
                 var context = new ReplayDataflowNetwork.ReplayDataflowContext(ugcId) { UgcFileException = httpEx };
 
                 // Act
@@ -487,22 +490,43 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             }
         }
 
-        static async Task<HttpRequestStatusException> GetHttpRequestStatusExceptionAsync(HttpStatusCode statusCode)
+        [TestClass]
+        public class IntegrationTests
         {
-            var mockHandler = new MockHttpMessageHandler();
-            mockHandler.When("*").Respond(statusCode, new StringContent(""));
-            var handler = new HttpMessageHandlerAdapter(new HttpErrorHandler { InnerHandler = mockHandler });
-            HttpRequestStatusException httpEx = null;
-            try
+            [TestMethod]
+            public async Task UgcFileDetailsNotFound_DoesNotHang()
             {
-                await handler.PublicSendAsync(Mock.Of<HttpRequestMessage>());
-            }
-            catch (HttpRequestStatusException ex)
-            {
-                httpEx = ex;
-            }
+                // Arrange
+                var steamWebApiClientHandler = new MockHttpMessageHandler();
+                steamWebApiClientHandler
+                    .When("http://localhost/")
+                    .Respond(HttpStatusCode.NotFound, new StringContent(Resources.UgcFileDetails_847096111522125255_NotFound, Encoding.UTF8, "application/json"));
+                var steamWebApiClientHandlers = HttpClientFactory.CreatePipeline(steamWebApiClientHandler, new DelegatingHandler[]
+                {
+                    new SteamWebApiTransientFaultHandler(),
+                });
+                var steamWebApiClient = new SteamWebApiClient(steamWebApiClientHandlers)
+                {
+                    BaseAddress = new Uri("http://localhost/"),
+                    SteamWebApiKey = "mySteamWebApiKey",
+                };
+                var appId = 247080U;
+                var ugcHttpClient = Mock.Of<IUgcHttpClient>();
+                var directory = Mock.Of<ICloudBlobDirectory>();
+                var cancellationToken = CancellationToken.None;
+                var network = new ReplayDataflowNetwork(steamWebApiClient, appId, ugcHttpClient, directory, cancellationToken);
+                network.DownloadReplay.LinkTo(DataflowBlock.NullTarget<Replay>());
+                network.StoreReplayFile.LinkTo(DataflowBlock.NullTarget<Uri>());
+                await network.SendAsync(847096111522125255, cancellationToken);
+                network.Complete();
 
-            return httpEx;
+                // Act
+                var completion = Task.WhenAll(network.DownloadReplay.Completion, network.StoreReplayFile.Completion);
+
+                // Assert
+                await completion;
+                steamWebApiClientHandler.VerifyNoOutstandingRequest();
+            }
         }
     }
 }

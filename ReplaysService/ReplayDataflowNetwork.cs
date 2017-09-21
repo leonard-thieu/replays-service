@@ -72,7 +72,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             readReplayData.LinkTo(createReplay, GetDefaultDataflowLinkOptions());
             createReplay.LinkTo(broadcastReplayDataflowContext);
 
-            getUgcFileDetails.LinkTo(createReplayWithoutUgcFileDetails, GetDefaultDataflowLinkOptions(), context => context.UgcFileException != null);
+            getUgcFileDetails.LinkTo(createReplayWithoutUgcFileDetails, GetDefaultDataflowLinkOptions(), context => context.UgcFileDetailsException != null);
             createReplayWithoutUgcFileDetails.LinkTo(broadcastReplayDataflowContext);
 
             getUgcFile.LinkTo(createReplayWithoutUgcFile, GetDefaultDataflowLinkOptions(), context => context.UgcFileException != null);
@@ -100,11 +100,17 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             getUgcFile.Completion.ContinueWith(t =>
             {
-                downloadNotifier.Dispose();
+                if (downloadNotifier.IsValueCreated)
+                {
+                    downloadNotifier.Value.Dispose();
+                }
             }, cancellationToken);
             storeUgcFile.Completion.ContinueWith(t =>
             {
-                storeNotifier.Dispose();
+                if (storeNotifier.IsValueCreated)
+                {
+                    storeNotifier.Value.Dispose();
+                }
             }, cancellationToken);
         }
 
@@ -113,8 +119,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         readonly IUgcHttpClient ugcHttpClient;
         readonly ICloudBlobDirectory directory;
         readonly CancellationToken cancellationToken;
-        DownloadNotifier downloadNotifier;
-        StoreNotifier storeNotifier;
+        readonly Lazy<DownloadNotifier> downloadNotifier = new Lazy<DownloadNotifier>(() => new DownloadNotifier(Log, "replays"));
+        readonly Lazy<StoreNotifier> storeNotifier = new Lazy<StoreNotifier>(() => new StoreNotifier(Log, "replay files"));
 
         readonly TransformBlock<long, ReplayDataflowContext> getReplayDataflowContext;
         readonly TransformBlock<ReplayDataflowContext, Replay> getReplay;
@@ -155,11 +161,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         internal async Task<ReplayDataflowContext> GetUgcFileDetailsAsync(ReplayDataflowContext context)
         {
-            if (downloadNotifier == null) { downloadNotifier = new DownloadNotifier(Log, "replays"); }
-
             try
             {
-                context.UgcFileDetails = await steamWebApiClient.GetUgcFileDetailsAsync(appId, context.UgcId, downloadNotifier, cancellationToken);
+                context.UgcFileDetails = await steamWebApiClient.GetUgcFileDetailsAsync(appId, context.UgcId, downloadNotifier.Value, cancellationToken);
             }
             catch (HttpRequestStatusException ex)
             {
@@ -173,7 +177,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         {
             try
             {
-                context.UgcFile = await ugcHttpClient.GetUgcFileAsync(context.UgcFileDetails.Data.Url, downloadNotifier, cancellationToken);
+                context.UgcFile = await ugcHttpClient.GetUgcFileAsync(context.UgcFileDetails.Data.Url, downloadNotifier.Value, cancellationToken);
             }
             catch (HttpRequestStatusException ex)
             {
@@ -239,8 +243,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         internal async Task<Uri> StoreUgcFileAsync(ReplayDataflowContext context)
         {
-            if (storeNotifier == null) { storeNotifier = new StoreNotifier(Log, "replay files"); }
-
             using (var ugcFile = new MemoryStream())
             {
                 ReplaySerializer.Serialize(ugcFile, context.ReplayData);
@@ -253,7 +255,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 await blob.UploadFromStreamAsync(ugcFile, cancellationToken).ConfigureAwait(false);
 
                 Log.Debug(blob.Uri);
-                storeNotifier.Report(1);
+                storeNotifier.Value.Report(1);
 
                 return blob.Uri;
             }

@@ -97,9 +97,6 @@
         <Component Id="owcCE4898A459220AFB82CE5C29F65FEB28" Guid="d6cfc0fe-0141-1a96-5403-d9390c17e896">
           <File Id="owfCE4898A459220AFB82CE5C29F65FEB28" Source="$(var.SourceDir)\System.Threading.Tasks.Dataflow.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owcD0A940C4737AEDDE1A3178260CF6D5E9" Guid="288adc1d-48d5-8344-5b22-8745adf79316">
-          <File Id="owfD0A940C4737AEDDE1A3178260CF6D5E9" Source="$(var.SourceDir)\System.Web.Http.dll" KeyPath="yes" />
-        </Component>
         <Component Id="owcF719C5F01913951F80887C901C3807F4" Guid="d32204d3-a32f-e912-0016-a93dbfa23399">
           <File Id="owfF719C5F01913951F80887C901C3807F4" Source="$(var.SourceDir)\toofz.dll" KeyPath="yes" />
         </Component>

@@ -205,7 +205,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var mockToofzApiClient = new Mock<IToofzApiClient>();
                 mockToofzApiClient
                     .Setup(t => t.GetReplaysAsync(It.IsAny<GetReplaysParams>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(new ReplaysEnvelope()));
+                    .Returns(Task.FromResult(new ReplaysEnvelope { Replays = new List<ReplayDTO>() }));
                 mockToofzApiClient
                     .Setup(tootzApiClient => tootzApiClient.PostReplaysAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(new BulkStoreDTO()));
@@ -270,7 +270,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var mockToofzApiClient = new Mock<IToofzApiClient>();
                 mockToofzApiClient
                     .Setup(c => c.GetReplaysAsync(It.IsAny<GetReplaysParams>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(new ReplaysEnvelope()));
+                    .Returns(Task.FromResult(new ReplaysEnvelope { Replays = new List<ReplayDTO>() }));
                 var toofzApiClient = mockToofzApiClient.Object;
                 var limit = 20;
                 var cancellationToken = CancellationToken.None;
@@ -366,7 +366,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                             replayNotFound.ErrorCode == 2404;
                     })
                     .Respond(HttpStatusCode.InternalServerError, new StringContent(FullCycleResources.PostReplaysError, Encoding.UTF8, "application/json"));
-                var toofzApiClient = new ToofzApiClient(toofzApiClientHandler, disposeHandler: false) { BaseAddress = new Uri("http://localhost/") };
+                var toofzApiClientHandlers = HttpClientFactory.CreatePipeline(toofzApiClientHandler, new DelegatingHandler[]
+                {
+                    new ToofzHttpErrorHandler(),
+                });
+                var toofzApiClient = new ToofzApiClient(toofzApiClientHandlers, disposeHandler: false) { BaseAddress = new Uri("http://localhost/") };
 
                 #endregion
 
@@ -521,35 +525,16 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var limit = 60;
 
                 // Act
-                await workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, blobClient, limit, cancellationToken);
+                await Assert.ThrowsExceptionAsync<HttpErrorException>(() =>
+                {
+                    return workerRole.UpdateReplaysAsync(toofzApiClient, steamWebApiClient, ugcHttpClient, blobClient, limit, cancellationToken);
+                });
 
                 // Assert
                 toofzApiClientHandler.VerifyNoOutstandingRequest();
                 steamWebApiClientHandler.VerifyNoOutstandingRequest();
                 ugcHttpClientHandler.VerifyNoOutstandingRequest();
             }
-        }
-    }
-
-    static class MockHttpMessageHandlerExtensions
-    {
-        public static MockedRequest RespondWithUgcFileDetails(this MockHttpMessageHandler handler, long ugcId, string content)
-        {
-            return handler
-                .When("http://localhost/ISteamRemoteStorage/GetUGCFileDetails/v1")
-                .WithQueryString("key", "mySteamWebApiKey")
-                .WithQueryString("appid", 247080.ToString())
-                .WithQueryString("ugcid", ugcId.ToString())
-                .RespondWithJson(content);
-        }
-    }
-
-    static class MockedRequestExtensions
-    {
-        public static MockedRequest RespondWithJson(this MockedRequest handler, string content)
-        {
-            return handler
-                .Respond(new StringContent(content, Encoding.UTF8, "application/json"));
         }
     }
 }

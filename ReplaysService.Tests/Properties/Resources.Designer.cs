@@ -78,5 +78,18 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties {
                 return ResourceManager.GetString("StaleReplays", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///	&quot;status&quot;: {
+        ///		&quot;code&quot;: 9
+        ///	}
+        ///}.
+        /// </summary>
+        internal static string UgcFileDetails_847096111522125255_NotFound {
+            get {
+                return ResourceManager.GetString("UgcFileDetails_847096111522125255_NotFound", resourceCulture);
+            }
+        }
     }
 }
