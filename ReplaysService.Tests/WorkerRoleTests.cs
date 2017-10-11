@@ -1,13 +1,127 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Moq;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
     class WorkerRoleTests
     {
+        [TestClass]
+        public class CreateToofzApiHandlerMethod
+        {
+            [TestMethod]
+            public void ReturnsHandler()
+            {
+                // Arrange
+                var toofzApiUserName = "myUserName";
+                var toofzApiPassword = "myPassword";
+
+                // Act
+                var handler = WorkerRole.CreateToofzApiHandler(toofzApiUserName, toofzApiPassword);
+
+                // Assert
+                Assert.IsInstanceOfType(handler, typeof(HttpMessageHandler));
+            }
+        }
+
+        [TestClass]
+        public class CreateSteamWebApiHandlerMethod
+        {
+            [TestMethod]
+            public void ReturnsHandler()
+            {
+                // Arrange -> Act
+                var handler = WorkerRole.CreateSteamWebApiHandler();
+
+                // Assert
+                Assert.IsInstanceOfType(handler, typeof(HttpMessageHandler));
+            }
+        }
+
+        [TestClass]
+        public class CreateUgcHandlerMethod
+        {
+            [TestMethod]
+            public void ReturnsHandler()
+            {
+                // Arrange -> Act
+                var handler = WorkerRole.CreateUgcHandler();
+
+                // Assert
+                Assert.IsInstanceOfType(handler, typeof(HttpMessageHandler));
+            }
+        }
+
+        [TestClass]
+        public class GetCloudBlobDirectoryMethod
+        {
+            public GetCloudBlobDirectoryMethod()
+            {
+                BlobClient = MockBlobClient.Object;
+                Container = MockContainer.Object;
+
+                MockBlobClient.Setup(c => c.GetContainerReference("crypt")).Returns(Container);
+                MockContainer.Setup(c => c.GetDirectoryReference("replays")).Returns(Mock.Of<ICloudBlobDirectory>());
+            }
+
+            public Mock<ICloudBlobClient> MockBlobClient { get; set; } = new Mock<ICloudBlobClient>();
+            public ICloudBlobClient BlobClient { get; set; }
+            public Mock<ICloudBlobContainer> MockContainer { get; set; } = new Mock<ICloudBlobContainer>();
+            public ICloudBlobContainer Container { get; set; }
+            public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
+
+            [TestMethod]
+            public async Task ContainerDoesNotExist_CreatesContainer()
+            {
+                // Arrange
+                MockContainer.Setup(c => c.ExistsAsync(CancellationToken)).ReturnsAsync(false);
+
+                // Act
+                await WorkerRole.GetCloudBlobDirectory(BlobClient, CancellationToken);
+
+                // Assert
+                MockContainer.Verify(c => c.CreateAsync(CancellationToken), Times.Once);
+            }
+
+            [TestMethod]
+            public async Task ContainerExists_DoesNotCreateContainer()
+            {
+                // Arrange
+                MockContainer.Setup(c => c.ExistsAsync(CancellationToken)).ReturnsAsync(true);
+
+                // Act
+                await WorkerRole.GetCloudBlobDirectory(BlobClient, CancellationToken);
+
+                // Assert
+                MockContainer.Verify(c => c.CreateAsync(CancellationToken), Times.Never);
+            }
+
+            [TestMethod]
+            public async Task SetsPermissionsToPublic()
+            {
+                // Arrange -> Act
+                await WorkerRole.GetCloudBlobDirectory(BlobClient, CancellationToken);
+
+                // Assert
+                MockContainer.Verify(c => c.SetPermissionsAsync(It.Is<BlobContainerPermissions>(p => p.PublicAccess == BlobContainerPublicAccessType.Blob), CancellationToken));
+            }
+
+            [TestMethod]
+            public async Task ReturnsDirectory()
+            {
+                // Arrange -> Act
+                var directory = await WorkerRole.GetCloudBlobDirectory(BlobClient, CancellationToken);
+
+                // Assert
+                Assert.IsInstanceOfType(directory, typeof(ICloudBlobDirectory));
+            }
+        }
+
         [TestClass]
         public class OnStartMethod
         {

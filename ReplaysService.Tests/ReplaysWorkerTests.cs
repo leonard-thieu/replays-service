@@ -45,6 +45,33 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class GetStaleReplaysAsyncMethod : ReplaysWorkerTests
         {
             [TestMethod]
+            public async Task ToofzApiClientIsNull_ThrowsArgumentNullException()
+            {
+                // Arrange
+                ToofzApiClient = null;
+                var limit = 1;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                {
+                    return Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
+                });
+            }
+
+            [TestMethod]
+            public async Task LimitIsNonpositive_ThrowsArgumentOutOfRangeException()
+            {
+                // Arrange
+                var limit = 0;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
+                {
+                    return Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
+                });
+            }
+
+            [TestMethod]
             public async Task ReturnsStaleReplays()
             {
                 // Arrange
@@ -64,6 +91,33 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         [TestClass]
         public class UpdateReplaysAsyncMethod : ReplaysWorkerTests
         {
+            public UpdateReplaysAsyncMethod()
+            {
+                var mockBlob = new Mock<ICloudBlockBlob>();
+                mockBlob.SetupGet(b => b.Properties).Returns(new BlobProperties());
+                mockBlob.SetupGet(b => b.Uri).Returns(new Uri("http://example.org/"));
+                var blob = mockBlob.Object;
+                MockDirectory.Setup(d => d.GetBlockBlobReference(It.IsAny<string>())).Returns(blob);
+                Directory = MockDirectory.Object;
+            }
+
+            public Mock<ICloudBlobDirectory> MockDirectory { get; set; } = new Mock<ICloudBlobDirectory>();
+            public ICloudBlobDirectory Directory { get; set; }
+            public List<Replay> Replays { get; set; } = new List<Replay>();
+
+            [TestMethod]
+            public async Task ReplaysIsNull_ThrowsArgumentNullException()
+            {
+                // Arrange
+                Replays = null;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                {
+                    return Worker.UpdateReplaysAsync(SteamWebApiClient, UgcHttpClient, Directory, Replays, CancellationToken);
+                });
+            }
+
             [TestMethod]
             public async Task ReturnsReplays()
             {
@@ -71,43 +125,60 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 MockSteamWebApiClient
                     .Setup(c => c.GetUgcFileDetailsAsync(AppId, It.IsAny<long>(), It.IsAny<IProgress<long>>(), CancellationToken))
                     .ReturnsAsync(new UgcFileDetailsEnvelope { Data = new UgcFileDetails() });
-                var mockBlob = new Mock<ICloudBlockBlob>();
-                mockBlob.SetupGet(b => b.Properties).Returns(new BlobProperties());
-                mockBlob.SetupGet(b => b.Uri).Returns(new Uri("http://example.org/"));
-                var blob = mockBlob.Object;
-                var mockDirectory = new Mock<ICloudBlobDirectory>();
-                mockDirectory.Setup(d => d.GetBlockBlobReference(It.IsAny<string>())).Returns(blob);
-                var directory = mockDirectory.Object;
-                var replays = new[]
-                {
-                    new Replay(),
-                };
+                Replays.Add(new Replay());
 
                 // Act
-                await Worker.UpdateReplaysAsync(SteamWebApiClient, UgcHttpClient, directory, replays, CancellationToken);
+                await Worker.UpdateReplaysAsync(SteamWebApiClient, UgcHttpClient, Directory, Replays, CancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(replays, typeof(IEnumerable<Replay>));
+                Assert.IsInstanceOfType(Replays, typeof(IEnumerable<Replay>));
             }
         }
 
         [TestClass]
         public class StoreReplaysAsyncMethod : ReplaysWorkerTests
         {
+            public List<Replay> Replays { get; set; } = new List<Replay>();
+
+            [TestMethod]
+            public async Task ToofzApiClientIsNull_ThrowsArgumentNullException()
+            {
+                // Arrange
+                ToofzApiClient = null;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                {
+                    return Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
+                });
+            }
+
+            [TestMethod]
+            public async Task ReplaysIsNull_ThrowsArgumentNullException()
+            {
+                // Arrange
+                Replays = null;
+
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                {
+                    return Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
+                });
+            }
+
             [TestMethod]
             public async Task StoresReplays()
             {
                 // Arrange
-                var replays = new List<Replay>();
                 MockToofzApiClient
-                    .Setup(c => c.PostReplaysAsync(replays, CancellationToken))
+                    .Setup(c => c.PostReplaysAsync(Replays, CancellationToken))
                     .ReturnsAsync(new BulkStoreDTO());
 
                 // Act
-                await Worker.StoreReplaysAsync(ToofzApiClient, replays, CancellationToken);
+                await Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
 
                 // Assert
-                MockToofzApiClient.Verify(c => c.PostReplaysAsync(replays, CancellationToken), Times.Once);
+                MockToofzApiClient.Verify(c => c.PostReplaysAsync(Replays, CancellationToken), Times.Once);
             }
         }
 

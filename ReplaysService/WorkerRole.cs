@@ -55,7 +55,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         }
 
         internal static async Task<ICloudBlobDirectory> GetCloudBlobDirectory(
-            CloudBlobClientAdapter blobClient,
+            ICloudBlobClient blobClient,
             CancellationToken cancellationToken)
         {
             var container = blobClient.GetContainerReference("crypt");
@@ -65,7 +65,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 await container.CreateAsync(cancellationToken).ConfigureAwait(false);
             }
             var permissions = new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob };
-            await container.SetPermissionsAsync(permissions, cancellationToken);
+            await container.SetPermissionsAsync(permissions, cancellationToken).ConfigureAwait(false);
             var directory = container.GetDirectoryReference("replays");
 
             return directory;
