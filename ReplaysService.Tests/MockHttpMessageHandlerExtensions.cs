@@ -7,7 +7,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public static MockedRequest RespondWithUgcFileDetails(this MockHttpMessageHandler handler, long ugcId, string content)
         {
             return handler
-                .When("http://localhost/ISteamRemoteStorage/GetUGCFileDetails/v1")
+                .When("https://api.steampowered.com/ISteamRemoteStorage/GetUGCFileDetails/v1")
                 .WithQueryString("key", "mySteamWebApiKey")
                 .WithQueryString("appid", 247080.ToString())
                 .WithQueryString("ugcid", ugcId.ToString())

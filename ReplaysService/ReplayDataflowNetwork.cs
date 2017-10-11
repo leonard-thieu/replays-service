@@ -15,25 +15,25 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(ReplayDataflowNetwork));
 
-        static readonly ReplaySerializer ReplaySerializer = new ReplaySerializer();
+        static readonly ReplayDataSerializer ReplayDataSerializer = new ReplayDataSerializer();
 
         public ReplayDataflowNetwork(
-            ISteamWebApiClient steamWebApiClient,
             uint appId,
+            ISteamWebApiClient steamWebApiClient,
             IUgcHttpClient ugcHttpClient,
             ICloudBlobDirectory directory,
             CancellationToken cancellationToken)
         {
-            this.steamWebApiClient = steamWebApiClient ?? throw new ArgumentNullException(nameof(steamWebApiClient));
-            if (appId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(appId), $"{nameof(appId)} must be a positive integer.");
+            if (appId < 1)
+                throw new ArgumentOutOfRangeException(nameof(appId), appId, $"{nameof(appId)} must be a positive integer.");
             this.appId = appId;
+            this.steamWebApiClient = steamWebApiClient ?? throw new ArgumentNullException(nameof(steamWebApiClient));
             this.ugcHttpClient = ugcHttpClient ?? throw new ArgumentNullException(nameof(ugcHttpClient));
             this.directory = directory ?? throw new ArgumentNullException(nameof(directory));
             this.cancellationToken = cancellationToken;
 
-            getReplayDataflowContext = new TransformBlock<long, ReplayDataflowContext>(
-                ugcId => new ReplayDataflowContext(ugcId),
+            getReplayDataflowContext = new TransformBlock<Replay, ReplayDataflowContext>(
+                replay => new ReplayDataflowContext(replay),
                 GetProcessorBoundExecutionDataflowBlockOptions());
 
             var getUgcFileDetails = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
@@ -47,20 +47,19 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 context => ReadReplayData(context),
                 GetProcessorBoundExecutionDataflowBlockOptions());
 
-            var createReplay = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => CreateReplay(context),
+            var updateReplay = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
+                context => UpdateReplay(context),
                 GetProcessorBoundExecutionDataflowBlockOptions());
-            var createReplayWithoutUgcFileDetails = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => CreateReplayWithoutUgcFileDetails(context),
+            var onUgcFileDetailsError = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
+                context => OnUgcFileDetailsError(context),
                 GetProcessorBoundExecutionDataflowBlockOptions());
-            var createReplayWithoutUgcFile = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => CreateReplayWithoutUgcFile(context),
+            var onUgcFileError = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
+                context => OnUgcFileError(context),
                 GetProcessorBoundExecutionDataflowBlockOptions());
 
             var broadcastReplayDataflowContext = new BroadcastBlock<ReplayDataflowContext>(context => context, GetDefaultDataflowBlockOptions());
-            getReplay = new TransformBlock<ReplayDataflowContext, Replay>(context => GetReplay(context), GetProcessorBoundExecutionDataflowBlockOptions());
 
-            storeUgcFile = new TransformBlock<ReplayDataflowContext, Uri>(
+            var storeUgcFile = new ActionBlock<ReplayDataflowContext>(
                 context => StoreUgcFileAsync(context),
                 GetNetworkBoundExecutionDataflowBlockOptions());
 
@@ -69,19 +68,19 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             getUgcFileDetails.LinkTo(getUgcFile, GetDefaultDataflowLinkOptions(), context => context.UgcFileDetails != null);
 
             getUgcFile.LinkTo(readReplayData, GetDefaultDataflowLinkOptions(), context => context.UgcFile != null);
-            readReplayData.LinkTo(createReplay, GetDefaultDataflowLinkOptions());
-            createReplay.LinkTo(broadcastReplayDataflowContext);
+            readReplayData.LinkTo(updateReplay, GetDefaultDataflowLinkOptions());
+            updateReplay.LinkTo(broadcastReplayDataflowContext);
 
-            getUgcFileDetails.LinkTo(createReplayWithoutUgcFileDetails, GetDefaultDataflowLinkOptions(), context => context.UgcFileDetailsException != null);
-            createReplayWithoutUgcFileDetails.LinkTo(broadcastReplayDataflowContext);
+            getUgcFileDetails.LinkTo(onUgcFileDetailsError, GetDefaultDataflowLinkOptions(), context => context.UgcFileDetailsException != null);
+            onUgcFileDetailsError.LinkTo(broadcastReplayDataflowContext);
 
-            getUgcFile.LinkTo(createReplayWithoutUgcFile, GetDefaultDataflowLinkOptions(), context => context.UgcFileException != null);
-            createReplayWithoutUgcFile.LinkTo(broadcastReplayDataflowContext);
+            getUgcFile.LinkTo(onUgcFileError, GetDefaultDataflowLinkOptions(), context => context.UgcFileException != null);
+            onUgcFileError.LinkTo(broadcastReplayDataflowContext);
 
             var createReplayCompletions = Task.WhenAll(
-                createReplay.Completion,
-                createReplayWithoutUgcFileDetails.Completion,
-                createReplayWithoutUgcFile.Completion);
+                updateReplay.Completion,
+                onUgcFileDetailsError.Completion,
+                onUgcFileError.Completion);
             createReplayCompletions.ContinueWith(t =>
             {
                 if (t.IsFaulted)
@@ -94,64 +93,64 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 }
             }, cancellationToken);
 
-            broadcastReplayDataflowContext.LinkTo(getReplay, GetDefaultDataflowLinkOptions());
-
             broadcastReplayDataflowContext.LinkTo(storeUgcFile, GetDefaultDataflowLinkOptions(), context => context.ReplayData != null);
 
             getUgcFile.Completion.ContinueWith(t =>
             {
-                if (downloadNotifier.IsValueCreated)
+                if (downloadActivity.IsValueCreated)
                 {
-                    downloadNotifier.Value.Dispose();
+                    downloadActivity.Value.Dispose();
                 }
             }, cancellationToken);
             storeUgcFile.Completion.ContinueWith(t =>
             {
-                if (storeNotifier.IsValueCreated)
+                if (storeActivity.IsValueCreated)
                 {
-                    storeNotifier.Value.Dispose();
+                    storeActivity.Value.Dispose();
                 }
             }, cancellationToken);
+
+            Completion = Task.WhenAll(broadcastReplayDataflowContext.Completion, storeUgcFile.Completion);
         }
 
-        readonly ISteamWebApiClient steamWebApiClient;
         readonly uint appId;
+        readonly ISteamWebApiClient steamWebApiClient;
         readonly IUgcHttpClient ugcHttpClient;
         readonly ICloudBlobDirectory directory;
         readonly CancellationToken cancellationToken;
-        readonly Lazy<DownloadNotifier> downloadNotifier = new Lazy<DownloadNotifier>(() => new DownloadNotifier(Log, "replays"));
-        readonly Lazy<StoreNotifier> storeNotifier = new Lazy<StoreNotifier>(() => new StoreNotifier(Log, "replay files"));
+        readonly Lazy<DownloadActivity> downloadActivity = new Lazy<DownloadActivity>(() => new DownloadActivity(Log, "replays"));
+        readonly Lazy<StoreActivity> storeActivity = new Lazy<StoreActivity>(() => new StoreActivity(Log, "replay files"));
 
-        readonly TransformBlock<long, ReplayDataflowContext> getReplayDataflowContext;
-        readonly TransformBlock<ReplayDataflowContext, Replay> getReplay;
-        readonly TransformBlock<ReplayDataflowContext, Uri> storeUgcFile;
+        readonly TransformBlock<Replay, ReplayDataflowContext> getReplayDataflowContext;
 
-        public ISourceBlock<Replay> DownloadReplay { get => getReplay; }
-        public ISourceBlock<Uri> StoreReplayFile { get => storeUgcFile; }
+        /// <summary>
+        /// Gets a <see cref="Task"/> that represents the asynchronous operation and completion of the dataflow block.
+        /// </summary>
+        public Task Completion { get; }
 
         /// <summary>
         /// Asynchronously offers a message to the target message block, allowing for postponement.
         /// </summary>
-        /// <param name="id">The UGC ID of the replay.</param>
+        /// <param name="replay">The replay.</param>
         /// <param name="cancellationToken">
         /// The cancellation token with which to request cancellation of the send operation.
         /// </param>
         /// <returns>
-        ///  A <see cref="Task{Boolean}"/> that represents the asynchronous send.
-        ///  If the target accepts and consumes the offered element during the call to SendAsync,
-        ///  upon return from the call the resulting <see cref="Task{Boolean}"/>
-        ///  will be completed and its Result property will return true. If the target declines
-        ///  the offered element during the call, upon return from the call the resulting
-        ///  <see cref="Task{Boolean}"/> will be completed and its Result property
-        ///  will return false. If the target postpones the offered element, the element will
-        ///  be buffered until such time that the target consumes or releases it, at which
-        ///  point the Task will complete, with its Result indicating whether the message
-        ///  was consumed. If the target never attempts to consume or release the message,
-        ///  the returned task will never complete. If cancellation is requested before the
-        ///  target has successfully consumed the sent data, the returned task will complete
-        ///  in the Canceled state and the data will no longer be available to the target.
+        /// A <see cref="Task{Boolean}"/> that represents the asynchronous send.
+        /// If the target accepts and consumes the offered element during the call to SendAsync,
+        /// upon return from the call the resulting <see cref="Task{Boolean}"/>
+        /// will be completed and its Result property will return true. If the target declines
+        /// the offered element during the call, upon return from the call the resulting
+        /// <see cref="Task{Boolean}"/> will be completed and its Result property
+        /// will return false. If the target postpones the offered element, the element will
+        /// be buffered until such time that the target consumes or releases it, at which
+        /// point the Task will complete, with its Result indicating whether the message
+        /// was consumed. If the target never attempts to consume or release the message,
+        /// the returned task will never complete. If cancellation is requested before the
+        /// target has successfully consumed the sent data, the returned task will complete
+        /// in the Canceled state and the data will no longer be available to the target.
         /// </returns>
-        public Task<bool> SendAsync(long id, CancellationToken cancellationToken) => getReplayDataflowContext.SendAsync(id, cancellationToken);
+        public Task<bool> SendAsync(Replay replay, CancellationToken cancellationToken) => getReplayDataflowContext.SendAsync(replay, cancellationToken);
 
         /// <summary>
         /// Signals to the <see cref="ReplayDataflowNetwork"/> that it should 
@@ -163,7 +162,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         {
             try
             {
-                context.UgcFileDetails = await steamWebApiClient.GetUgcFileDetailsAsync(appId, context.UgcId, downloadNotifier.Value, cancellationToken);
+                context.UgcFileDetails = await steamWebApiClient.GetUgcFileDetailsAsync(appId, context.Replay.ReplayId, downloadActivity.Value, cancellationToken);
             }
             catch (HttpRequestStatusException ex)
             {
@@ -177,7 +176,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         {
             try
             {
-                context.UgcFile = await ugcHttpClient.GetUgcFileAsync(context.UgcFileDetails.Data.Url, downloadNotifier.Value, cancellationToken);
+                context.UgcFile = await ugcHttpClient.GetUgcFileAsync(context.UgcFileDetails.Data.Url, downloadActivity.Value, cancellationToken);
             }
             catch (HttpRequestStatusException ex)
             {
@@ -191,73 +190,61 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         {
             using (var ms = new MemoryStream(context.UgcFile))
             {
-                context.ReplayData = ReplaySerializer.Deserialize(ms);
+                context.ReplayData = ReplayDataSerializer.Deserialize(ms);
 
                 return context;
             }
         }
 
-        internal static ReplayDataflowContext CreateReplay(ReplayDataflowContext context)
+        internal static ReplayDataflowContext UpdateReplay(ReplayDataflowContext context)
         {
-            var replay = new Replay { ReplayId = context.UgcId };
+            var replay = context.Replay;
 
             var replayData = context.ReplayData;
-            replay.Version = replayData.Header.Version;
-            replay.KilledBy = replayData.Header.KilledBy;
-            if (replayData.TryGetSeed(out int seed))
-            {
-                replay.Seed = seed;
-            }
-
-            context.Replay = replay;
+            replay.Version = replayData.Version;
+            replay.KilledBy = replayData.KilledBy;
+            replay.Seed = replayData.Seed;
 
             return context;
         }
 
-        internal static ReplayDataflowContext CreateReplayWithoutUgcFileDetails(ReplayDataflowContext context)
+        internal static ReplayDataflowContext OnUgcFileDetailsError(ReplayDataflowContext context)
         {
-            var replay = new Replay { ReplayId = context.UgcId };
+            var replay = context.Replay;
 
             replay.ErrorCode = 1000 + (int)context.UgcFileDetailsException.StatusCode;
 
-            context.Replay = replay;
-
             return context;
         }
 
-        internal static ReplayDataflowContext CreateReplayWithoutUgcFile(ReplayDataflowContext context)
+        internal static ReplayDataflowContext OnUgcFileError(ReplayDataflowContext context)
         {
-            var replay = new Replay { ReplayId = context.UgcId };
+            var replay = context.Replay;
 
             replay.ErrorCode = 2000 + (int)context.UgcFileException.StatusCode;
 
-            context.Replay = replay;
-
             return context;
         }
 
-        internal static Replay GetReplay(ReplayDataflowContext context)
-        {
-            return context.Replay;
-        }
-
-        internal async Task<Uri> StoreUgcFileAsync(ReplayDataflowContext context)
+        internal async Task StoreUgcFileAsync(ReplayDataflowContext context)
         {
             using (var ugcFile = new MemoryStream())
             {
-                ReplaySerializer.Serialize(ugcFile, context.ReplayData);
+                ReplayDataSerializer.Serialize(ugcFile, context.ReplayData);
                 ugcFile.Position = 0;
 
-                var blob = directory.GetBlockBlobReference(context.Replay.FileName);
+                var replay = context.Replay;
+                var fileName = replay.Version != null ?
+                    $"{replay.Version}_{replay.ReplayId}.dat" :
+                    $"UNKNOWN_{replay.ReplayId}.dat";
+                var blob = directory.GetBlockBlobReference(fileName);
                 blob.Properties.ContentType = "application/octet-stream";
                 blob.Properties.CacheControl = "max-age=604800"; // 1 week
 
                 await blob.UploadFromStreamAsync(ugcFile, cancellationToken).ConfigureAwait(false);
 
-                Log.Debug(blob.Uri);
-                storeNotifier.Value.Report(1);
-
-                return blob.Uri;
+                context.Replay.Uri = blob.Uri.ToString();
+                storeActivity.Value.Report(1);
             }
         }
 
@@ -285,18 +272,17 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         internal sealed class ReplayDataflowContext
         {
-            public ReplayDataflowContext(long ugcId)
+            public ReplayDataflowContext(Replay replay)
             {
-                UgcId = ugcId;
+                Replay = replay;
             }
 
-            public long UgcId { get; }
+            public Replay Replay { get; }
             public UgcFileDetailsEnvelope UgcFileDetails { get; set; }
             public HttpRequestStatusException UgcFileDetailsException { get; set; }
             public byte[] UgcFile { get; set; }
             public HttpRequestStatusException UgcFileException { get; set; }
             public ReplayData ReplayData { get; set; }
-            public Replay Replay { get; set; }
         }
     }
 }
