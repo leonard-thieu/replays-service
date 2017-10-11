@@ -219,10 +219,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                             replayNotFound.ErrorCode == 2404;
                     })
                     .Respond(HttpStatusCode.InternalServerError, new StringContent(FullCycleResources.PostReplaysError, Encoding.UTF8, "application/json"));
-                var toofzApiClientHandlers = HttpClientFactory.CreatePipeline(toofzApiClientHandler, new DelegatingHandler[]
-                {
-                    new ToofzHttpErrorHandler(),
-                });
+                var toofzApiClientHandlers = WorkerRole.CreateToofzApiHandler("myUserName", "myPassword", toofzApiClientHandler);
                 var toofzApiClient = new ToofzApiClient(toofzApiClientHandlers, disposeHandler: false) { BaseAddress = new Uri("http://localhost/") };
 
                 #endregion
@@ -290,10 +287,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217310845, FullCycleResources.UgcFileDetails_845970351217310845);
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217341480, FullCycleResources.UgcFileDetails_845970351217341480);
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217499797, FullCycleResources.UgcFileDetails_845970351217499797);
-                var steamWebApiClientHandlers = HttpClientFactory.CreatePipeline(steamWebApiClientHandler, new DelegatingHandler[]
-                {
-                    new SteamWebApiTransientFaultHandler(),
-                });
+                var steamWebApiClientHandlers = WorkerRole.CreateSteamWebApiHandler(steamWebApiClientHandler);
                 var steamWebApiClient = new SteamWebApiClient(steamWebApiClientHandlers)
                 {
                     SteamWebApiKey = "mySteamWebApiKey",
@@ -364,10 +358,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217310845/AB3A5D78136231A85ADABE91DDE687D38F79E84B/").Respond(new ByteArrayContent(FullCycleResources.DLC_SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6));
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217341480/1D2EADAFE681E8E801E8CAB0B1AAEE101A3FADB0/").Respond(new ByteArrayContent(FullCycleResources.DLC_6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4));
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217499797/C037E8872756B56162B20639E94FF3C21A5D06CA/").Respond(new ByteArrayContent(FullCycleResources.DLC_HARDCORE_Melody_PROD_SCORE317_ZONE1_LEVEL3));
-                var ugcHttpClientHandlers = HttpClientFactory.CreatePipeline(ugcHttpClientHandler, new DelegatingHandler[]
-                {
-                    new HttpErrorHandler(),
-                });
+                var ugcHttpClientHandlers = WorkerRole.CreateUgcHandler(ugcHttpClientHandler);
                 var ugcHttpClient = new UgcHttpClient(ugcHttpClientHandlers);
 
                 #endregion
