@@ -75,9 +75,7 @@
           <File Id="owfCD62D949CF4EB05A6A3ED5BCFE52C978" Source="$(var.SourceDir)\ReplaysService.exe" KeyPath="yes" />
           <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
           <ServiceControl Id="sc00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
-        </Component>
-        <Component Id="owc91FCC4586B173E3BCA775794089C4F29" Guid="dcbd0c88-2b43-c2fa-b07f-8755b24a6fe4">
-          <File Id="owf91FCC4586B173E3BCA775794089C4F29" Source="$(var.SourceDir)\ReplaysService.exe.config" KeyPath="yes" />
+          <File Id="owf91FCC4586B173E3BCA775794089C4F29" Source="$(var.SourceDir)\ReplaysService.exe.config" CompanionFile="owfCD62D949CF4EB05A6A3ED5BCFE52C978" />
         </Component>
         <Component Id="owc84FB49F3465E33D8154C1860795BF195" Guid="791141d4-a7af-f4e0-fd2b-74cd57d0bb5b">
           <File Id="owf84FB49F3465E33D8154C1860795BF195" Source="$(var.SourceDir)\SqlBulkUpsert.dll" KeyPath="yes" />
