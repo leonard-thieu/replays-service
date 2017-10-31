@@ -34,16 +34,14 @@ Global
 		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E22376F-E48D-4F14-AB77-1408C46CF0F4}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{6E22376F-E48D-4F14-AB77-1408C46CF0F4}.Release|Any CPU.ActiveCfg = Release|x86
-		{6E22376F-E48D-4F14-AB77-1408C46CF0F4}.Release|Any CPU.Build.0 = Release|x86
 		{D1A64E94-5EA2-48D9-AA7F-5EE050627D8C}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D1A64E94-5EA2-48D9-AA7F-5EE050627D8C}.Release|Any CPU.ActiveCfg = Release|x86
-		{D1A64E94-5EA2-48D9-AA7F-5EE050627D8C}.Release|Any CPU.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {50EFFA34-1119-4B13-B2BC-0B743E63DE7B}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
+		SolutionGuid = {50EFFA34-1119-4B13-B2BC-0B743E63DE7B}
 	EndGlobalSection
 EndGlobal
