@@ -41,8 +41,6 @@ test_script:
 after_test:
   - ps: .\Scripts\Submit-CodeCoverageResults.ps1
 
-before_deploy:
-  - ps: .\Scripts\Deploy-NuGetPackage.ps1
 deploy:
   - provider: Environment
     name: production
