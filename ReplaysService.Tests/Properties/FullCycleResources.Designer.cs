@@ -672,14 +672,22 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties {
         ///      &quot;killed_by&quot;: null
         ///    },
         ///    {
-        ///      &quot;id&quot;: &quot;845970274592369232&quot;,
+        ///      &quot;id&quot;: &quot;844845073340436306&quot;,
         ///      &quot;error&quot;: null,
         ///      &quot;seed&quot;: null,
         ///      &quot;version&quot;: null,
         ///      &quot;killed_by&quot;: null
-        ///    }
-        ///  ]
-        ///}.
+        ///    },
+        ///    {
+        ///      &quot;id&quot;: &quot;844845073340472702&quot;,
+        ///      &quot;error&quot;: null,
+        ///      &quot;seed&quot;: null,
+        ///      &quot;version&quot;: null,
+        ///      &quot;killed_by&quot;: null
+        ///    },
+        ///    {
+        ///      &quot;id&quot;: &quot;844845073340489317&quot;,
+        ///       [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string StaleReplays {
             get {
