@@ -1,6 +1,6 @@
 ﻿namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    interface ICloudBlobDirectory
+    internal interface ICloudBlobDirectory
     {
         /// <summary>
         /// Gets a reference to a block blob in this virtual directory.

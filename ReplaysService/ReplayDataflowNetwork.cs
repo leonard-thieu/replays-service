@@ -11,11 +11,11 @@ using toofz.NecroDancer.Replays;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class ReplayDataflowNetwork
+    internal sealed class ReplayDataflowNetwork
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(ReplayDataflowNetwork));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ReplayDataflowNetwork));
 
-        static readonly ReplayDataSerializer ReplayDataSerializer = new ReplayDataSerializer();
+        private static readonly ReplayDataSerializer ReplayDataSerializer = new ReplayDataSerializer();
 
         public ReplayDataflowNetwork(
             uint appId,
@@ -113,15 +113,15 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             Completion = Task.WhenAll(broadcastReplayDataflowContext.Completion, storeUgcFile.Completion);
         }
 
-        readonly uint appId;
-        readonly ISteamWebApiClient steamWebApiClient;
-        readonly IUgcHttpClient ugcHttpClient;
-        readonly ICloudBlobDirectory directory;
-        readonly CancellationToken cancellationToken;
-        readonly Lazy<DownloadActivity> downloadActivity = new Lazy<DownloadActivity>(() => new DownloadActivity(Log, "replays"));
-        readonly Lazy<StoreActivity> storeActivity = new Lazy<StoreActivity>(() => new StoreActivity(Log, "replay files"));
+        private readonly uint appId;
+        private readonly ISteamWebApiClient steamWebApiClient;
+        private readonly IUgcHttpClient ugcHttpClient;
+        private readonly ICloudBlobDirectory directory;
+        private readonly CancellationToken cancellationToken;
+        private readonly Lazy<DownloadActivity> downloadActivity = new Lazy<DownloadActivity>(() => new DownloadActivity(Log, "replays"));
+        private readonly Lazy<StoreActivity> storeActivity = new Lazy<StoreActivity>(() => new StoreActivity(Log, "replay files"));
 
-        readonly TransformBlock<Replay, ReplayDataflowContext> getReplayDataflowContext;
+        private readonly TransformBlock<Replay, ReplayDataflowContext> getReplayDataflowContext;
 
         /// <summary>
         /// Gets a <see cref="Task"/> that represents the asynchronous operation and completion of the dataflow block.
@@ -248,24 +248,24 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             }
         }
 
-        DataflowBlockOptions GetDefaultDataflowBlockOptions() => new DataflowBlockOptions
+        private DataflowBlockOptions GetDefaultDataflowBlockOptions() => new DataflowBlockOptions
         {
             CancellationToken = cancellationToken,
         };
 
-        ExecutionDataflowBlockOptions GetNetworkBoundExecutionDataflowBlockOptions() => new ExecutionDataflowBlockOptions
+        private ExecutionDataflowBlockOptions GetNetworkBoundExecutionDataflowBlockOptions() => new ExecutionDataflowBlockOptions
         {
             MaxDegreeOfParallelism = Environment.ProcessorCount * 8,
             CancellationToken = cancellationToken,
         };
 
-        ExecutionDataflowBlockOptions GetProcessorBoundExecutionDataflowBlockOptions() => new ExecutionDataflowBlockOptions
+        private ExecutionDataflowBlockOptions GetProcessorBoundExecutionDataflowBlockOptions() => new ExecutionDataflowBlockOptions
         {
             MaxDegreeOfParallelism = Environment.ProcessorCount,
             CancellationToken = cancellationToken,
         };
 
-        DataflowLinkOptions GetDefaultDataflowLinkOptions() => new DataflowLinkOptions
+        private DataflowLinkOptions GetDefaultDataflowLinkOptions() => new DataflowLinkOptions
         {
             PropagateCompletion = true,
         };

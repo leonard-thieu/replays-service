@@ -6,14 +6,14 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class CloudBlockBlobAdapter : ICloudBlockBlob
+    internal sealed class CloudBlockBlobAdapter : ICloudBlockBlob
     {
         public CloudBlockBlobAdapter(CloudBlockBlob cloudBlockBlob)
         {
             this.cloudBlockBlob = cloudBlockBlob ?? throw new ArgumentNullException(nameof(cloudBlockBlob));
         }
 
-        readonly CloudBlockBlob cloudBlockBlob;
+        private readonly CloudBlockBlob cloudBlockBlob;
 
         /// <summary>
         /// Gets the blob's system properties.

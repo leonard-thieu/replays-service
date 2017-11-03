@@ -2,19 +2,19 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
+using toofz.Services;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
-    class WorkerRoleTests
+    public class WorkerRoleTests
     {
-        [TestClass]
         public class CreateToofzApiHandlerMethod
         {
-            [TestMethod]
+            [Fact]
             public void ReturnsHandler()
             {
                 // Arrange
@@ -25,39 +25,36 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var handler = WorkerRole.CreateToofzApiHandler(toofzApiUserName, toofzApiPassword);
 
                 // Assert
-                Assert.IsInstanceOfType(handler, typeof(HttpMessageHandler));
+                Assert.IsAssignableFrom<HttpMessageHandler>(handler);
             }
         }
 
-        [TestClass]
         public class CreateSteamWebApiHandlerMethod
         {
-            [TestMethod]
+            [Fact]
             public void ReturnsHandler()
             {
                 // Arrange -> Act
                 var handler = WorkerRole.CreateSteamWebApiHandler();
 
                 // Assert
-                Assert.IsInstanceOfType(handler, typeof(HttpMessageHandler));
+                Assert.IsAssignableFrom<HttpMessageHandler>(handler);
             }
         }
 
-        [TestClass]
         public class CreateUgcHandlerMethod
         {
-            [TestMethod]
+            [Fact]
             public void ReturnsHandler()
             {
                 // Arrange -> Act
                 var handler = WorkerRole.CreateUgcHandler();
 
                 // Assert
-                Assert.IsInstanceOfType(handler, typeof(HttpMessageHandler));
+                Assert.IsAssignableFrom<HttpMessageHandler>(handler);
             }
         }
 
-        [TestClass]
         public class GetCloudBlobDirectoryMethod
         {
             public GetCloudBlobDirectoryMethod()
@@ -69,13 +66,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 MockContainer.Setup(c => c.GetDirectoryReference("replays")).Returns(Mock.Of<ICloudBlobDirectory>());
             }
 
-            public Mock<ICloudBlobClient> MockBlobClient { get; set; } = new Mock<ICloudBlobClient>();
-            public ICloudBlobClient BlobClient { get; set; }
-            public Mock<ICloudBlobContainer> MockContainer { get; set; } = new Mock<ICloudBlobContainer>();
-            public ICloudBlobContainer Container { get; set; }
+            internal Mock<ICloudBlobClient> MockBlobClient { get; set; } = new Mock<ICloudBlobClient>();
+            internal ICloudBlobClient BlobClient { get; set; }
+            internal Mock<ICloudBlobContainer> MockContainer { get; set; } = new Mock<ICloudBlobContainer>();
+            internal ICloudBlobContainer Container { get; set; }
             public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
 
-            [TestMethod]
+            [Fact]
             public async Task ContainerDoesNotExist_CreatesContainer()
             {
                 // Arrange
@@ -88,7 +85,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 MockContainer.Verify(c => c.CreateAsync(CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ContainerExists_DoesNotCreateContainer()
             {
                 // Arrange
@@ -101,7 +98,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 MockContainer.Verify(c => c.CreateAsync(CancellationToken), Times.Never);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SetsPermissionsToPublic()
             {
                 // Arrange -> Act
@@ -111,21 +108,20 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 MockContainer.Verify(c => c.SetPermissionsAsync(It.Is<BlobContainerPermissions>(p => p.PublicAccess == BlobContainerPublicAccessType.Blob), CancellationToken));
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ReturnsDirectory()
             {
                 // Arrange -> Act
                 var directory = await WorkerRole.GetCloudBlobDirectory(BlobClient, CancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(directory, typeof(ICloudBlobDirectory));
+                Assert.IsAssignableFrom<ICloudBlobDirectory>(directory);
             }
         }
 
-        [TestClass]
         public class OnStartMethod
         {
-            [TestMethod]
+            [Fact]
             public void ToofzApiUserNameIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -137,13 +133,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var workerRole = new WorkerRole(settings);
 
                 // Act -> Assert
-                Assert.ThrowsException<InvalidOperationException>(() =>
+                Assert.Throws<InvalidOperationException>(() =>
                 {
                     workerRole.Start();
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ToofzApiUserNameIsEmpty_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -155,13 +151,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var workerRole = new WorkerRole(settings);
 
                 // Act -> Assert
-                Assert.ThrowsException<InvalidOperationException>(() =>
+                Assert.Throws<InvalidOperationException>(() =>
                 {
                     workerRole.Start();
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ToofzApiPasswordIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -173,17 +169,16 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var workerRole = new WorkerRole(settings);
 
                 // Act -> Assert
-                Assert.ThrowsException<InvalidOperationException>(() =>
+                Assert.Throws<InvalidOperationException>(() =>
                 {
                     workerRole.Start();
                 });
             }
         }
 
-        [TestClass]
         public class RunAsyncOverrideMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task ToofzApiBaseAddressIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -197,13 +192,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ToofzApiBaseAddressIsEmpty_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -217,13 +212,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SteamWebApiKeyIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -237,13 +232,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task AzureStorageConnectionStringIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -257,13 +252,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ReplaysPerUpdateIsNotPositive_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -278,13 +273,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            class WorkerRoleAdapter : WorkerRole
+            private class WorkerRoleAdapter : WorkerRole
             {
                 public WorkerRoleAdapter(IReplaysSettings settings) : base(settings) { }
 

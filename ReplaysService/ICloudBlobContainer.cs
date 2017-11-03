@@ -4,7 +4,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    interface ICloudBlobContainer
+    internal interface ICloudBlobContainer
     {
         /// <summary>
         /// Initiates an asynchronous operation that checks whether the container exists.

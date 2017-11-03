@@ -1,9 +1,10 @@
 ﻿using System;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
-    class StubReplaysSettings : IReplaysSettings
+    internal class StubReplaysSettings : IReplaysSettings
     {
         public uint AppId => 247080;
 

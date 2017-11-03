@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
@@ -17,12 +16,13 @@ using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
 using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.TestsShared;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
-    class ReplaysWorkerTests
+    public class ReplaysWorkerTests
     {
-        const uint AppId = 247080;
+        private const uint AppId = 247080;
 
         public ReplaysWorkerTests()
         {
@@ -32,7 +32,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             UgcHttpClient = MockUgcHttpClient.Object;
         }
 
-        public ReplaysWorker Worker { get; set; }
+        internal ReplaysWorker Worker { get; set; }
         public Mock<IToofzApiClient> MockToofzApiClient { get; set; } = new Mock<IToofzApiClient>();
         public IToofzApiClient ToofzApiClient { get; set; }
         public Mock<ISteamWebApiClient> MockSteamWebApiClient { get; set; } = new Mock<ISteamWebApiClient>();
@@ -41,10 +41,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public IUgcHttpClient UgcHttpClient { get; set; }
         public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
 
-        [TestClass]
         public class GetStaleReplaysAsyncMethod : ReplaysWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task ToofzApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -52,26 +51,26 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var limit = 1;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 {
                     return Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task LimitIsNonpositive_ThrowsArgumentOutOfRangeException()
             {
                 // Arrange
                 var limit = 0;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() =>
+                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
                 {
                     return Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ReturnsStaleReplays()
             {
                 // Arrange
@@ -84,11 +83,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var staleReplays = await Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(staleReplays, typeof(IEnumerable<Replay>));
+                Assert.IsAssignableFrom<IEnumerable<Replay>>(staleReplays);
             }
         }
 
-        [TestClass]
         public class UpdateReplaysAsyncMethod : ReplaysWorkerTests
         {
             public UpdateReplaysAsyncMethod()
@@ -101,24 +99,24 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 Directory = MockDirectory.Object;
             }
 
-            public Mock<ICloudBlobDirectory> MockDirectory { get; set; } = new Mock<ICloudBlobDirectory>();
-            public ICloudBlobDirectory Directory { get; set; }
+            internal Mock<ICloudBlobDirectory> MockDirectory { get; set; } = new Mock<ICloudBlobDirectory>();
+            internal ICloudBlobDirectory Directory { get; set; }
             public List<Replay> Replays { get; set; } = new List<Replay>();
 
-            [TestMethod]
+            [Fact]
             public async Task ReplaysIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 Replays = null;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 {
                     return Worker.UpdateReplaysAsync(SteamWebApiClient, UgcHttpClient, Directory, Replays, CancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ReturnsReplays()
             {
                 // Arrange
@@ -131,42 +129,41 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 await Worker.UpdateReplaysAsync(SteamWebApiClient, UgcHttpClient, Directory, Replays, CancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(Replays, typeof(IEnumerable<Replay>));
+                Assert.IsAssignableFrom<IEnumerable<Replay>>(Replays);
             }
         }
 
-        [TestClass]
         public class StoreReplaysAsyncMethod : ReplaysWorkerTests
         {
             public List<Replay> Replays { get; set; } = new List<Replay>();
 
-            [TestMethod]
+            [Fact]
             public async Task ToofzApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 ToofzApiClient = null;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 {
                     return Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task ReplaysIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 Replays = null;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+                await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 {
                     return Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresReplays()
             {
                 // Arrange
@@ -182,20 +179,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             }
         }
 
-        [TestClass]
-        [TestCategory("Use Azure Storage Emulator")]
+        [Trait("Category", "Uses Azure Storage Emulator")]
+        [Collection(AzureStorageCollection.Name)]
         public class IntegrationTests
         {
-            public IntegrationTests()
-            {
-                if (!AzureStorageEmulatorManager.IsStarted())
-                {
-                    AzureStorageEmulatorManager.Start();
-                    TestsSetup.ShouldStopAzureStorageEmulator = true;
-                }
-            }
-
-            [TestMethod]
+            [Fact]
             public async Task EndToEnd()
             {
                 // Arrange
@@ -373,7 +361,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var directory = await WorkerRole.GetCloudBlobDirectory(blobClient, cancellationToken);
                 await workerRole.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
 
-                await Assert.ThrowsExceptionAsync<HttpErrorException>(() =>
+                await Assert.ThrowsAsync<HttpErrorException>(() =>
                 {
                     return workerRole.StoreReplaysAsync(toofzApiClient, replays, cancellationToken);
                 });

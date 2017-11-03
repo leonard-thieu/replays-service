@@ -2,14 +2,14 @@
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class CloudBlobClientAdapter : ICloudBlobClient
+    internal sealed class CloudBlobClientAdapter : ICloudBlobClient
     {
         public CloudBlobClientAdapter(CloudBlobClient cloudBlobClient)
         {
             this.cloudBlobClient = cloudBlobClient;
         }
 
-        readonly CloudBlobClient cloudBlobClient;
+        private readonly CloudBlobClient cloudBlobClient;
 
         /// <summary>
         /// Returns a reference to a <see cref="ICloudBlobContainer"/> object with the specified name.

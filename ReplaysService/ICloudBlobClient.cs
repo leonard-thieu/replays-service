@@ -1,6 +1,6 @@
 ﻿namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    interface ICloudBlobClient
+    internal interface ICloudBlobClient
     {
         /// <summary>
         /// Returns a reference to a <see cref="ICloudBlobContainer"/> object with the specified name.

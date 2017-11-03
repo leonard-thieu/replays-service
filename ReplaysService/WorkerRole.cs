@@ -14,9 +14,9 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    class WorkerRole : WorkerRoleBase<IReplaysSettings>
+    internal class WorkerRole : WorkerRoleBase<IReplaysSettings>
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
         internal static HttpMessageHandler CreateToofzApiHandler(string toofzApiUserName, string toofzApiPassword, HttpMessageHandler innerHandler = null)
         {
@@ -73,7 +73,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         public WorkerRole(IReplaysSettings settings) : base("replays", settings) { }
 
-        HttpMessageHandler toofzApiHandler;
+        private HttpMessageHandler toofzApiHandler;
 
         protected override void OnStart(string[] args)
         {

@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    interface ICloudBlockBlob
+    internal interface ICloudBlockBlob
     {
         /// <summary>
         /// Gets the blob's system properties.

@@ -29,13 +29,13 @@
     <Setting Name="ToofzApiUserName" Description="The user name used to log on to toofz API." Type="System.String" Scope="User">
       <Value Profile="(Default)">ReplaysService</Value>
     </Setting>
-    <Setting Name="ToofzApiPassword" Description="The password used to log on to toofz API." GenerateDefaultValueInCode="false" Type="toofz.EncryptedSecret" Scope="User">
+    <Setting Name="ToofzApiPassword" Description="The password used to log on to toofz API." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SteamWebApiKey" Description="A Steam Web API key." GenerateDefaultValueInCode="false" Type="toofz.EncryptedSecret" Scope="User">
+    <Setting Name="SteamWebApiKey" Description="A Steam Web API key." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AzureStorageConnectionString" Description="An Azure Storage connection string." Type="toofz.EncryptedSecret" Scope="User">
+    <Setting Name="AzureStorageConnectionString" Description="An Azure Storage connection string." Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

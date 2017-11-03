@@ -2,7 +2,7 @@
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
-    static class MockHttpMessageHandlerExtensions
+    internal static class MockHttpMessageHandlerExtensions
     {
         public static MockedRequest RespondWithUgcFileDetails(this MockHttpMessageHandler handler, long ugcId, string content)
         {

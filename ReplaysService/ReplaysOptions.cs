@@ -2,7 +2,7 @@
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class ReplaysOptions : Options
+    internal sealed class ReplaysOptions : Options
     {
         /// <summary>
         /// The number of replays to update.

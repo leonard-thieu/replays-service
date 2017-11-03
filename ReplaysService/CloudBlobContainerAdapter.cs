@@ -4,7 +4,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class CloudBlobContainerAdapter : ICloudBlobContainer
+    internal sealed class CloudBlobContainerAdapter : ICloudBlobContainer
     {
         public CloudBlobContainerAdapter(CloudBlobContainer container)
         {

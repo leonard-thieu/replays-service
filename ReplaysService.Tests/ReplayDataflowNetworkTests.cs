@@ -5,8 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using RichardSzalay.MockHttp;
@@ -15,15 +13,15 @@ using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
 using toofz.NecroDancer.Replays;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
-    class ReplayDataflowNetworkTests
+    public class ReplayDataflowNetworkTests
     {
-        [TestClass]
         public class Constructor
         {
-            [TestMethod]
+            [Fact]
             public void SteamWebApiClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -34,13 +32,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentNullException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void AppIdIsNotAPositiveInteger_ThrowsArgumentOutOfRangeException()
             {
                 // Arrange
@@ -51,13 +49,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
                 {
                     new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void UgcHttpClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -68,13 +66,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentNullException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void DirectoryIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -85,13 +83,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentNullException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -105,14 +103,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var network = new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(network, typeof(ReplayDataflowNetwork));
+                Assert.IsAssignableFrom<ReplayDataflowNetwork>(network);
             }
         }
 
-        [TestClass]
         public class SendAsyncMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task AcceptsItem()
             {
                 // Arrange
@@ -128,14 +125,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var accepted = await network.SendAsync(replay, cancellationToken);
 
                 // Assert
-                Assert.IsTrue(accepted);
+                Assert.True(accepted);
             }
         }
 
-        [TestClass]
         public class CompleteMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task SignalsCompletion()
             {
                 // Arrange
@@ -152,14 +148,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 // Assert
                 var completion = network.Completion;
                 await completion;
-                Assert.IsTrue(completion.IsCompleted);
+                Assert.True(completion.IsCompleted);
             }
         }
 
-        [TestClass]
         public class GetUgcFileDetailsAsyncMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task GetUgcFileDetailsAsyncThrowsHttpRequestStatusException_SetsUgcFileDetailsException()
             {
                 // Arrange
@@ -183,11 +178,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 // Assert
                 var ex = context2.UgcFileDetailsException;
-                Assert.IsNotNull(ex);
-                Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+                Assert.NotNull(ex);
+                Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SetsUgcFileDetails()
             {
                 // Arrange
@@ -217,14 +212,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var context2 = await network.GetUgcFileDetailsAsync(context);
 
                 // Assert
-                Assert.AreEqual("http://cloud-3.steamusercontent.com/ugc/849347241492683863/9AC1027041B31DBC1EED3E1A709D6930D7165BEA/", context2.UgcFileDetails.Data.Url);
+                Assert.Equal("http://cloud-3.steamusercontent.com/ugc/849347241492683863/9AC1027041B31DBC1EED3E1A709D6930D7165BEA/", context2.UgcFileDetails.Data.Url);
             }
         }
 
-        [TestClass]
         public class GetUgcFileAsyncMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task GetUgcFileAsyncThrowsHttpRequestStatusException_SetsUgcFileException()
             {
                 // Arrange
@@ -258,11 +252,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 // Assert
                 var ex = context2.UgcFileException;
-                Assert.IsNotNull(ex);
-                Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+                Assert.NotNull(ex);
+                Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SetsUgcFile()
             {
                 // Arrange
@@ -293,14 +287,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var context2 = await network.GetUgcFileAsync(context);
 
                 // Assert
-                Assert.AreEqual(999, context2.UgcFile.Length);
+                Assert.Equal(999, context2.UgcFile.Length);
             }
         }
 
-        [TestClass]
         public class ReadReplayDataMethod
         {
-            [TestMethod]
+            [Fact]
             public void SetsReplayData()
             {
                 // Arrange
@@ -313,15 +306,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var context2 = ReplayDataflowNetwork.ReadReplayData(context);
 
                 // Assert
-                Assert.AreEqual(94, context2.ReplayData.Version);
-                Assert.AreEqual("LIGHT MINOTAUR", context2.ReplayData.KilledBy);
+                Assert.Equal(94, context2.ReplayData.Version);
+                Assert.Equal("LIGHT MINOTAUR", context2.ReplayData.KilledBy);
             }
         }
 
-        [TestClass]
         public class CreateReplayMethod
         {
-            [TestMethod]
+            [Fact]
             public void SetsReplay()
             {
                 // Arrange
@@ -338,14 +330,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var context2 = ReplayDataflowNetwork.UpdateReplay(context);
 
                 // Assert
-                Assert.IsInstanceOfType(context2.Replay, typeof(Replay));
+                Assert.IsAssignableFrom<Replay>(context2.Replay);
             }
         }
 
-        [TestClass]
         public class CreateReplayWithoutUgcFileDetailsMethod
         {
-            [TestMethod]
+            [Fact]
             public void SetsReplayWithErrorCodeSetTo1xxx()
             {
                 // Arrange
@@ -360,15 +351,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 // Assert
                 var replay2 = context2.Replay;
-                Assert.IsInstanceOfType(replay2, typeof(Replay));
-                Assert.AreEqual(1404, replay2.ErrorCode);
+                Assert.IsAssignableFrom<Replay>(replay2);
+                Assert.Equal(1404, replay2.ErrorCode);
             }
         }
 
-        [TestClass]
         public class CreateReplayWithoutUgcFileMethod
         {
-            [TestMethod]
+            [Fact]
             public void SetsReplayWithErrorCodeSetTo2xxx()
             {
                 // Arrange
@@ -383,15 +373,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 // Assert
                 var replay2 = context2.Replay;
-                Assert.IsInstanceOfType(replay2, typeof(Replay));
-                Assert.AreEqual(2404, replay2.ErrorCode);
+                Assert.IsAssignableFrom<Replay>(replay2);
+                Assert.Equal(2404, replay2.ErrorCode);
             }
         }
 
-        [TestClass]
         public class StoreUgcFileAsyncMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task StoresUgcFile()
             {
                 // Arrange
@@ -420,11 +409,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             }
         }
 
-        [TestClass]
         public class IntegrationTests
         {
-
-            [TestMethod]
+            [Fact]
             public async Task UgcFileDetailsNotFound_DoesNotHang()
             {
                 // Arrange

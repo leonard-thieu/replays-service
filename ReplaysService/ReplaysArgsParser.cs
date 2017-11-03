@@ -7,7 +7,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class ReplaysArgsParser : ArgsParser<ReplaysOptions, IReplaysSettings>
+    internal sealed class ReplaysArgsParser : ArgsParser<ReplaysOptions, IReplaysSettings>
     {
         internal const string DefaultAzureStorageConnectionString = "UseDevelopmentStorage=true";
 

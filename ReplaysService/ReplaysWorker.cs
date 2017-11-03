@@ -11,18 +11,18 @@ using toofz.NecroDancer.Replays;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    sealed class ReplaysWorker
+    internal sealed class ReplaysWorker
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(ReplaysWorker));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ReplaysWorker));
 
-        static readonly ReplayDataSerializer ReplayDataSerializer = new ReplayDataSerializer();
+        private static readonly ReplayDataSerializer ReplayDataSerializer = new ReplayDataSerializer();
 
         public ReplaysWorker(uint appId)
         {
             this.appId = appId;
         }
 
-        readonly uint appId;
+        private readonly uint appId;
 
         public async Task<IEnumerable<Replay>> GetReplaysAsync(
             IToofzApiClient toofzApiClient,

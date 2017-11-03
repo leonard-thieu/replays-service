@@ -2,7 +2,7 @@
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties
 {
-    interface IReplaysSettings : ISettings
+    internal interface IReplaysSettings : ISettings
     {
         /// <summary>
         /// The product's application ID.

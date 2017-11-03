@@ -4,7 +4,7 @@ using RichardSzalay.MockHttp;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
-    static class MockedRequestExtensions
+    internal static class MockedRequestExtensions
     {
         public static MockedRequest RespondWithJson(this MockedRequest handler, string content)
         {
