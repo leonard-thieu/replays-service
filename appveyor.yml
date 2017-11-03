@@ -7,13 +7,10 @@ branches:
 configuration:
   - Release
 environment:
-  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=9
   PROJECT: ReplaysService
   MYGET_API_KEY:
     secure: XZmbJDCK5oiqhbLt1y7UXM6aCYPpF2tm/bJMUJzBsCe1fd2TuwXyaz99RN+bDpHw
   PROJECT_PACKAGE: toofz-replays-service-v%APPVEYOR_BUILD_VERSION%.msi
-cache:
-  - packages -> **\packages.config
 notifications:
   - provider: Slack
     incoming_webhook:
@@ -27,6 +24,7 @@ artifacts:
     name: $(PROJECT)
 
 install:
+  - nuget update -Self
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
   - ps: .\Scripts\Install-AzureStorageEmulator.ps1
 
