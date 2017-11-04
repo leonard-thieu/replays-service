@@ -82,7 +82,14 @@
         </Component>
         <Component Id="owcCD62D949CF4EB05A6A3ED5BCFE52C978" Guid="f0e13060-9d4e-b205-3cde-dfeb91bbee29">
           <File Id="owfCD62D949CF4EB05A6A3ED5BCFE52C978" Source="$(var.SourceDir)\ReplaysService.exe" KeyPath="yes" />
-          <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
+          <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes">
+            <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension"
+                           FirstFailureActionType="restart"
+                           SecondFailureActionType="restart"
+                           ThirdFailureActionType="restart"
+                           RestartServiceDelayInSeconds="30"
+                           ResetPeriodInDays="1" />
+          </ServiceInstall>
           <ServiceControl Id="sc00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
           <File Id="owf91FCC4586B173E3BCA775794089C4F29" Source="$(var.SourceDir)\ReplaysService.exe.config" CompanionFile="owfCD62D949CF4EB05A6A3ED5BCFE52C978" />
         </Component>
