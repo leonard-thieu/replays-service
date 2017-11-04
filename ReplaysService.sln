@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaysService", "ReplaysService\ReplaysService.csproj", "{A1DCEC28-3283-4953-BD44-105DCCBB04CE}"
 EndProject
@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerMM", "InstallerMM\InstallerMM.wixproj", "{6E22376F-E48D-4F14-AB77-1408C46CF0F4}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerMM", "InstallerMM\InstallerMM.wixproj", "{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{D1A64E94-5EA2-48D9-AA7F-5EE050627D8C}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{383589EC-4C17-46F6-AAA2-54091E88C202}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,16 +32,18 @@ Global
 		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E22376F-E48D-4F14-AB77-1408C46CF0F4}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{6E22376F-E48D-4F14-AB77-1408C46CF0F4}.Release|Any CPU.ActiveCfg = Release|x86
-		{D1A64E94-5EA2-48D9-AA7F-5EE050627D8C}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{D1A64E94-5EA2-48D9-AA7F-5EE050627D8C}.Release|Any CPU.ActiveCfg = Release|x86
+		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.ActiveCfg = Release|x86
+		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.Build.0 = Release|x86
+		{383589EC-4C17-46F6-AAA2-54091E88C202}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{383589EC-4C17-46F6-AAA2-54091E88C202}.Release|Any CPU.ActiveCfg = Release|x86
+		{383589EC-4C17-46F6-AAA2-54091E88C202}.Release|Any CPU.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
 		SolutionGuid = {50EFFA34-1119-4B13-B2BC-0B743E63DE7B}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
 	EndGlobalSection
 EndGlobal
