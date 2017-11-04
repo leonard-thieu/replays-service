@@ -6,7 +6,7 @@
 ## Requirements
 
 * Windows 7 or later
-* .NET Framework 4.5
+* .NET Framework 4.6.1 or later
 
 ## Usage
 
