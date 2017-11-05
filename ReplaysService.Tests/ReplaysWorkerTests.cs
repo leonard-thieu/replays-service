@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
+using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
@@ -198,7 +199,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                     .When(HttpMethod.Post, "http://localhost/replays")
                     .With(request =>
                     {
-                        var _replays = request.Content.ReadAsAsync<IEnumerable<Replay>>().Result;
+                        var content = request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        var _replays = JsonConvert.DeserializeObject<IEnumerable<Replay>>(content);
 
                         var replayNotFound = _replays.Single(r => r.ReplayId == 845970274592369232);
 

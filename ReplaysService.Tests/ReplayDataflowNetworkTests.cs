@@ -13,6 +13,7 @@ using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
 using toofz.NecroDancer.Replays;
+using toofz.Services;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
