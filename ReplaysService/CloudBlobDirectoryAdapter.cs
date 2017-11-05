@@ -7,7 +7,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         public CloudBlobDirectoryAdapter(CloudBlobDirectory directory)
         {
-            this.directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            this.directory = directory;
         }
 
         private readonly CloudBlobDirectory directory;

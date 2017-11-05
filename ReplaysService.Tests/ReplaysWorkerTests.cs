@@ -16,7 +16,6 @@ using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
 using toofz.NecroDancer.Leaderboards.toofz;
-using toofz.TestsShared;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
@@ -44,33 +43,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
         public class GetStaleReplaysAsyncMethod : ReplaysWorkerTests
         {
-            [Fact]
-            public async Task ToofzApiClientIsNull_ThrowsArgumentNullException()
-            {
-                // Arrange
-                ToofzApiClient = null;
-                var limit = 1;
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                {
-                    return Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
-                });
-            }
-
-            [Fact]
-            public async Task LimitIsNonpositive_ThrowsArgumentOutOfRangeException()
-            {
-                // Arrange
-                var limit = 0;
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-                {
-                    return Worker.GetReplaysAsync(ToofzApiClient, limit, CancellationToken);
-                });
-            }
-
             [Fact]
             public async Task ReturnsStaleReplays()
             {
@@ -105,19 +77,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public List<Replay> Replays { get; set; } = new List<Replay>();
 
             [Fact]
-            public async Task ReplaysIsNull_ThrowsArgumentNullException()
-            {
-                // Arrange
-                Replays = null;
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                {
-                    return Worker.UpdateReplaysAsync(SteamWebApiClient, UgcHttpClient, Directory, Replays, CancellationToken);
-                });
-            }
-
-            [Fact]
             public async Task ReturnsReplays()
             {
                 // Arrange
@@ -137,32 +96,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public class StoreReplaysAsyncMethod : ReplaysWorkerTests
         {
             public List<Replay> Replays { get; set; } = new List<Replay>();
-
-            [Fact]
-            public async Task ToofzApiClientIsNull_ThrowsArgumentNullException()
-            {
-                // Arrange
-                ToofzApiClient = null;
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                {
-                    return Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
-                });
-            }
-
-            [Fact]
-            public async Task ReplaysIsNull_ThrowsArgumentNullException()
-            {
-                // Arrange
-                Replays = null;
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                {
-                    return Worker.StoreReplaysAsync(ToofzApiClient, Replays, CancellationToken);
-                });
-            }
 
             [Fact]
             public async Task StoresReplays()

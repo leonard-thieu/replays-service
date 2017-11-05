@@ -24,12 +24,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             ICloudBlobDirectory directory,
             CancellationToken cancellationToken)
         {
-            if (appId < 1)
-                throw new ArgumentOutOfRangeException(nameof(appId), appId, $"{nameof(appId)} must be a positive integer.");
             this.appId = appId;
-            this.steamWebApiClient = steamWebApiClient ?? throw new ArgumentNullException(nameof(steamWebApiClient));
-            this.ugcHttpClient = ugcHttpClient ?? throw new ArgumentNullException(nameof(ugcHttpClient));
-            this.directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            this.steamWebApiClient = steamWebApiClient;
+            this.ugcHttpClient = ugcHttpClient;
+            this.directory = directory;
             this.cancellationToken = cancellationToken;
 
             getReplayDataflowContext = new TransformBlock<Replay, ReplayDataflowContext>(

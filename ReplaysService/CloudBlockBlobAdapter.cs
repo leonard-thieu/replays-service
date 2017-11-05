@@ -10,7 +10,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         public CloudBlockBlobAdapter(CloudBlockBlob cloudBlockBlob)
         {
-            this.cloudBlockBlob = cloudBlockBlob ?? throw new ArgumentNullException(nameof(cloudBlockBlob));
+            this.cloudBlockBlob = cloudBlockBlob;
         }
 
         private readonly CloudBlockBlob cloudBlockBlob;
