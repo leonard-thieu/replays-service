@@ -134,7 +134,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("The base address of toofz API.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44300/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:49603/")]
         public string ToofzApiBaseAddress {
             get {
                 return ((string)(this["ToofzApiBaseAddress"]));

@@ -24,7 +24,7 @@
       <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="ToofzApiBaseAddress" Description="The base address of toofz API." Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://localhost:44300/</Value>
+      <Value Profile="(Default)">http://localhost:49603/</Value>
     </Setting>
     <Setting Name="ToofzApiUserName" Description="The user name used to log on to toofz API." Type="System.String" Scope="User">
       <Value Profile="(Default)">ReplaysService</Value>
