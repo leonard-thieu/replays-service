@@ -1,24 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{100F18F7-93AB-4493-92B0-FF5541373FAC}</ProjectGuid>
+    <ProjectGuid>{EF68E4E6-DCC9-4413-95AA-239CC28FC9A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>toofz.NecroDancer.Leaderboards.ReplaysService.Tests</RootNamespace>
     <AssemblyName>ReplaysService.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +33,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="RichardSzalay.MockHttp">
@@ -67,29 +58,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Compile Include="AzureStorageCollection.cs" />
-    <Compile Include="AzureStorageFixture.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="Resources\RawReplayData.dat" />
-    <None Include="Resources\StaleReplays.json" />
-    <None Include="Resources\UgcFileDetails_847096111522125255_NotFound.json" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\FullCycleResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>FullCycleResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Properties\FullCycleResources.Designer.cs">
@@ -120,12 +94,12 @@
     <None Include="FullCycleResources\DLC HARDCORE Aria_PROD_SCORE375_ZONE1_LEVEL3" />
     <None Include="FullCycleResources\DLC HARDCORE Bard PHASING_PROD_SCORE4484_ZONE5_LEVEL6" />
     <None Include="FullCycleResources\DLC HARDCORE Diamond RANDOMIZER_PROD_SCORE246_ZONE1_LEVEL1" />
+    <None Include="FullCycleResources\DLC HARDCORE Melody MYSTERY_PROD_SCORE3398_ZONE5_LEVEL3" />
+    <None Include="FullCycleResources\DLC HARDCORE Melody_PROD_SCORE317_ZONE1_LEVEL3" />
     <None Include="FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE188_ZONE1_LEVEL3" />
     <None Include="FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE278_ZONE1_LEVEL2" />
     <None Include="FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE487_ZONE1_LEVEL3" />
     <None Include="FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE87_ZONE1_LEVEL1" />
-    <None Include="FullCycleResources\DLC HARDCORE Melody MYSTERY_PROD_SCORE3398_ZONE5_LEVEL3" />
-    <None Include="FullCycleResources\DLC HARDCORE Melody_PROD_SCORE317_ZONE1_LEVEL3" />
     <None Include="FullCycleResources\DLC HARDCORE Nocturna_PROD_SCORE488_ZONE2_LEVEL1" />
     <None Include="FullCycleResources\DLC HARDCORE PHASING_PROD_SCORE209_ZONE1_LEVEL2" />
     <None Include="FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE171_ZONE1_LEVEL2" />
@@ -221,6 +195,22 @@
     <None Include="FullCycleResources\UgcFileDetails_845970351217499797.json" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Resources\RawReplayData.dat" />
+    <None Include="Resources\StaleReplays.json" />
+    <None Include="Resources\UgcFileDetails_847096111522125255_NotFound.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AzureStorageCollection.cs" />
+    <Compile Include="AzureStorageFixture.cs" />
     <Compile Include="MockedRequestExtensions.cs" />
     <Compile Include="MockHttpMessageHandlerExtensions.cs" />
     <Compile Include="ReplayDataflowNetworkTests.cs" />
@@ -228,6 +218,5 @@
     <Compile Include="ReplaysWorkerTests.cs" />
     <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

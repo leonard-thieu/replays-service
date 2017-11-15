@@ -1,12 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaysService", "ReplaysService\ReplaysService.csproj", "{A1DCEC28-3283-4953-BD44-105DCCBB04CE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaysService.Tests", "ReplaysService.Tests\ReplaysService.Tests.csproj", "{100F18F7-93AB-4493-92B0-FF5541373FAC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A1128BE-B026-45D7-ABD8-FC286A540723}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
@@ -14,9 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{383589EC-4C17-46F6-AAA2-54091E88C202}"
+EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerMM", "InstallerMM\InstallerMM.wixproj", "{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{383589EC-4C17-46F6-AAA2-54091E88C202}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaysService", "ReplaysService\ReplaysService.csproj", "{A1DCEC28-3283-4953-BD44-105DCCBB04CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaysService.Tests", "ReplaysService.Tests\ReplaysService.Tests.csproj", "{EF68E4E6-DCC9-4413-95AA-239CC28FC9A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,26 +24,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{383589EC-4C17-46F6-AAA2-54091E88C202}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{383589EC-4C17-46F6-AAA2-54091E88C202}.Release|Any CPU.ActiveCfg = Release|x86
+		{383589EC-4C17-46F6-AAA2-54091E88C202}.Release|Any CPU.Build.0 = Release|x86
+		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.ActiveCfg = Release|x86
+		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.Build.0 = Release|x86
 		{A1DCEC28-3283-4953-BD44-105DCCBB04CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1DCEC28-3283-4953-BD44-105DCCBB04CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1DCEC28-3283-4953-BD44-105DCCBB04CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1DCEC28-3283-4953-BD44-105DCCBB04CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{100F18F7-93AB-4493-92B0-FF5541373FAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.ActiveCfg = Release|x86
-		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.Build.0 = Release|x86
-		{383589EC-4C17-46F6-AAA2-54091E88C202}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{383589EC-4C17-46F6-AAA2-54091E88C202}.Release|Any CPU.ActiveCfg = Release|x86
-		{383589EC-4C17-46F6-AAA2-54091E88C202}.Release|Any CPU.Build.0 = Release|x86
+		{EF68E4E6-DCC9-4413-95AA-239CC28FC9A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF68E4E6-DCC9-4413-95AA-239CC28FC9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF68E4E6-DCC9-4413-95AA-239CC28FC9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF68E4E6-DCC9-4413-95AA-239CC28FC9A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {50EFFA34-1119-4B13-B2BC-0B743E63DE7B}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
+		SolutionGuid = {50EFFA34-1119-4B13-B2BC-0B743E63DE7B}
 	EndGlobalSection
 EndGlobal

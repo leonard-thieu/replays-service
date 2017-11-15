@@ -118,6 +118,156 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DLC_12_9_2017_PROD_SCORE210_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 12_9_2017_PROD_SCORE210_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_12_9_2017_PROD_SCORE83_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 12_9_2017_PROD_SCORE83_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_5_9_2017_PROD_SCORE1195_ZONE3_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 5_9_2017_PROD_SCORE1195_ZONE3_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_5_9_2017_PROD_SCORE174_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 5_9_2017_PROD_SCORE174_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_6_9_2017_PROD_SCORE1305_ZONE2_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE1305_ZONE2_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_6_9_2017_PROD_SCORE3892_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE3892_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_6_9_2017_PROD_SCORE4410_ZONE3_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE4410_ZONE3_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_6_9_2017_PROD_SCORE7759_ZONE5_LEVEL5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE7759_ZONE5_LEVEL5;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Aria_PROD_SCORE375_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Aria_PROD_SCORE375_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Bard_PHASING_PROD_SCORE4484_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Bard PHASING_PROD_SCORE4484_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Diamond_RANDOMIZER_PROD_SCORE246_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Diamond RANDOMIZER_PROD_SCORE246_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Melody_MYSTERY_PROD_SCORE3398_ZONE5_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Melody MYSTERY_PROD_SCORE3398_ZONE5_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Melody_PROD_SCORE317_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Melody_PROD_SCORE317_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE188_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE188_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE278_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE278_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE487_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE487_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE87_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE87_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Nocturna_PROD_SCORE488_ZONE2_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Nocturna_PROD_SCORE488_ZONE2_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_PHASING_PROD_SCORE209_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE PHASING_PROD_SCORE209_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_PROD_SCORE191_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE_PROD_SCORE191_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_PROD_SCORE312_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE_PROD_SCORE312_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_PROD_SCORE396_ZONE2_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE_PROD_SCORE396_ZONE2_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_RANDOMIZER_PROD_SCORE171_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE171_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_RANDOMIZER_PROD_SCORE2119_ZONE3_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE2119_ZONE3_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_RANDOMIZER_PROD_SCORE4034_ZONE4_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE4034_ZONE4_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_SEEDED_HARD_PROD_SCORE2668_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE SEEDED HARD_PROD_SCORE2668_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_HARDCORE_Tempo_HARD_PROD_SCORE1320_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC HARDCORE Tempo HARD_PROD_SCORE1320_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_SEEDED_SPEEDRUN_HARD_PROD_SCORE97659881_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC SEEDED SPEEDRUN HARD_PROD_SCORE97659881_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_SPEEDRUN_Bard_PHASING_PROD_SCORE98017110_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC SPEEDRUN Bard PHASING_PROD_SCORE98017110_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DLC_SPEEDRUN_PROD_SCORE97674899_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\DLC SPEEDRUN_PROD_SCORE97674899_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Aria_PROD_SCORE265_ZONE4_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Aria_PROD_SCORE265_ZONE4_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Bard_PROD_SCORE102_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Bard_PROD_SCORE102_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Monk_DEATHLESS_PROD_SCORE0_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Monk DEATHLESS_PROD_SCORE0_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Monk_PROD_SCORE6_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Monk_PROD_SCORE6_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_PROD_SCORE272_ZONE2_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE_PROD_SCORE272_ZONE2_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_PROD_SCORE52_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE_PROD_SCORE52_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_PROD_SCORE534_ZONE1_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE_PROD_SCORE534_ZONE1_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_PROD_SCORE643_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE_PROD_SCORE643_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_SEEDED_PROD_SCORE0_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE SEEDED_PROD_SCORE0_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_SEEDED_PROD_SCORE55_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE SEEDED_PROD_SCORE55_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Story_Mode_PROD_SCORE121_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE121_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Story_Mode_PROD_SCORE143_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE143_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Story_Mode_PROD_SCORE165_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE165_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HARDCORE_Story_Mode_PROD_SCORE27_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE27_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PostReplaysError" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\PostReplaysError.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="SPEEDRUN_Bard_PROD_SCORE98525016_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\SPEEDRUN Bard_PROD_SCORE98525016_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="StaleReplays" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FullCycleResources\StaleReplays.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="UgcFileDetails_844845073340377377" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\UgcFileDetails_844845073340377377.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
@@ -300,156 +450,6 @@
   </data>
   <data name="UgcFileDetails_845970351217499797" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\UgcFileDetails_845970351217499797.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="DLC_12_9_2017_PROD_SCORE210_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 12_9_2017_PROD_SCORE210_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_12_9_2017_PROD_SCORE83_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 12_9_2017_PROD_SCORE83_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_5_9_2017_PROD_SCORE1195_ZONE3_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 5_9_2017_PROD_SCORE1195_ZONE3_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_5_9_2017_PROD_SCORE174_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 5_9_2017_PROD_SCORE174_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_6_9_2017_PROD_SCORE1305_ZONE2_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE1305_ZONE2_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_6_9_2017_PROD_SCORE3892_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE3892_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_6_9_2017_PROD_SCORE4410_ZONE3_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE4410_ZONE3_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_6_9_2017_PROD_SCORE7759_ZONE5_LEVEL5" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC 6_9_2017_PROD_SCORE7759_ZONE5_LEVEL5;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Aria_PROD_SCORE375_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Aria_PROD_SCORE375_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Bard_PHASING_PROD_SCORE4484_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Bard PHASING_PROD_SCORE4484_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Diamond_RANDOMIZER_PROD_SCORE246_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Diamond RANDOMIZER_PROD_SCORE246_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Melody_MYSTERY_PROD_SCORE3398_ZONE5_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Melody MYSTERY_PROD_SCORE3398_ZONE5_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Melody_PROD_SCORE317_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Melody_PROD_SCORE317_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE188_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE188_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE278_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE278_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE487_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE487_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_MYSTERY_PROD_SCORE87_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE MYSTERY_PROD_SCORE87_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Nocturna_PROD_SCORE488_ZONE2_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Nocturna_PROD_SCORE488_ZONE2_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_PHASING_PROD_SCORE209_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE PHASING_PROD_SCORE209_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_PROD_SCORE191_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE_PROD_SCORE191_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_PROD_SCORE312_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE_PROD_SCORE312_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_PROD_SCORE396_ZONE2_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE_PROD_SCORE396_ZONE2_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_RANDOMIZER_PROD_SCORE171_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE171_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_RANDOMIZER_PROD_SCORE2119_ZONE3_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE2119_ZONE3_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_RANDOMIZER_PROD_SCORE4034_ZONE4_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE RANDOMIZER_PROD_SCORE4034_ZONE4_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_SEEDED_HARD_PROD_SCORE2668_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE SEEDED HARD_PROD_SCORE2668_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_HARDCORE_Tempo_HARD_PROD_SCORE1320_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC HARDCORE Tempo HARD_PROD_SCORE1320_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_SEEDED_SPEEDRUN_HARD_PROD_SCORE97659881_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC SEEDED SPEEDRUN HARD_PROD_SCORE97659881_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_SPEEDRUN_Bard_PHASING_PROD_SCORE98017110_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC SPEEDRUN Bard PHASING_PROD_SCORE98017110_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="DLC_SPEEDRUN_PROD_SCORE97674899_ZONE5_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\DLC SPEEDRUN_PROD_SCORE97674899_ZONE5_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Aria_PROD_SCORE265_ZONE4_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Aria_PROD_SCORE265_ZONE4_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Bard_PROD_SCORE102_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Bard_PROD_SCORE102_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Monk_DEATHLESS_PROD_SCORE0_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Monk DEATHLESS_PROD_SCORE0_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Monk_PROD_SCORE6_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Monk_PROD_SCORE6_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_PROD_SCORE272_ZONE2_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE_PROD_SCORE272_ZONE2_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_PROD_SCORE52_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE_PROD_SCORE52_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_PROD_SCORE534_ZONE1_LEVEL4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE_PROD_SCORE534_ZONE1_LEVEL4;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_PROD_SCORE643_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE_PROD_SCORE643_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_SEEDED_PROD_SCORE0_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE SEEDED_PROD_SCORE0_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_SEEDED_PROD_SCORE55_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE SEEDED_PROD_SCORE55_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Story_Mode_PROD_SCORE121_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE121_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Story_Mode_PROD_SCORE143_ZONE1_LEVEL3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE143_ZONE1_LEVEL3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Story_Mode_PROD_SCORE165_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE165_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="HARDCORE_Story_Mode_PROD_SCORE27_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE27_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="PostReplaysError" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\PostReplaysError.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="SPEEDRUN_Bard_PROD_SCORE98525016_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\SPEEDRUN Bard_PROD_SCORE98525016_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="StaleReplays" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\StaleReplays.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="_12_9_2017_PROD_SCORE173_ZONE1_LEVEL2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\12_9_2017_PROD_SCORE173_ZONE1_LEVEL2;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
