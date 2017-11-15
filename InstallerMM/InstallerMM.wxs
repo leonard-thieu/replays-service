@@ -56,9 +56,6 @@
         <Component Id="owcA5E27D48EBC7E1742C9D63DD7DEB952C" Guid="8fa28dcb-d09f-7bab-e7b6-e9e9802661e2">
           <File Id="owfA5E27D48EBC7E1742C9D63DD7DEB952C" Source="$(var.SourceDir)\Microsoft.Data.Services.Client.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owcFA00D7145B7D14B89754AE971AE39D75" Guid="daf90fc7-52a9-d05d-b34d-a7438c3d42d5">
-          <File Id="owfFA00D7145B7D14B89754AE971AE39D75" Source="$(var.SourceDir)\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" KeyPath="yes" />
-        </Component>
         <Component Id="owcADE9A457248959D397C6B092C7CCF78B" Guid="4aac0c53-b1ed-bef0-2706-7a1a9ee332ae">
           <File Id="owfADE9A457248959D397C6B092C7CCF78B" Source="$(var.SourceDir)\Microsoft.Win32.Primitives.dll" KeyPath="yes" />
         </Component>
@@ -77,18 +74,16 @@
         <Component Id="owc3FC8434C1A84605AEEBC6A100CA2F3E1" Guid="47d7e276-db6d-424e-d797-1a69e1e24b3b">
           <File Id="owf3FC8434C1A84605AEEBC6A100CA2F3E1" Source="$(var.SourceDir)\Newtonsoft.Json.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc40B857C5CC2CAC09BD1708FC7761B1BE" Guid="67a53e59-b39b-69b9-7a69-e125255e9c54">
+          <File Id="owf40B857C5CC2CAC09BD1708FC7761B1BE" Source="$(var.SourceDir)\Polly.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owcED4CA0C587B1FFB62753FB5DED9C7587" Guid="c81d2020-653a-ed0b-7d1a-b67616f88462">
           <File Id="owfED4CA0C587B1FFB62753FB5DED9C7587" Source="$(var.SourceDir)\protobuf-net.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcCD62D949CF4EB05A6A3ED5BCFE52C978" Guid="f0e13060-9d4e-b205-3cde-dfeb91bbee29">
           <File Id="owfCD62D949CF4EB05A6A3ED5BCFE52C978" Source="$(var.SourceDir)\ReplaysService.exe" KeyPath="yes" />
           <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes">
-            <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension"
-                           FirstFailureActionType="restart"
-                           SecondFailureActionType="restart"
-                           ThirdFailureActionType="restart"
-                           RestartServiceDelayInSeconds="30"
-                           ResetPeriodInDays="1" />
+            <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension" FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="restart" RestartServiceDelayInSeconds="30" ResetPeriodInDays="1" />
           </ServiceInstall>
           <ServiceControl Id="sc00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
           <File Id="owf91FCC4586B173E3BCA775794089C4F29" Source="$(var.SourceDir)\ReplaysService.exe.config" CompanionFile="owfCD62D949CF4EB05A6A3ED5BCFE52C978" />

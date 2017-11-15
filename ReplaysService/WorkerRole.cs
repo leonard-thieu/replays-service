@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
+using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
@@ -30,7 +31,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             });
         }
 
-        internal static HttpMessageHandler CreateSteamWebApiHandler(HttpMessageHandler innerHandler = null)
+        internal static HttpMessageHandler CreateSteamWebApiHandler(TelemetryClient telemetryClient, HttpMessageHandler innerHandler = null)
         {
             innerHandler = innerHandler ?? new WebRequestHandler();
 
@@ -38,7 +39,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 new LoggingHandler(),
                 new GZipHandler(),
-                new SteamWebApiTransientFaultHandler(),
+                new SteamWebApiTransientFaultHandler(telemetryClient),
             });
         }
 
@@ -71,7 +72,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             return directory;
         }
 
-        public WorkerRole(IReplaysSettings settings) : base("replays", settings) { }
+        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : base("replays", settings, telemetryClient) { }
 
         private HttpMessageHandler toofzApiHandler;
 
@@ -107,7 +108,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
                 var replaysPerUpdate = Settings.ReplaysPerUpdate;
 
-                using (var toofzApiClient = new ToofzApiClient(toofzApiHandler, disposeHandler: false))
+                using (var toofzApiClient = new ToofzApiClient(toofzApiHandler, false, TelemetryClient))
                 {
                     toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
 
@@ -120,8 +121,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
 
-                    using (var steamWebApiClient = new SteamWebApiClient(CreateSteamWebApiHandler()))
-                    using (var ugcHttpClient = new UgcHttpClient(CreateUgcHandler()))
+                    using (var steamWebApiClient = new SteamWebApiClient(CreateSteamWebApiHandler(TelemetryClient), TelemetryClient))
+                    using (var ugcHttpClient = new UgcHttpClient(CreateUgcHandler(), TelemetryClient))
                     {
                         steamWebApiClient.SteamWebApiKey = steamWebApiKey;
 

@@ -209,7 +209,6 @@
     <Compile Include="ReplayDataflowNetworkTests.cs" />
     <Compile Include="ReplaysArgsParserTests.cs" />
     <Compile Include="ReplaysWorkerTests.cs" />
-    <Compile Include="StubReplaysSettings.cs" />
     <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
   <ItemGroup>
