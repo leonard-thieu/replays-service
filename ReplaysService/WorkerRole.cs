@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
@@ -92,44 +93,55 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
+            using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update replays cycle"))
             using (new UpdateActivity(Log, "replays"))
             {
-                if (string.IsNullOrEmpty(Settings.ToofzApiBaseAddress))
-                    throw new InvalidOperationException($"{nameof(Settings.ToofzApiBaseAddress)} is not set.");
-                if (Settings.SteamWebApiKey == null)
-                    throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
-                if (Settings.AzureStorageConnectionString == null)
-                    throw new InvalidOperationException($"{nameof(Settings.AzureStorageConnectionString)} is not set.");
-                if (Settings.ReplaysPerUpdate <= 0)
-                    throw new InvalidOperationException($"{nameof(Settings.ReplaysPerUpdate)} is not set to a positive number.");
-
-                var toofzApiBaseAddress = Settings.ToofzApiBaseAddress;
-                var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
-                var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
-                var replaysPerUpdate = Settings.ReplaysPerUpdate;
-
-                using (var toofzApiClient = new ToofzApiClient(toofzApiHandler, false, TelemetryClient))
+                try
                 {
-                    toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
+                    if (string.IsNullOrEmpty(Settings.ToofzApiBaseAddress))
+                        throw new InvalidOperationException($"{nameof(Settings.ToofzApiBaseAddress)} is not set.");
+                    if (Settings.SteamWebApiKey == null)
+                        throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
+                    if (Settings.AzureStorageConnectionString == null)
+                        throw new InvalidOperationException($"{nameof(Settings.AzureStorageConnectionString)} is not set.");
+                    if (Settings.ReplaysPerUpdate <= 0)
+                        throw new InvalidOperationException($"{nameof(Settings.ReplaysPerUpdate)} is not set to a positive number.");
 
-                    var account = CloudStorageAccount.Parse(azureStorageConnectionString);
-                    var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+                    var toofzApiBaseAddress = Settings.ToofzApiBaseAddress;
+                    var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
+                    var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
+                    var replaysPerUpdate = Settings.ReplaysPerUpdate;
 
-                    var replaysWorker = new ReplaysWorker(Settings.AppId);
-
-                    var replays = await replaysWorker.GetReplaysAsync(toofzApiClient, replaysPerUpdate, cancellationToken).ConfigureAwait(false);
-
-                    var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
-
-                    using (var steamWebApiClient = new SteamWebApiClient(CreateSteamWebApiHandler(TelemetryClient), TelemetryClient))
-                    using (var ugcHttpClient = new UgcHttpClient(CreateUgcHandler(), TelemetryClient))
+                    using (var toofzApiClient = new ToofzApiClient(toofzApiHandler, false, TelemetryClient))
                     {
-                        steamWebApiClient.SteamWebApiKey = steamWebApiKey;
+                        toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
 
-                        await replaysWorker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
+                        var account = CloudStorageAccount.Parse(azureStorageConnectionString);
+                        var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+
+                        var replaysWorker = new ReplaysWorker(Settings.AppId, TelemetryClient);
+
+                        var replays = await replaysWorker.GetReplaysAsync(toofzApiClient, replaysPerUpdate, cancellationToken).ConfigureAwait(false);
+
+                        var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
+
+                        using (var steamWebApiClient = new SteamWebApiClient(CreateSteamWebApiHandler(TelemetryClient), TelemetryClient))
+                        using (var ugcHttpClient = new UgcHttpClient(CreateUgcHandler(), TelemetryClient))
+                        {
+                            steamWebApiClient.SteamWebApiKey = steamWebApiKey;
+
+                            await replaysWorker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
+                        }
+
+                        await replaysWorker.StoreReplaysAsync(toofzApiClient, replays, cancellationToken).ConfigureAwait(false);
                     }
 
-                    await replaysWorker.StoreReplaysAsync(toofzApiClient, replays, cancellationToken).ConfigureAwait(false);
+                    operation.Telemetry.Success = true;
+                }
+                catch (Exception)
+                {
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }

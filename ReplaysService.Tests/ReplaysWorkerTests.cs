@@ -25,13 +25,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
     {
         public ReplaysWorkerTests()
         {
-            worker = new ReplaysWorker(appId);
+            worker = new ReplaysWorker(appId, telemetryClient);
             toofzApiClient = mockToofzApiClient.Object;
             steamWebApiClient = mockSteamWebApiClient.Object;
             ugcHttpClient = mockUgcHttpClient.Object;
         }
 
         private readonly uint appId = 247080;
+        private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly ReplaysWorker worker;
         private readonly Mock<IToofzApiClient> mockToofzApiClient = new Mock<IToofzApiClient>();
         private readonly IToofzApiClient toofzApiClient;
@@ -124,7 +125,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             {
                 // Arrange
                 var telemetryClient = new TelemetryClient();
-                var workerRole = new ReplaysWorker(247080);
+                var workerRole = new ReplaysWorker(247080, telemetryClient);
                 var cancellationToken = CancellationToken.None;
 
                 #region ToofzApiClient
