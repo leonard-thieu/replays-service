@@ -44,6 +44,23 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="RichardSzalay.MockHttp">
+      <Version>3.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="toofz.TestsShared">
+      <Version>5.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.assert">
+      <Version>2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.core">
+      <Version>2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <Version>2.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ReplaysService\ReplaysService.csproj">
       <Project>{a1dcec28-3283-4953-bd44-105dccbb04ce}</Project>
       <Name>ReplaysService</Name>
@@ -210,23 +227,6 @@
     <Compile Include="ReplaysArgsParserTests.cs" />
     <Compile Include="ReplaysWorkerTests.cs" />
     <Compile Include="WorkerRoleTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="RichardSzalay.MockHttp">
-      <Version>3.2.1</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.TestsShared">
-      <Version>5.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.assert">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.core">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.3.1</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
