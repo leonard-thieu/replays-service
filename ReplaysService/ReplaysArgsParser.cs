@@ -100,17 +100,16 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             #region AzureStorageConnectionString
 
             var azureStorageConnectionString = options.AzureStorageConnectionString;
-            if (!string.IsNullOrEmpty(azureStorageConnectionString))
-            {
-                settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, iterations);
-            }
-            else if (azureStorageConnectionString == null)
+            if (azureStorageConnectionString == null)
             {
                 azureStorageConnectionString = ReadOption("Azure Storage connection string");
-                settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, iterations);
             }
 
-            if (settings.AzureStorageConnectionString == null)
+            if (azureStorageConnectionString != "")
+            {
+                settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, iterations);
+            }
+            else if (settings.AzureStorageConnectionString == null)
             {
                 settings.AzureStorageConnectionString = new EncryptedSecret(DefaultAzureStorageConnectionString, iterations);
             }
