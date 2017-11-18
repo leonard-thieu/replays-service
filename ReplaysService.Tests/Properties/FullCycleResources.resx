@@ -256,17 +256,11 @@
   <data name="HARDCORE_Story_Mode_PROD_SCORE27_ZONE1_LEVEL1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\HARDCORE Story Mode_PROD_SCORE27_ZONE1_LEVEL1;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="PostReplaysError" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\PostReplaysError.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="SPEEDRUN_Bard_PROD_SCORE98525016_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\SPEEDRUN Bard_PROD_SCORE98525016_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="StaleReplays" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\FullCycleResources\StaleReplays.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="UgcFileDetails_844845073340377377" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\FullCycleResources\UgcFileDetails_844845073340377377.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>

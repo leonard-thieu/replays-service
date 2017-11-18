@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
+using toofz.NecroDancer.Leaderboards.Steam;
+using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.Services;
 using Xunit;
 
@@ -16,49 +17,36 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly IReplaysSettings settings = new StubReplaysSettings();
 
-        public class CreateToofzApiHandlerMethod
-        {
-            [Fact]
-            public void ReturnsHandler()
-            {
-                // Arrange
-                var toofzApiUserName = "myUserName";
-                var toofzApiPassword = "myPassword";
-
-                // Act
-                var handler = WorkerRole.CreateToofzApiHandler(toofzApiUserName, toofzApiPassword);
-
-                // Assert
-                Assert.IsAssignableFrom<HttpMessageHandler>(handler);
-            }
-        }
-
-        public class CreateSteamWebApiHandlerMethod
+        public class CreateSteamWebApiClientMethod
         {
             [Fact]
             public void ReturnsHandler()
             {
                 // Arrange 
+                var apiKey = "myApiKey";
                 var telemetryClient = new TelemetryClient();
 
                 // Act
-                var handler = WorkerRole.CreateSteamWebApiHandler(telemetryClient);
+                var client = WorkerRole.CreateSteamWebApiClient(apiKey, telemetryClient);
 
                 // Assert
-                Assert.IsAssignableFrom<HttpMessageHandler>(handler);
+                Assert.IsAssignableFrom<ISteamWebApiClient>(client);
             }
         }
 
-        public class CreateUgcHandlerMethod
+        public class CreateUgcHttpClientMethod
         {
             [Fact]
             public void ReturnsHandler()
             {
-                // Arrange -> Act
-                var handler = WorkerRole.CreateUgcHandler();
+                // Arrange
+                var telemetryClient = new TelemetryClient();
+
+                // Act
+                var client = WorkerRole.CreateUgcHttpClient(telemetryClient);
 
                 // Assert
-                Assert.IsAssignableFrom<HttpMessageHandler>(handler);
+                Assert.IsAssignableFrom<IUgcHttpClient>(client);
             }
         }
 
@@ -129,62 +117,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             }
         }
 
-        public class OnStartMethod : WorkerRoleTests
-        {
-            public OnStartMethod()
-            {
-                settings.ToofzApiUserName = "myUserName";
-                settings.ToofzApiPassword = new EncryptedSecret("myPassword", 1);
-                workerRole = new WorkerRole(settings, telemetryClient);
-            }
-
-            private readonly WorkerRole workerRole;
-
-            [Fact]
-            public void ToofzApiUserNameIsNull_ThrowsInvalidOperationException()
-            {
-                // Arrange
-                settings.ToofzApiUserName = null;
-
-                // Act -> Assert
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    workerRole.Start();
-                });
-            }
-
-            [Fact]
-            public void ToofzApiUserNameIsEmpty_ThrowsInvalidOperationException()
-            {
-                // Arrange
-                settings.ToofzApiUserName = "";
-
-                // Act -> Assert
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    workerRole.Start();
-                });
-            }
-
-            [Fact]
-            public void ToofzApiPasswordIsNull_ThrowsInvalidOperationException()
-            {
-                // Arrange
-                settings.ToofzApiPassword = null;
-
-                // Act -> Assert
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    workerRole.Start();
-                });
-            }
-        }
-
         public class RunAsyncOverrideMethod : WorkerRoleTests
         {
             public RunAsyncOverrideMethod()
             {
-                settings.ToofzApiBaseAddress = "http://example.org";
                 settings.SteamWebApiKey = new EncryptedSecret("mySteamWebApiKey", 1);
                 settings.AzureStorageConnectionString = new EncryptedSecret("myAzureStorageConnectionString", 1);
                 settings.ReplaysPerUpdate = 1;
@@ -193,32 +129,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
             private readonly WorkerRoleAdapter workerRole;
             private readonly CancellationToken cancellationToken = default;
-
-            [Fact]
-            public async Task ToofzApiBaseAddressIsNull_ThrowsInvalidOperationException()
-            {
-                // Arrange
-                settings.ToofzApiBaseAddress = null;
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                {
-                    return workerRole.PublicRunAsyncOverride(cancellationToken);
-                });
-            }
-
-            [Fact]
-            public async Task ToofzApiBaseAddressIsEmpty_ThrowsInvalidOperationException()
-            {
-                // Arrange
-                settings.ToofzApiBaseAddress = "";
-
-                // Act -> Assert
-                await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                {
-                    return workerRole.PublicRunAsyncOverride(cancellationToken);
-                });
-            }
 
             [Fact]
             public async Task SteamWebApiKeyIsNull_ThrowsInvalidOperationException()
@@ -272,15 +182,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public uint AppId => 247080;
 
             public int ReplaysPerUpdate { get; set; }
-            public string ToofzApiBaseAddress { get; set; }
-            public string ToofzApiUserName { get; set; }
-            public EncryptedSecret ToofzApiPassword { get; set; }
             public EncryptedSecret SteamWebApiKey { get; set; }
             public EncryptedSecret AzureStorageConnectionString { get; set; }
             public TimeSpan UpdateInterval { get; set; }
             public TimeSpan DelayBeforeGC { get; set; }
             public string InstrumentationKey { get; set; }
             public int KeyDerivationIterations { get; set; }
+            public EncryptedSecret LeaderboardsConnectionString { get; set; }
 
             public void Reload() { }
 

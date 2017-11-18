@@ -20,9 +20,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             base.OnParsing(settingsType, optionSet, options);
 
             optionSet.Add("replays=", GetDescription(settingsType, nameof(Settings.ReplaysPerUpdate)), (int replays) => options.ReplaysPerUpdate = replays);
-            optionSet.Add("toofz=", GetDescription(settingsType, nameof(Settings.ToofzApiBaseAddress)), api => options.ToofzApiBaseAddress = api);
-            optionSet.Add("username=", GetDescription(settingsType, nameof(Settings.ToofzApiUserName)), username => options.ToofzApiUserName = username);
-            optionSet.Add("password:", GetDescription(settingsType, nameof(Settings.ToofzApiPassword)), password => options.ToofzApiPassword = password);
             optionSet.Add("apikey:", GetDescription(settingsType, nameof(Settings.SteamWebApiKey)), apikey => options.SteamWebApiKey = apikey);
             optionSet.Add("storage:", GetDescription(settingsType, nameof(Settings.AzureStorageConnectionString)), storage => options.AzureStorageConnectionString = storage);
         }
@@ -39,45 +36,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             if (replaysPerUpdate != null)
             {
                 settings.ReplaysPerUpdate = replaysPerUpdate.Value;
-            }
-
-            #endregion
-
-            #region ToofzApiBaseAddress
-
-            var toofzApiBaseAddress = options.ToofzApiBaseAddress;
-            if (!string.IsNullOrEmpty(toofzApiBaseAddress))
-            {
-                settings.ToofzApiBaseAddress = toofzApiBaseAddress;
-            }
-
-            #endregion
-
-            #region ToofzApiUserName
-
-            var toofzApiUserName = options.ToofzApiUserName;
-            if (!string.IsNullOrEmpty(toofzApiUserName))
-            {
-                settings.ToofzApiUserName = toofzApiUserName;
-            }
-            else if (string.IsNullOrEmpty(settings.ToofzApiUserName))
-            {
-                settings.ToofzApiUserName = ReadOption("toofz API user name");
-            }
-
-            #endregion
-
-            #region ToofzApiPassword
-
-            var toofzApiPassword = options.ToofzApiPassword;
-            if (ShouldPromptForRequiredSetting(toofzApiPassword, settings.ToofzApiPassword))
-            {
-                toofzApiPassword = ReadOption("toofz API password");
-            }
-
-            if (toofzApiPassword != "")
-            {
-                settings.ToofzApiPassword = new EncryptedSecret(toofzApiPassword, iterations);
             }
 
             #endregion

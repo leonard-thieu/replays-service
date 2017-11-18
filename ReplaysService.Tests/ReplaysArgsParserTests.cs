@@ -25,8 +25,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         {
             public ParseMethod()
             {
-                settings.ToofzApiUserName = "userName";
-                settings.ToofzApiPassword = new EncryptedSecret("password", 1);
                 settings.SteamWebApiKey = new EncryptedSecret("steamWebApiKey", 1);
                 settings.AzureStorageConnectionString = new EncryptedSecret("connectionString", 1);
                 settings.KeyDerivationIterations = 1;
@@ -47,22 +45,21 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 parser.Parse(args, settings);
 
                 // Assert
+                var output = outWriter.ToString();
                 Assert.Equal(@"
 Usage: ReplaysService.exe [options]
 
 options:
-  --help              Shows usage information.
-  --interval=VALUE    The minimum amount of time that should pass between each cycle.
-  --delay=VALUE       The amount of time to wait after a cycle to perform garbage collection.
-  --ikey=VALUE        An Application Insights instrumentation key.
-  --iterations=VALUE  The number of rounds to execute a key derivation function.
-  --replays=VALUE     The number of replays to update.
-  --toofz=VALUE       The base address of toofz API.
-  --username=VALUE    The user name used to log on to toofz API.
-  --password[=VALUE]  The password used to log on to toofz API.
-  --apikey[=VALUE]    A Steam Web API key.
-  --storage[=VALUE]   An Azure Storage connection string.
-", outWriter.ToString(), ignoreLineEndingDifferences: true);
+  --help                Shows usage information.
+  --interval=VALUE      The minimum amount of time that should pass between each cycle.
+  --delay=VALUE         The amount of time to wait after a cycle to perform garbage collection.
+  --ikey=VALUE          An Application Insights instrumentation key.
+  --iterations=VALUE    The number of rounds to execute a key derivation function.
+  --connection[=VALUE]  The connection string used to connect to the leaderboards database.
+  --replays=VALUE       The number of replays to update.
+  --apikey[=VALUE]      A Steam Web API key.
+  --storage[=VALUE]     An Azure Storage connection string.
+", output, ignoreLineEndingDifferences: true);
             }
 
             #region ReplaysPerUpdate
@@ -78,136 +75,6 @@ options:
 
                 // Assert
                 Assert.Equal(10, settings.ReplaysPerUpdate);
-            }
-
-            #endregion
-
-            #region ToofzApiBaseAddress
-
-            [Fact]
-            public void ToofzIsSpecified_SetsToofzApiBaseAddress()
-            {
-                // Arrange
-                string[] args = { "--toofz=http://localhost/" };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                Assert.Equal("http://localhost/", settings.ToofzApiBaseAddress);
-            }
-
-            #endregion
-
-            #region ToofzApiUserName
-
-            [Fact]
-            public void UserNameIsSpecified_SetToofzApiUserName()
-            {
-                // Arrange
-                string[] args = { "--username=myUserName" };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                Assert.Equal("myUserName", settings.ToofzApiUserName);
-            }
-
-            [Fact]
-            public void UserNameIsNotSpecifiedAndToofzApiUserNameIsNotSet_PromptsUserForUserNameAndSetsToofzApiUserName()
-            {
-                // Arrange
-                string[] args = { };
-                settings.ToofzApiUserName = null;
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myUserName");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                Assert.Equal("myUserName", settings.ToofzApiUserName);
-            }
-
-            [Fact]
-            public void UserNameIsNotSpecifiedAndToofzApiUserNameIsSet_DoesNotSetToofzApiUserName()
-            {
-                // Arrange
-                string[] args = { };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                Assert.Equal("userName", settings.ToofzApiUserName);
-            }
-
-            #endregion
-
-            #region ToofzApiPassword
-
-            [Fact]
-            public void PasswordIsSpecified_SetsToofzApiPassword()
-            {
-                // Arrange
-                string[] args = { "--password=myPassword" };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.ToofzApiPassword.Decrypt());
-            }
-
-            [Fact]
-            public void PasswordFlagIsSpecified_PromptsUserForPasswordAndSetsToofzApiPassword()
-            {
-                // Arrange
-                string[] args = { "--password" };
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myPassword");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.ToofzApiPassword.Decrypt());
-            }
-
-            [Fact]
-            public void PasswordFlagIsNotSpecifiedAndToofzApiPasswordIsNotSet_PromptsUserForPasswordAndSetsToofzApiPassword()
-            {
-                // Arrange
-                string[] args = { };
-                settings.ToofzApiPassword = null;
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myPassword");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.ToofzApiPassword.Decrypt());
-            }
-
-            [Fact]
-            public void PasswordFlagIsNotSpecifiedAndToofzApiPasswordIsSet_DoesNotSetToofzApiPassword()
-            {
-                // Arrange
-                string[] args = { };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                Assert.Equal("password", settings.ToofzApiPassword.Decrypt());
             }
 
             #endregion
@@ -346,15 +213,13 @@ options:
                 public uint AppId => 247080;
 
                 public int ReplaysPerUpdate { get; set; }
-                public string ToofzApiBaseAddress { get; set; }
-                public string ToofzApiUserName { get; set; }
-                public EncryptedSecret ToofzApiPassword { get; set; }
                 public EncryptedSecret SteamWebApiKey { get; set; }
                 public EncryptedSecret AzureStorageConnectionString { get; set; }
                 public TimeSpan UpdateInterval { get; set; }
                 public TimeSpan DelayBeforeGC { get; set; }
                 public string InstrumentationKey { get; set; }
                 public int KeyDerivationIterations { get; set; }
+                public EncryptedSecret LeaderboardsConnectionString { get; set; }
 
                 public void Reload() { }
 

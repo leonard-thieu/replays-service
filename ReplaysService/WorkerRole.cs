@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
-using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
@@ -20,40 +20,32 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        internal static HttpMessageHandler CreateToofzApiHandler(string toofzApiUserName, string toofzApiPassword, HttpMessageHandler innerHandler = null)
-        {
-            innerHandler = innerHandler ?? new WebRequestHandler { AutomaticDecompression = DecompressionMethods.GZip };
-
-            return HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
-            {
-                new LoggingHandler(),
-                new ToofzHttpErrorHandler(),
-                new OAuth2Handler(toofzApiUserName, toofzApiPassword),
-            });
-        }
-
-        internal static HttpMessageHandler CreateSteamWebApiHandler(TelemetryClient telemetryClient, HttpMessageHandler innerHandler = null)
+        internal static ISteamWebApiClient CreateSteamWebApiClient(string apiKey, TelemetryClient telemetryClient, HttpMessageHandler innerHandler = null)
         {
             innerHandler = innerHandler ?? new WebRequestHandler();
 
-            return HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
+            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
             {
                 new LoggingHandler(),
                 new GZipHandler(),
                 new SteamWebApiTransientFaultHandler(telemetryClient),
             });
+
+            return new SteamWebApiClient(handler, telemetryClient) { SteamWebApiKey = apiKey };
         }
 
-        internal static HttpMessageHandler CreateUgcHandler(HttpMessageHandler innerHandler = null)
+        internal static IUgcHttpClient CreateUgcHttpClient(TelemetryClient telemetryClient, HttpMessageHandler innerHandler = null)
         {
             innerHandler = innerHandler ?? new WebRequestHandler();
 
-            return HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
+            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
             {
                 new LoggingHandler(),
                 new GZipHandler(),
                 new HttpErrorHandler(),
             });
+
+            return new UgcHttpClient(handler, telemetryClient);
         }
 
         internal static async Task<ICloudBlobDirectory> GetCloudBlobDirectory(
@@ -75,22 +67,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : base("replays", settings, telemetryClient) { }
 
-        private HttpMessageHandler toofzApiHandler;
-
-        protected override void OnStart(string[] args)
-        {
-            if (string.IsNullOrEmpty(Settings.ToofzApiUserName))
-                throw new InvalidOperationException($"{nameof(Settings.ToofzApiUserName)} is not set.");
-            if (Settings.ToofzApiPassword == null)
-                throw new InvalidOperationException($"{nameof(Settings.ToofzApiPassword)} is not set.");
-
-            var toofzApiUserName = Settings.ToofzApiUserName;
-            var toofzApiPassword = Settings.ToofzApiPassword.Decrypt();
-            toofzApiHandler = CreateToofzApiHandler(toofzApiUserName, toofzApiPassword);
-
-            base.OnStart(args);
-        }
-
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update replays cycle"))
@@ -98,8 +74,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(Settings.ToofzApiBaseAddress))
-                        throw new InvalidOperationException($"{nameof(Settings.ToofzApiBaseAddress)} is not set.");
+                    if (Settings.LeaderboardsConnectionString == null)
+                        throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
                     if (Settings.SteamWebApiKey == null)
                         throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
                     if (Settings.AzureStorageConnectionString == null)
@@ -107,33 +83,33 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     if (Settings.ReplaysPerUpdate <= 0)
                         throw new InvalidOperationException($"{nameof(Settings.ReplaysPerUpdate)} is not set to a positive number.");
 
-                    var toofzApiBaseAddress = Settings.ToofzApiBaseAddress;
-                    var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
-                    var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
+                    var leaderboardsConnectionString = Settings.LeaderboardsConnectionString.Decrypt();
                     var replaysPerUpdate = Settings.ReplaysPerUpdate;
+                    var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
+                    var account = CloudStorageAccount.Parse(azureStorageConnectionString);
+                    var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
 
-                    using (var toofzApiClient = new ToofzApiClient(toofzApiHandler, false, TelemetryClient))
+                    var worker = new ReplaysWorker(Settings.AppId, TelemetryClient);
+
+                    IEnumerable<Replay> replays;
+                    using (var db = new LeaderboardsContext(leaderboardsConnectionString))
                     {
-                        toofzApiClient.BaseAddress = new Uri(toofzApiBaseAddress);
+                        replays = await worker.GetReplaysAsync(db, replaysPerUpdate, cancellationToken).ConfigureAwait(false);
+                    }
 
-                        var account = CloudStorageAccount.Parse(azureStorageConnectionString);
-                        var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+                    var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+                    var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
 
-                        var replaysWorker = new ReplaysWorker(Settings.AppId, TelemetryClient);
+                    using (var steamWebApiClient = CreateSteamWebApiClient(steamWebApiKey, TelemetryClient))
+                    using (var ugcHttpClient = CreateUgcHttpClient(TelemetryClient))
+                    {
+                        await worker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
+                    }
 
-                        var replays = await replaysWorker.GetReplaysAsync(toofzApiClient, replaysPerUpdate, cancellationToken).ConfigureAwait(false);
-
-                        var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
-
-                        using (var steamWebApiClient = new SteamWebApiClient(CreateSteamWebApiHandler(TelemetryClient), TelemetryClient))
-                        using (var ugcHttpClient = new UgcHttpClient(CreateUgcHandler(), TelemetryClient))
-                        {
-                            steamWebApiClient.SteamWebApiKey = steamWebApiKey;
-
-                            await replaysWorker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
-                        }
-
-                        await replaysWorker.StoreReplaysAsync(toofzApiClient, replays, cancellationToken).ConfigureAwait(false);
+                    using (var connection = new SqlConnection(leaderboardsConnectionString))
+                    {
+                        var storeClient = new LeaderboardsStoreClient(connection);
+                        await worker.StoreReplaysAsync(storeClient, replays, cancellationToken).ConfigureAwait(false);
                     }
 
                     operation.Telemetry.Success = true;

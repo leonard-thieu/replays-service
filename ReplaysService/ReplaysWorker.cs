@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,6 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
-using toofz.NecroDancer.Leaderboards.toofz;
 using toofz.NecroDancer.Replays;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
@@ -28,29 +28,18 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         private readonly uint appId;
         private readonly TelemetryClient telemetryClient;
 
-        public async Task<IEnumerable<Replay>> GetReplaysAsync(
-            IToofzApiClient toofzApiClient,
+        public Task<List<Replay>> GetReplaysAsync(
+            ILeaderboardsContext db,
             int limit,
             CancellationToken cancellationToken)
         {
-            var response = await toofzApiClient
-                .GetReplaysAsync(new GetReplaysParams
-                {
-                    Limit = limit,
-                }, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            var replays = (from r in response.Replays
-                           select new Replay
-                           {
-                               ReplayId = r.Id,
-                               ErrorCode = r.Error,
-                               Seed = r.Seed,
-                               Version = r.Version,
-                               KilledBy = r.KilledBy,
-                           })
-                           .ToList();
-
-            return replays;
+            return (from r in db.Replays.AsNoTracking()
+                    where r.Version == null
+                    where r.ErrorCode == null
+                    orderby r.ReplayId
+                    select r)
+                    .Take(() => limit)
+                    .ToListAsync(cancellationToken);
         }
 
         public async Task UpdateReplaysAsync(
@@ -93,7 +82,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         }
 
         public async Task StoreReplaysAsync(
-            IToofzApiClient toofzApiClient,
+            ILeaderboardsStoreClient storeClient,
             IEnumerable<Replay> replays,
             CancellationToken cancellationToken)
         {
@@ -102,8 +91,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 try
                 {
-                    var bulkStore = await toofzApiClient.PostReplaysAsync(replays, cancellationToken).ConfigureAwait(false);
-                    activity.Report(bulkStore.RowsAffected);
+                    var rowsAffected = await storeClient.BulkUpsertAsync(replays, cancellationToken).ConfigureAwait(false);
+                    activity.Report(rowsAffected);
 
                     operation.Telemetry.Success = true;
                 }

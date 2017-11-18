@@ -20,17 +20,11 @@
     <Setting Name="KeyDerivationIterations" Description="The number of rounds to execute a key derivation function." Type="System.Int32" Scope="User">
       <Value Profile="(Default)">20000</Value>
     </Setting>
+    <Setting Name="LeaderboardsConnectionString" Description="The connection string used to connect to the leaderboards database." Type="toofz.Services.EncryptedSecret" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="ReplaysPerUpdate" Description="The number of replays to update." Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
-    </Setting>
-    <Setting Name="ToofzApiBaseAddress" Description="The base address of toofz API." Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://localhost:49603/</Value>
-    </Setting>
-    <Setting Name="ToofzApiUserName" Description="The user name used to log on to toofz API." Type="System.String" Scope="User">
-      <Value Profile="(Default)">ReplaysService</Value>
-    </Setting>
-    <Setting Name="ToofzApiPassword" Description="The password used to log on to toofz API." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SteamWebApiKey" Description="A Steam Web API key." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
