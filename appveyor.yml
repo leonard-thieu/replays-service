@@ -10,7 +10,7 @@ environment:
   PROJECT: ReplaysService
   MYGET_API_KEY:
     secure: XZmbJDCK5oiqhbLt1y7UXM6aCYPpF2tm/bJMUJzBsCe1fd2TuwXyaz99RN+bDpHw
-  LeaderboardsContextTestConnectionString: Server=(local)\SQL2014;User ID=sa;Password=Password12!
+  LeaderboardsContextTestConnectionString: Server=(local)\SQL2014;Initial Catalog=TestReplaysService;User ID=sa;Password=Password12!
   PROJECT_PACKAGE: toofz-replays-service-v%APPVEYOR_BUILD_VERSION%.msi
 notifications:
   - provider: Slack
