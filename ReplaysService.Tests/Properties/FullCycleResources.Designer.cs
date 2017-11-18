@@ -632,15 +632,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;message&quot;:&quot;An error has occurred.&quot;}.
-        /// </summary>
-        internal static string PostReplaysError {
-            get {
-                return ResourceManager.GetString("PostReplaysError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] SPEEDRUN_Bard_PROD_SCORE98525016_ZONE4_LEVEL6 {
@@ -657,41 +648,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties {
             get {
                 object obj = ResourceManager.GetObject("SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;total&quot;: 69408,
-        ///  &quot;replays&quot;: [
-        ///    {
-        ///      &quot;id&quot;: &quot;844845073340377377&quot;,
-        ///      &quot;error&quot;: null,
-        ///      &quot;seed&quot;: null,
-        ///      &quot;version&quot;: null,
-        ///      &quot;killed_by&quot;: null
-        ///    },
-        ///    {
-        ///      &quot;id&quot;: &quot;844845073340436306&quot;,
-        ///      &quot;error&quot;: null,
-        ///      &quot;seed&quot;: null,
-        ///      &quot;version&quot;: null,
-        ///      &quot;killed_by&quot;: null
-        ///    },
-        ///    {
-        ///      &quot;id&quot;: &quot;844845073340472702&quot;,
-        ///      &quot;error&quot;: null,
-        ///      &quot;seed&quot;: null,
-        ///      &quot;version&quot;: null,
-        ///      &quot;killed_by&quot;: null
-        ///    },
-        ///    {
-        ///      &quot;id&quot;: &quot;844845073340489317&quot;,
-        ///       [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string StaleReplays {
-            get {
-                return ResourceManager.GetString("StaleReplays", resourceCulture);
             }
         }
         

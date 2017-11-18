@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data.SqlClient;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,13 +10,12 @@ using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
-using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
-using toofz.NecroDancer.Leaderboards.toofz;
+using toofz.TestsShared;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
@@ -26,38 +25,30 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         public ReplaysWorkerTests()
         {
             worker = new ReplaysWorker(appId, telemetryClient);
-            toofzApiClient = mockToofzApiClient.Object;
-            steamWebApiClient = mockSteamWebApiClient.Object;
-            ugcHttpClient = mockUgcHttpClient.Object;
         }
 
         private readonly uint appId = 247080;
         private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly ReplaysWorker worker;
-        private readonly Mock<IToofzApiClient> mockToofzApiClient = new Mock<IToofzApiClient>();
-        private readonly IToofzApiClient toofzApiClient;
-        private readonly Mock<ISteamWebApiClient> mockSteamWebApiClient = new Mock<ISteamWebApiClient>();
-        private readonly ISteamWebApiClient steamWebApiClient;
-        private readonly Mock<IUgcHttpClient> mockUgcHttpClient = new Mock<IUgcHttpClient>();
-        private readonly IUgcHttpClient ugcHttpClient;
         private readonly CancellationToken cancellationToken = default;
 
-        public class GetStaleReplaysAsyncMethod : ReplaysWorkerTests
+        public class GetReplaysAsyncMethod : ReplaysWorkerTests
         {
             [Fact]
-            public async Task ReturnsStaleReplays()
+            public async Task ReturnsReplays()
             {
                 // Arrange
-                mockToofzApiClient
-                    .Setup(c => c.GetReplaysAsync(It.IsAny<GetReplaysParams>(), It.IsAny<IProgress<long>>(), It.IsAny<CancellationToken>()))
-                    .ReturnsAsync(new ReplaysEnvelope { Replays = new List<ReplayDTO>() });
+                var mockDb = new Mock<ILeaderboardsContext>();
+                var db = mockDb.Object;
+                var mockDbReplays = new MockDbSet<Replay>();
+                mockDb.Setup(d => d.Replays).Returns(mockDbReplays.Object);
                 var limit = 20;
 
                 // Act
-                var staleReplays = await worker.GetReplaysAsync(toofzApiClient, limit, cancellationToken);
+                var replays = await worker.GetReplaysAsync(db, limit, cancellationToken);
 
                 // Assert
-                Assert.IsAssignableFrom<IEnumerable<Replay>>(staleReplays);
+                Assert.IsAssignableFrom<IEnumerable<Replay>>(replays);
             }
         }
 
@@ -65,6 +56,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         {
             public UpdateReplaysAsyncMethod()
             {
+                steamWebApiClient = mockSteamWebApiClient.Object;
+                ugcHttpClient = mockUgcHttpClient.Object;
+
                 mockBlob.SetupGet(b => b.Properties).Returns(new BlobProperties());
                 mockBlob.SetupGet(b => b.Uri).Returns(new Uri("http://example.org/"));
                 blob = mockBlob.Object;
@@ -73,6 +67,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 directory = mockDirectory.Object;
             }
 
+            private readonly Mock<ISteamWebApiClient> mockSteamWebApiClient = new Mock<ISteamWebApiClient>();
+            private readonly ISteamWebApiClient steamWebApiClient;
+            private readonly Mock<IUgcHttpClient> mockUgcHttpClient = new Mock<IUgcHttpClient>();
+            private readonly IUgcHttpClient ugcHttpClient;
             private readonly Mock<ICloudBlockBlob> mockBlob = new Mock<ICloudBlockBlob>();
             private readonly ICloudBlockBlob blob;
             private readonly Mock<ICloudBlobDirectory> mockDirectory = new Mock<ICloudBlobDirectory>();
@@ -80,7 +78,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             private readonly List<Replay> replays = new List<Replay>();
 
             [Fact]
-            public async Task ReturnsReplays()
+            public async Task UpdatesReplays()
             {
                 // Arrange
                 mockSteamWebApiClient
@@ -98,28 +96,56 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
         public class StoreReplaysAsyncMethod : ReplaysWorkerTests
         {
+            public StoreReplaysAsyncMethod()
+            {
+                storeClient = mockStoreClient.Object;
+            }
+
+            private Mock<ILeaderboardsStoreClient> mockStoreClient = new Mock<ILeaderboardsStoreClient>();
+            private ILeaderboardsStoreClient storeClient;
             private readonly List<Replay> replays = new List<Replay>();
 
             [Fact]
             public async Task StoresReplays()
             {
                 // Arrange
-                mockToofzApiClient
-                    .Setup(c => c.PostReplaysAsync(replays, cancellationToken))
-                    .ReturnsAsync(new BulkStoreDTO());
+                mockStoreClient
+                    .Setup(c => c.BulkUpsertAsync(replays, cancellationToken))
+                    .ReturnsAsync(replays.Count);
 
                 // Act
-                await worker.StoreReplaysAsync(toofzApiClient, replays, cancellationToken);
+                await worker.StoreReplaysAsync(storeClient, replays, cancellationToken);
 
                 // Assert
-                mockToofzApiClient.Verify(c => c.PostReplaysAsync(replays, cancellationToken), Times.Once);
+                mockStoreClient.Verify(c => c.BulkUpsertAsync(replays, cancellationToken), Times.Once);
             }
         }
 
         [Trait("Category", "Uses Azure Storage Emulator")]
         [Collection(AzureStorageCollection.Name)]
-        public class IntegrationTests
+        [Trait("Category", "Uses SQL Server")]
+        public class IntegrationTests : IDisposable
         {
+            public IntegrationTests()
+            {
+                var connectionString = DatabaseHelper.GetConnectionString();
+                db = new LeaderboardsContext(connectionString);
+                connection = new SqlConnection(connectionString);
+                db.Database.Delete();  // Make sure it really dropped - needed for dirty database
+                db.Database.Initialize(force: true);
+            }
+
+            private readonly LeaderboardsContext db;
+            private readonly SqlConnection connection;
+
+            public void Dispose()
+            {
+                connection.Close();
+                db.Database.Delete();
+                db.Dispose();
+                connection.Dispose();
+            }
+
             [Fact]
             public async Task EndToEnd()
             {
@@ -128,26 +154,76 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var workerRole = new ReplaysWorker(247080, telemetryClient);
                 var cancellationToken = CancellationToken.None;
 
-                #region ToofzApiClient
+                #region LeaderboardsContext
 
-                var toofzApiClientHandler = new MockHttpMessageHandler();
-                toofzApiClientHandler.When(HttpMethod.Get, "http://localhost/replays").RespondWithJson(FullCycleResources.StaleReplays);
-                toofzApiClientHandler
-                    .When(HttpMethod.Post, "http://localhost/replays")
-                    .With(request =>
-                    {
-                        var content = request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                        var _replays = JsonConvert.DeserializeObject<IEnumerable<Replay>>(content);
-
-                        var replayNotFound = _replays.Single(r => r.ReplayId == 845970274592369232);
-
-                        return
-                            _replays.Count() == 60 &&
-                            replayNotFound.ErrorCode == 2404;
-                    })
-                    .Respond(HttpStatusCode.InternalServerError, new StringContent(FullCycleResources.PostReplaysError, Encoding.UTF8, "application/json"));
-                var toofzApiClientHandlers = WorkerRole.CreateToofzApiHandler("myUserName", "myPassword", toofzApiClientHandler);
-                var toofzApiClient = new ToofzApiClient(toofzApiClientHandlers, false, telemetryClient) { BaseAddress = new Uri("http://localhost/") };
+                var replayIds = new[]
+                {
+                    844845073340377377,
+                    844845073340436306,
+                    844845073340472702,
+                    844845073340489317,
+                    844845073340511612,
+                    844845073340512126,
+                    844845073340539302,
+                    844845073340574779,
+                    844845073340582264,
+                    844845073340618972,
+                    844845073340654449,
+                    844845073340658917,
+                    844845073340661010,
+                    844845073340712746,
+                    844845073340796353,
+                    844845073340843735,
+                    845970274592369232,
+                    845970274592383940,
+                    845970274592402923,
+                    845970274592404139,
+                    845970274592417527,
+                    845970274592539966,
+                    845970274592540128,
+                    845970274592641888,
+                    845970274592656129,
+                    845970274592667508,
+                    845970274592678894,
+                    845970274592679004,
+                    845970274592783564,
+                    845970274592783747,
+                    845970274592823214,
+                    845970351216224430,
+                    845970351216237024,
+                    845970351216294057,
+                    845970351216353794,
+                    845970351216404327,
+                    845970351216460106,
+                    845970351216468628,
+                    845970351216482197,
+                    845970351216614550,
+                    845970351216627104,
+                    845970351216647618,
+                    845970351216663674,
+                    845970351216677651,
+                    845970351216722085,
+                    845970351216735376,
+                    845970351216743053,
+                    845970351216748528,
+                    845970351216837544,
+                    845970351216845676,
+                    845970351216964529,
+                    845970351216998233,
+                    845970351217037549,
+                    845970351217043243,
+                    845970351217061481,
+                    845970351217127622,
+                    845970351217136579,
+                    845970351217310845,
+                    845970351217341480,
+                    845970351217499797,
+                };
+                foreach (var replayId in replayIds)
+                {
+                    db.Replays.Add(new Replay { ReplayId = replayId });
+                    db.SaveChanges();
+                }
 
                 #endregion
 
@@ -214,11 +290,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217310845, FullCycleResources.UgcFileDetails_845970351217310845);
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217341480, FullCycleResources.UgcFileDetails_845970351217341480);
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217499797, FullCycleResources.UgcFileDetails_845970351217499797);
-                var steamWebApiClientHandlers = WorkerRole.CreateSteamWebApiHandler(telemetryClient, steamWebApiClientHandler);
-                var steamWebApiClient = new SteamWebApiClient(steamWebApiClientHandlers, telemetryClient)
-                {
-                    SteamWebApiKey = "mySteamWebApiKey",
-                };
+                var steamWebApiClient = WorkerRole.CreateSteamWebApiClient("mySteamWebApiKey", telemetryClient, steamWebApiClientHandler);
 
                 #endregion
 
@@ -285,8 +357,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217310845/AB3A5D78136231A85ADABE91DDE687D38F79E84B/").Respond(new ByteArrayContent(FullCycleResources.DLC_SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6));
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217341480/1D2EADAFE681E8E801E8CAB0B1AAEE101A3FADB0/").Respond(new ByteArrayContent(FullCycleResources.DLC_6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4));
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217499797/C037E8872756B56162B20639E94FF3C21A5D06CA/").Respond(new ByteArrayContent(FullCycleResources.DLC_HARDCORE_Melody_PROD_SCORE317_ZONE1_LEVEL3));
-                var ugcHttpClientHandlers = WorkerRole.CreateUgcHandler(ugcHttpClientHandler);
-                var ugcHttpClient = new UgcHttpClient(ugcHttpClientHandlers, telemetryClient);
+                var ugcHttpClient = WorkerRole.CreateUgcHttpClient(telemetryClient, ugcHttpClientHandler);
+
+                #endregion
+
+                #region LeaderboardsStoreClient
+
+                var storeClient = new LeaderboardsStoreClient(connection);
 
                 #endregion
 
@@ -295,18 +372,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var limit = 60;
 
                 // Act
-                var replays = await workerRole.GetReplaysAsync(toofzApiClient, limit, cancellationToken).ConfigureAwait(false);
+                var replays = await workerRole.GetReplaysAsync(db, limit, cancellationToken).ConfigureAwait(false);
 
                 var directory = await WorkerRole.GetCloudBlobDirectory(blobClient, cancellationToken);
                 await workerRole.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
 
-                await Assert.ThrowsAsync<HttpErrorException>(() =>
-                {
-                    return workerRole.StoreReplaysAsync(toofzApiClient, replays, cancellationToken);
-                });
+                await workerRole.StoreReplaysAsync(storeClient, replays, cancellationToken);
 
                 // Assert
-                toofzApiClientHandler.VerifyNoOutstandingRequest();
                 steamWebApiClientHandler.VerifyNoOutstandingRequest();
                 ugcHttpClientHandler.VerifyNoOutstandingRequest();
             }

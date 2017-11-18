@@ -128,10 +128,8 @@
     <None Include="FullCycleResources\HARDCORE_PROD_SCORE52_ZONE1_LEVEL1" />
     <None Include="FullCycleResources\HARDCORE_PROD_SCORE534_ZONE1_LEVEL4" />
     <None Include="FullCycleResources\HARDCORE_PROD_SCORE643_ZONE4_LEVEL6" />
-    <None Include="FullCycleResources\PostReplaysError.json" />
     <None Include="FullCycleResources\SPEEDRUN Bard_PROD_SCORE98525016_ZONE4_LEVEL6" />
     <None Include="FullCycleResources\SPEEDRUN_PROD_SCORE98067457_ZONE4_LEVEL6" />
-    <None Include="FullCycleResources\StaleReplays.json" />
     <None Include="FullCycleResources\UgcFileDetails_844845073340377377.json" />
     <None Include="FullCycleResources\UgcFileDetails_844845073340436306.json" />
     <None Include="FullCycleResources\UgcFileDetails_844845073340472702.json" />
@@ -209,8 +207,10 @@
     <None Include="Resources\UgcFileDetails_847096111522125255_NotFound.json" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <Compile Include="AzureStorageCollection.cs" />
     <Compile Include="AzureStorageFixture.cs" />
+    <Compile Include="DatabaseHelper.cs" />
     <Compile Include="MockedRequestExtensions.cs" />
     <Compile Include="MockHttpMessageHandlerExtensions.cs" />
     <Compile Include="ReplayDataflowNetworkTests.cs" />

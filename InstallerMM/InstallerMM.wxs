@@ -11,6 +11,12 @@
         <Component Id="owc73F0394A22FE8E3A382B6736AF24B1B5" Guid="5d1a8002-e826-eacb-b930-577135fd067e">
           <File Id="owf73F0394A22FE8E3A382B6736AF24B1B5" Source="$(var.SourceDir)\ApplicationInsights.config" KeyPath="yes" />
         </Component>
+        <Component Id="owc26A192B8451F5142030ED047326B15C5" Guid="491ac24b-078d-9f47-1313-e6ff3e7ced2c">
+          <File Id="owf26A192B8451F5142030ED047326B15C5" Source="$(var.SourceDir)\EntityFramework.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcBBB39913228532D4BAB1CEE53395BA69" Guid="c123e70d-df49-c6ef-e053-668f2afcd11a">
+          <File Id="owfBBB39913228532D4BAB1CEE53395BA69" Source="$(var.SourceDir)\EntityFramework.SqlServer.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owc41BE39A696D33CEE4C43F7C20804FD2B" Guid="39cfa1ce-5659-0792-1b94-9f53cbcea37a">
           <File Id="owf41BE39A696D33CEE4C43F7C20804FD2B" Source="$(var.SourceDir)\Flurl.dll" KeyPath="yes" />
         </Component>
@@ -394,6 +400,9 @@
         </Component>
         <Component Id="owc18A2A5D8F057A6D1BC7451C1145ED01D" Guid="30a8fd01-692c-cce5-2778-d8972a397d93">
           <File Id="owf18A2A5D8F057A6D1BC7451C1145ED01D" Source="$(var.SourceDir)\toofz.NecroDancer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc6DBF3F730463E4CD3778833878E38A25" Guid="71ab8460-d5cc-f346-f9d3-ca5d3a3b0d56">
+          <File Id="owf6DBF3F730463E4CD3778833878E38A25" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcDDA9626CD9162B10D303FBA6E1A1DBC8" Guid="c9f28c3d-e59e-bc52-569c-23de5f900d9d">
           <File Id="owfDDA9626CD9162B10D303FBA6E1A1DBC8" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.dll" KeyPath="yes" />
