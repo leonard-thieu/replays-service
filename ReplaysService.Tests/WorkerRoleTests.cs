@@ -14,36 +14,36 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 {
     public class WorkerRoleTests
     {
-        private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly IReplaysSettings settings = new StubReplaysSettings();
+        private readonly TelemetryClient telemetryClient = new TelemetryClient();
 
-        public class CreateSteamWebApiClientMethod
+        public class CreateSteamWebApiClientMethod : WorkerRoleTests
         {
             [Fact]
             public void ReturnsHandler()
             {
                 // Arrange 
+                var worker = new WorkerRole(settings, telemetryClient);
                 var apiKey = "myApiKey";
-                var telemetryClient = new TelemetryClient();
 
                 // Act
-                var client = WorkerRole.CreateSteamWebApiClient(apiKey, telemetryClient);
+                var client = worker.CreateSteamWebApiClient(apiKey);
 
                 // Assert
                 Assert.IsAssignableFrom<ISteamWebApiClient>(client);
             }
         }
 
-        public class CreateUgcHttpClientMethod
+        public class CreateUgcHttpClientMethod : WorkerRoleTests
         {
             [Fact]
             public void ReturnsHandler()
             {
                 // Arrange
-                var telemetryClient = new TelemetryClient();
+                var worker = new WorkerRole(settings, telemetryClient);
 
                 // Act
-                var client = WorkerRole.CreateUgcHttpClient(telemetryClient);
+                var client = worker.CreateUgcHttpClient();
 
                 // Assert
                 Assert.IsAssignableFrom<IUgcHttpClient>(client);

@@ -11,6 +11,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using RichardSzalay.MockHttp;
+using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
@@ -151,7 +152,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             {
                 // Arrange
                 var telemetryClient = new TelemetryClient();
-                var workerRole = new ReplaysWorker(247080, telemetryClient);
+                var worker = new WorkerRole(Mock.Of<IReplaysSettings>(), telemetryClient);
+
+                var replaysWorker = new ReplaysWorker(247080, telemetryClient);
                 var cancellationToken = CancellationToken.None;
 
                 #region LeaderboardsContext
@@ -290,7 +293,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217310845, FullCycleResources.UgcFileDetails_845970351217310845);
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217341480, FullCycleResources.UgcFileDetails_845970351217341480);
                 steamWebApiClientHandler.RespondWithUgcFileDetails(845970351217499797, FullCycleResources.UgcFileDetails_845970351217499797);
-                var steamWebApiClient = WorkerRole.CreateSteamWebApiClient("mySteamWebApiKey", telemetryClient, steamWebApiClientHandler);
+                var steamWebApiClient = worker.CreateSteamWebApiClient("mySteamWebApiKey", steamWebApiClientHandler);
 
                 #endregion
 
@@ -357,7 +360,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217310845/AB3A5D78136231A85ADABE91DDE687D38F79E84B/").Respond(new ByteArrayContent(FullCycleResources.DLC_SPEEDRUN_PROD_SCORE97460146_ZONE5_LEVEL6));
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217341480/1D2EADAFE681E8E801E8CAB0B1AAEE101A3FADB0/").Respond(new ByteArrayContent(FullCycleResources.DLC_6_9_2017_PROD_SCORE5982_ZONE3_LEVEL4));
                 ugcHttpClientHandler.When("http://cloud-3.steamusercontent.com/ugc/845970351217499797/C037E8872756B56162B20639E94FF3C21A5D06CA/").Respond(new ByteArrayContent(FullCycleResources.DLC_HARDCORE_Melody_PROD_SCORE317_ZONE1_LEVEL3));
-                var ugcHttpClient = WorkerRole.CreateUgcHttpClient(telemetryClient, ugcHttpClientHandler);
+                var ugcHttpClient = worker.CreateUgcHttpClient(ugcHttpClientHandler);
 
                 #endregion
 
@@ -372,12 +375,12 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var limit = 60;
 
                 // Act
-                var replays = await workerRole.GetReplaysAsync(db, limit, cancellationToken).ConfigureAwait(false);
+                var replays = await replaysWorker.GetReplaysAsync(db, limit, cancellationToken).ConfigureAwait(false);
 
                 var directory = await WorkerRole.GetCloudBlobDirectory(blobClient, cancellationToken);
-                await workerRole.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
+                await replaysWorker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
 
-                await workerRole.StoreReplaysAsync(storeClient, replays, cancellationToken);
+                await replaysWorker.StoreReplaysAsync(storeClient, replays, cancellationToken);
 
                 // Assert
                 steamWebApiClientHandler.VerifyNoOutstandingRequest();

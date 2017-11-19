@@ -9,6 +9,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Polly;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
@@ -19,34 +20,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     internal class WorkerRole : WorkerRoleBase<IReplaysSettings>
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
-
-        internal static ISteamWebApiClient CreateSteamWebApiClient(string apiKey, TelemetryClient telemetryClient, HttpMessageHandler innerHandler = null)
-        {
-            innerHandler = innerHandler ?? new WebRequestHandler();
-
-            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
-            {
-                new LoggingHandler(),
-                new GZipHandler(),
-                new SteamWebApiTransientFaultHandler(telemetryClient),
-            });
-
-            return new SteamWebApiClient(handler, telemetryClient) { SteamWebApiKey = apiKey };
-        }
-
-        internal static IUgcHttpClient CreateUgcHttpClient(TelemetryClient telemetryClient, HttpMessageHandler innerHandler = null)
-        {
-            innerHandler = innerHandler ?? new WebRequestHandler();
-
-            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
-            {
-                new LoggingHandler(),
-                new GZipHandler(),
-                new HttpErrorHandler(),
-            });
-
-            return new UgcHttpClient(handler, telemetryClient);
-        }
 
         internal static async Task<ICloudBlobDirectory> GetCloudBlobDirectory(
             ICloudBlobClient blobClient,
@@ -100,8 +73,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
                     var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
 
-                    using (var steamWebApiClient = CreateSteamWebApiClient(steamWebApiKey, TelemetryClient))
-                    using (var ugcHttpClient = CreateUgcHttpClient(TelemetryClient))
+                    using (var steamWebApiClient = CreateSteamWebApiClient(steamWebApiKey))
+                    using (var ugcHttpClient = CreateUgcHttpClient())
                     {
                         await worker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
                     }
@@ -120,6 +93,45 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     throw;
                 }
             }
+        }
+
+        internal ISteamWebApiClient CreateSteamWebApiClient(string apiKey, HttpMessageHandler innerHandler = null)
+        {
+            innerHandler = innerHandler ?? new WebRequestHandler();
+
+            var policy = SteamWebApiClient
+                .GetRetryStrategy()
+                .WaitAndRetryAsync(
+                    3,
+                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
+                    (ex, duration) =>
+                    {
+                        TelemetryClient.TrackException(ex);
+                        if (Log.IsDebugEnabled) { Log.Debug($"Retrying in {duration}...", ex); }
+                    });
+
+            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
+            {
+                new LoggingHandler(),
+                new GZipHandler(),
+                new TransientFaultHandler(policy),
+            });
+
+            return new SteamWebApiClient(handler, TelemetryClient) { SteamWebApiKey = apiKey };
+        }
+
+        internal IUgcHttpClient CreateUgcHttpClient(HttpMessageHandler innerHandler = null)
+        {
+            innerHandler = innerHandler ?? new WebRequestHandler();
+
+            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
+            {
+                new LoggingHandler(),
+                new GZipHandler(),
+                new HttpErrorHandler(),
+            });
+
+            return new UgcHttpClient(handler, TelemetryClient);
         }
     }
 }

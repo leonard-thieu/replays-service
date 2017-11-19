@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
+using Polly;
 using RichardSzalay.MockHttp;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
@@ -325,11 +326,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 steamWebApiClientHandler
                     .When("http://localhost/")
                     .Respond(HttpStatusCode.NotFound, new StringContent(Resources.UgcFileDetails_847096111522125255_NotFound, Encoding.UTF8, "application/json"));
-                var telemetryClient = new TelemetryClient();
+                var steamWebApiClientRetryPolicy = SteamWebApiClient
+                    .GetRetryStrategy()
+                    .RetryAsync();
                 var steamWebApiClientHandlers = HttpClientFactory.CreatePipeline(steamWebApiClientHandler, new DelegatingHandler[]
                 {
-                    new SteamWebApiTransientFaultHandler(telemetryClient),
+                    new TransientFaultHandler(steamWebApiClientRetryPolicy),
                 });
+                var telemetryClient = new TelemetryClient();
                 var steamWebApiClient = new SteamWebApiClient(steamWebApiClientHandlers, telemetryClient)
                 {
                     SteamWebApiKey = "mySteamWebApiKey",
