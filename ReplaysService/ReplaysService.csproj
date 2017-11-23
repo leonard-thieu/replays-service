@@ -71,7 +71,7 @@
       <Version>12.2.4</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
-      <Version>13.0.1</Version>
+      <Version>13.0.2</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Storage">
       <Version>8.6.0</Version>
