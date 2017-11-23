@@ -19,6 +19,7 @@ Information about other projects that support **toofz** can be found in the [met
 
 ### Dependencies
 
+* [toofz NecroDancer Core](https://github.com/leonard-thieu/toofz-necrodancer-core)
 * [toofz Leaderboards Core](https://github.com/leonard-thieu/toofz-leaderboards-core)
 * [toofz Leaderboards Core (Data)](https://github.com/leonard-thieu/toofz-leaderboards-core-data)
 * [toofz Services Core](https://github.com/leonard-thieu/toofz-services-core)
