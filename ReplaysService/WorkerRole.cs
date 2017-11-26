@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Polly;
+using Ninject;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.NecroDancer.Leaderboards.Steam;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
@@ -21,69 +14,21 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        internal static async Task<ICloudBlobDirectory> GetCloudBlobDirectory(
-            ICloudBlobClient blobClient,
-            CancellationToken cancellationToken)
+        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : base("replays", settings, telemetryClient)
         {
-            var container = blobClient.GetContainerReference("crypt");
-            var containerExists = await container.ExistsAsync(cancellationToken).ConfigureAwait(false);
-            if (!containerExists)
-            {
-                await container.CreateAsync(cancellationToken).ConfigureAwait(false);
-            }
-            var permissions = new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob };
-            await container.SetPermissionsAsync(permissions, cancellationToken).ConfigureAwait(false);
-            var directory = container.GetDirectoryReference("replays");
-
-            return directory;
+            kernel = KernelConfig.CreateKernel(settings, telemetryClient);
         }
 
-        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : base("replays", settings, telemetryClient) { }
+        private readonly IKernel kernel;
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update replays cycle"))
-            using (new UpdateActivity(Log, "replays"))
+            using (new UpdateActivity(Log, "replays cycle"))
             {
                 try
                 {
-                    if (Settings.LeaderboardsConnectionString == null)
-                        throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
-                    if (Settings.SteamWebApiKey == null)
-                        throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
-                    if (Settings.AzureStorageConnectionString == null)
-                        throw new InvalidOperationException($"{nameof(Settings.AzureStorageConnectionString)} is not set.");
-                    if (Settings.ReplaysPerUpdate <= 0)
-                        throw new InvalidOperationException($"{nameof(Settings.ReplaysPerUpdate)} is not set to a positive number.");
-
-                    var leaderboardsConnectionString = Settings.LeaderboardsConnectionString.Decrypt();
-                    var replaysPerUpdate = Settings.ReplaysPerUpdate;
-                    var azureStorageConnectionString = Settings.AzureStorageConnectionString.Decrypt();
-                    var account = CloudStorageAccount.Parse(azureStorageConnectionString);
-                    var steamWebApiKey = Settings.SteamWebApiKey.Decrypt();
-
-                    var worker = new ReplaysWorker(Settings.AppId, TelemetryClient);
-
-                    IEnumerable<Replay> replays;
-                    using (var db = new LeaderboardsContext(leaderboardsConnectionString))
-                    {
-                        replays = await worker.GetReplaysAsync(db, replaysPerUpdate, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
-                    var directory = await GetCloudBlobDirectory(blobClient, cancellationToken).ConfigureAwait(false);
-
-                    using (var steamWebApiClient = CreateSteamWebApiClient(steamWebApiKey))
-                    using (var ugcHttpClient = CreateUgcHttpClient())
-                    {
-                        await worker.UpdateReplaysAsync(steamWebApiClient, ugcHttpClient, directory, replays, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    using (var connection = new SqlConnection(leaderboardsConnectionString))
-                    {
-                        var storeClient = new LeaderboardsStoreClient(connection);
-                        await worker.StoreReplaysAsync(storeClient, replays, cancellationToken).ConfigureAwait(false);
-                    }
+                    await UpdateReplaysAsync(cancellationToken).ConfigureAwait(false);
 
                     operation.Telemetry.Success = true;
                 }
@@ -95,43 +40,46 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             }
         }
 
-        internal ISteamWebApiClient CreateSteamWebApiClient(string apiKey, HttpMessageHandler innerHandler = null)
+        private async Task UpdateReplaysAsync(CancellationToken cancellationToken)
         {
-            innerHandler = innerHandler ?? new WebRequestHandler();
-
-            var policy = SteamWebApiClient
-                .GetRetryStrategy()
-                .WaitAndRetryAsync(
-                    3,
-                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
-                    (ex, duration) =>
-                    {
-                        TelemetryClient.TrackException(ex);
-                        if (Log.IsDebugEnabled) { Log.Debug($"Retrying in {duration}...", ex); }
-                    });
-
-            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
+            var worker = kernel.Get<ReplaysWorker>();
+            using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update replays"))
+            using (new UpdateActivity(Log, "replays"))
             {
-                new LoggingHandler(),
-                new GZipHandler(),
-                new TransientFaultHandler(policy),
-            });
+                try
+                {
+                    var replays = await worker.GetReplaysAsync(Settings.ReplaysPerUpdate, cancellationToken).ConfigureAwait(false);
+                    await worker.UpdateReplaysAsync(replays, cancellationToken).ConfigureAwait(false);
+                    await worker.StoreReplaysAsync(replays, cancellationToken).ConfigureAwait(false);
 
-            return new SteamWebApiClient(handler, TelemetryClient) { SteamWebApiKey = apiKey };
+                    operation.Telemetry.Success = true;
+                }
+                catch (HttpRequestStatusException ex)
+                {
+                    TelemetryClient.TrackException(ex);
+                    Log.Error("Failed to complete run due to an error.", ex);
+                    operation.Telemetry.Success = false;
+                }
+                catch (Exception)
+                {
+                    operation.Telemetry.Success = false;
+                    throw;
+                }
+                finally
+                {
+                    kernel.Release(worker);
+                }
+            }
         }
 
-        internal IUgcHttpClient CreateUgcHttpClient(HttpMessageHandler innerHandler = null)
+        protected override void Dispose(bool disposing)
         {
-            innerHandler = innerHandler ?? new WebRequestHandler();
-
-            var handler = HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
+            if (disposing)
             {
-                new LoggingHandler(),
-                new GZipHandler(),
-                new HttpErrorHandler(),
-            });
+                kernel.Dispose();
+            }
 
-            return new UgcHttpClient(handler, TelemetryClient);
+            base.Dispose(disposing);
         }
     }
 }

@@ -216,7 +216,6 @@
     <Compile Include="ReplayDataflowNetworkTests.cs" />
     <Compile Include="ReplaysArgsParserTests.cs" />
     <Compile Include="ReplaysWorkerTests.cs" />
-    <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

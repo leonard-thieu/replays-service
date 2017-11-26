@@ -19,17 +19,33 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         private static readonly ReplayDataSerializer ReplayDataSerializer = new ReplayDataSerializer();
 
-        public ReplaysWorker(uint appId, TelemetryClient telemetryClient)
+        public ReplaysWorker(
+            uint appId,
+            ILeaderboardsContext db,
+            ISteamWebApiClient steamWebApiClient,
+            IUgcHttpClient ugcHttpClient,
+            ICloudBlobDirectoryFactory directoryFactory,
+            ILeaderboardsStoreClient storeClient,
+            TelemetryClient telemetryClient)
         {
             this.appId = appId;
+            this.db = db;
+            this.steamWebApiClient = steamWebApiClient;
+            this.ugcHttpClient = ugcHttpClient;
+            this.directoryFactory = directoryFactory;
+            this.storeClient = storeClient;
             this.telemetryClient = telemetryClient;
         }
 
         private readonly uint appId;
+        private readonly ILeaderboardsContext db;
+        private readonly ISteamWebApiClient steamWebApiClient;
+        private readonly IUgcHttpClient ugcHttpClient;
+        private readonly ICloudBlobDirectoryFactory directoryFactory;
+        private readonly ILeaderboardsStoreClient storeClient;
         private readonly TelemetryClient telemetryClient;
 
         public Task<List<Replay>> GetReplaysAsync(
-            ILeaderboardsContext db,
             int limit,
             CancellationToken cancellationToken)
         {
@@ -43,9 +59,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         }
 
         public async Task UpdateReplaysAsync(
-            ISteamWebApiClient steamWebApiClient,
-            IUgcHttpClient ugcHttpClient,
-            ICloudBlobDirectory directory,
             IEnumerable<Replay> replays,
             CancellationToken cancellationToken)
         {
@@ -61,6 +74,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 try
                 {
+                    var directory = await directoryFactory.GetCloudBlobDirectoryAsync("crypt", "replays", cancellationToken).ConfigureAwait(false);
                     var replayNetwork = new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
 
                     foreach (var replay in replays)
@@ -82,7 +96,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         }
 
         public async Task StoreReplaysAsync(
-            ILeaderboardsStoreClient storeClient,
             IEnumerable<Replay> replays,
             CancellationToken cancellationToken)
         {
