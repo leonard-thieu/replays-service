@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -129,22 +128,19 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         {
             public IntegrationTests()
             {
-                var connectionString = DatabaseHelper.GetConnectionString();
+                connectionString = DatabaseHelper.GetConnectionString();
                 db = new LeaderboardsContext(connectionString);
-                connection = new SqlConnection(connectionString);
                 db.Database.Delete(); // Make sure it really dropped - needed for dirty database
                 db.Database.Initialize(force: true);
             }
 
+            private readonly string connectionString;
             private readonly LeaderboardsContext db;
-            private readonly SqlConnection connection;
 
             public void Dispose()
             {
-                connection.Close();
                 db.Database.Delete();
                 db.Dispose();
-                connection.Dispose();
             }
 
             [Fact]
@@ -370,7 +366,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 #region LeaderboardsStoreClient
 
-                var storeClient = new LeaderboardsStoreClient(connection);
+                var storeClient = new LeaderboardsStoreClient(connectionString);
 
                 #endregion
 
