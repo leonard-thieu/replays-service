@@ -35,30 +35,30 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 GetProcessorBoundExecutionDataflowBlockOptions());
 
             var getUgcFileDetails = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => GetUgcFileDetailsAsync(context),
+                (Func<ReplayDataflowContext, Task<ReplayDataflowContext>>)GetUgcFileDetailsAsync,
                 GetNetworkBoundExecutionDataflowBlockOptions());
             var getUgcFile = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => GetUgcFileAsync(context),
+                (Func<ReplayDataflowContext, Task<ReplayDataflowContext>>)GetUgcFileAsync,
                 GetNetworkBoundExecutionDataflowBlockOptions());
 
             var readReplayData = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => ReadReplayData(context),
+                (Func<ReplayDataflowContext, ReplayDataflowContext>)ReadReplayData,
                 GetProcessorBoundExecutionDataflowBlockOptions());
 
             var updateReplay = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => UpdateReplay(context),
+                (Func<ReplayDataflowContext, ReplayDataflowContext>)UpdateReplay,
                 GetProcessorBoundExecutionDataflowBlockOptions());
             var onUgcFileDetailsError = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => OnUgcFileDetailsError(context),
+                (Func<ReplayDataflowContext, ReplayDataflowContext>)OnUgcFileDetailsError,
                 GetProcessorBoundExecutionDataflowBlockOptions());
             var onUgcFileError = new TransformBlock<ReplayDataflowContext, ReplayDataflowContext>(
-                context => OnUgcFileError(context),
+                (Func<ReplayDataflowContext, ReplayDataflowContext>)OnUgcFileError,
                 GetProcessorBoundExecutionDataflowBlockOptions());
 
             var broadcastReplayDataflowContext = new BroadcastBlock<ReplayDataflowContext>(context => context, GetDefaultDataflowBlockOptions());
 
             var storeUgcFile = new ActionBlock<ReplayDataflowContext>(
-                context => StoreUgcFileAsync(context),
+                StoreUgcFileAsync,
                 GetNetworkBoundExecutionDataflowBlockOptions());
 
             getReplayDataflowContext.LinkTo(getUgcFileDetails, GetDefaultDataflowLinkOptions());
