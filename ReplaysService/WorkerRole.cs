@@ -28,6 +28,12 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 try
                 {
+                    if (Settings.SteamWebApiKey == null)
+                    {
+                        Log.Warn("Using test data for calls to Steam Web API. Set your Steam Web API key to use the actual Steam Web API.");
+                        Log.Warn("Run this application with --help to find out how to set your Steam Web API key.");
+                    }
+
                     await UpdateReplaysAsync(cancellationToken).ConfigureAwait(false);
 
                     operation.Telemetry.Success = true;

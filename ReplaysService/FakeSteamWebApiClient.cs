@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using log4net;
 using Newtonsoft.Json;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
@@ -13,13 +12,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
     internal sealed class FakeSteamWebApiClient : ISteamWebApiClient
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FakeSteamWebApiClient));
-
         public FakeSteamWebApiClient()
         {
-            Log.Warn("Using test data for calls to Steam Web API. Set your Steam Web API key to use the actual Steam Web API.");
-            Log.Warn("Run this application with --help to find out how to set your Steam Web API key.");
-
             var ugcFileDetailsPath = Path.Combine("Data", "SteamWebApi", "UgcFileDetails");
             ugcFileDetailsFiles = Directory.GetFiles(ugcFileDetailsPath, "*.json");
         }
