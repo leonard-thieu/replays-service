@@ -37,7 +37,7 @@ install:
 before_build:
   - appveyor-retry nuget restore -Verbosity quiet
   - npm install
-  - npm run azurite-blob
+  - npm run start-azurite-blob
 build:
   project: $(PROJECT).sln
   verbosity: minimal

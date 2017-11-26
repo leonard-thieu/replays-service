@@ -64,7 +64,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
             kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>().InParentScope();
-            kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>().InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>().When(r =>
+            {
+                var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
+
+                return settings.SteamWebApiKey != null;
+            }).InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>().To<FakeLeaderboardsStoreClient>().InParentScope();
 
             RegisterSteamWebApiClient(kernel);
             RegisterUgcHttpClient(kernel);
@@ -97,15 +103,18 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                 return CreateSteamWebApiClientHandler(new WebRequestHandler(), log, telemetryClient);
             }).WhenInjectedInto(typeof(SteamWebApiClient)).InParentScope();
-            kernel.Bind<ISteamWebApiClient>().To<SteamWebApiClient>().InParentScope().WithPropertyValue(nameof(SteamWebApiClient.SteamWebApiKey), c =>
+            kernel.Bind<ISteamWebApiClient>().To<SteamWebApiClient>().When(r =>
+            {
+                var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
+
+                return settings.SteamWebApiKey != null;
+            }).InParentScope().WithPropertyValue(nameof(SteamWebApiClient.SteamWebApiKey), c =>
             {
                 var settings = c.Kernel.Get<IReplaysSettings>();
 
-                if (settings.SteamWebApiKey == null)
-                    throw new InvalidOperationException($"{nameof(Settings.SteamWebApiKey)} is not set.");
-
                 return settings.SteamWebApiKey.Decrypt();
             });
+            kernel.Bind<ISteamWebApiClient>().To<FakeSteamWebApiClient>().InParentScope();
         }
 
         internal static HttpMessageHandler CreateSteamWebApiClientHandler(HttpMessageHandler innerHandler, ILog log, TelemetryClient telemetryClient)
@@ -135,7 +144,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 return CreateUgcHttpClientHandler(new WebRequestHandler());
             }).WhenInjectedInto(typeof(UgcHttpClient)).InParentScope();
-            kernel.Bind<IUgcHttpClient>().To<UgcHttpClient>().InParentScope();
+            kernel.Bind<IUgcHttpClient>().To<UgcHttpClient>().When(r =>
+            {
+                var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
+
+                return settings.SteamWebApiKey != null;
+            }).InParentScope();
+            kernel.Bind<IUgcHttpClient>().To<FakeUgcHttpClient>().InParentScope();
         }
 
         internal static HttpMessageHandler CreateUgcHttpClientHandler(HttpMessageHandler innerHandler)

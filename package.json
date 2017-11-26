@@ -4,7 +4,8 @@
     "forever": "0.15.3"
   },
   "scripts": {
-    "azurite-blob": "forever start ./node_modules/azurite/bin/blob -l blobs"
+    "start-azurite-blob": "forever start ./node_modules/azurite/bin/blob -l blobs",
+    "stop-azurite-blob": "forever stop ./node_modules/azurite/bin/blob"
   },
   "repository": {
     "type": "git",
