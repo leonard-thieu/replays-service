@@ -7,6 +7,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
 using Ninject;
 using Ninject.Extensions.NamedScope;
+using Ninject.Syntax;
 using Polly;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
@@ -28,9 +29,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             var kernel = new StandardKernel();
             try
             {
-                kernel.Bind<IReplaysSettings>().ToConstant(settings);
-                kernel.Bind<TelemetryClient>().ToConstant(telemetryClient);
+                kernel.Bind<IReplaysSettings>()
+                      .ToConstant(settings);
+                kernel.Bind<TelemetryClient>()
+                      .ToConstant(telemetryClient);
+
                 RegisterServices(kernel);
+
                 return kernel;
             }
             catch
@@ -46,94 +51,109 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(StandardKernel kernel)
         {
-            kernel.Bind<ILog>().ToConstant(Log);
+            kernel.Bind<ILog>()
+                  .ToConstant(Log);
 
-            kernel.Bind<uint>().ToMethod(c =>
-            {
-                var settings = c.Kernel.Get<IReplaysSettings>();
+            kernel.Bind<uint>()
+                  .ToMethod(c => c.Kernel.Get<IReplaysSettings>().AppId)
+                  .WhenInjectedInto(typeof(ReplaysWorker));
 
-                return settings.AppId;
-            }).WhenInjectedInto(typeof(ReplaysWorker));
+            kernel.Bind<string>()
+                  .ToMethod(c =>
+                  {
+                      var settings = c.Kernel.Get<IReplaysSettings>();
 
-            kernel.Bind<string>().ToMethod(c =>
-            {
-                var settings = c.Kernel.Get<IReplaysSettings>();
+                      if (settings.LeaderboardsConnectionString == null)
+                      {
+                          var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
+                          using (var connection = connectionFactory.CreateConnection("NecroDancer"))
+                          {
+                              settings.LeaderboardsConnectionString = new EncryptedSecret(connection.ConnectionString, settings.KeyDerivationIterations);
+                              settings.Save();
+                          }
+                      }
 
-                if (settings.LeaderboardsConnectionString == null)
-                {
-                    var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
-                    using (var connection = connectionFactory.CreateConnection("NecroDancer"))
-                    {
-                        settings.LeaderboardsConnectionString = new EncryptedSecret(connection.ConnectionString, settings.KeyDerivationIterations);
-                        settings.Save();
-                    }
-                }
+                      return settings.LeaderboardsConnectionString.Decrypt();
+                  })
+                  .WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
-                return settings.LeaderboardsConnectionString.Decrypt();
-            }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
+            kernel.Bind<ILeaderboardsContext>()
+                  .To<LeaderboardsContext>()
+                  .When(r =>
+                  {
+                      using (var db = r.ParentContext.Kernel.Get<LeaderboardsContext>())
+                      {
+                          return db.Replays.Any();
+                      }
+                  })
+                  .InParentScope();
+            kernel.Bind<ILeaderboardsContext>()
+                  .To<FakeLeaderboardsContext>()
+                  .InParentScope();
 
-            kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>().When(r =>
-            {
-                using (var db = r.ParentContext.Kernel.Get<LeaderboardsContext>())
-                {
-                    return db.Replays.Any();
-                }
-            }).InParentScope();
-            kernel.Bind<ILeaderboardsContext>().To<FakeLeaderboardsContext>().InParentScope();
-
-            kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>().When(r =>
-            {
-                var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
-
-                return settings.SteamWebApiKey != null;
-            }).InParentScope();
-            kernel.Bind<ILeaderboardsStoreClient>().To<FakeLeaderboardsStoreClient>().InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>()
+                  .To<LeaderboardsStoreClient>()
+                  .WhenSteamWebApiKeyIsSet()
+                  .InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>()
+                  .To<FakeLeaderboardsStoreClient>()
+                  .InParentScope();
 
             RegisterSteamWebApiClient(kernel);
             RegisterUgcHttpClient(kernel);
 
-            kernel.Bind<ICloudBlobContainer>().ToMethod(c =>
-            {
-                var settings = c.Kernel.Get<IReplaysSettings>();
+            kernel.Bind<ICloudBlobContainer>()
+                  .ToMethod(c =>
+                  {
+                      var settings = c.Kernel.Get<IReplaysSettings>();
 
-                if (settings.AzureStorageConnectionString == null)
-                {
-                    var azureStorageConnectionString = CloudStorageAccount.DevelopmentStorageAccount.ToString(exportSecrets: true);
-                    settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, settings.KeyDerivationIterations);
-                    settings.Save();
-                }
+                      if (settings.AzureStorageConnectionString == null)
+                      {
+                          var azureStorageConnectionString = CloudStorageAccount.DevelopmentStorageAccount.ToString(exportSecrets: true);
+                          settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, settings.KeyDerivationIterations);
+                          settings.Save();
+                      }
 
-                var account = CloudStorageAccount.Parse(settings.AzureStorageConnectionString.Decrypt());
-                var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+                      var account = CloudStorageAccount.Parse(settings.AzureStorageConnectionString.Decrypt());
+                      var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
 
-                return blobClient.GetContainerReference("crypt");
-            }).InParentScope();
-            kernel.Bind<ICloudBlobDirectoryFactory>().To<CloudBlobDirectoryFactory>().InParentScope();
+                      return blobClient.GetContainerReference("crypt");
+                  })
+                  .InParentScope();
+            kernel.Bind<ICloudBlobDirectoryFactory>()
+                  .To<CloudBlobDirectoryFactory>()
+                  .InParentScope();
 
-            kernel.Bind<ReplaysWorker>().ToSelf().InScope(c => c);
+            kernel.Bind<ReplaysWorker>()
+                  .ToSelf()
+                  .InScope(c => c);
         }
+
+        #region SteamWebApiClient
 
         private static void RegisterSteamWebApiClient(StandardKernel kernel)
         {
-            kernel.Bind<HttpMessageHandler>().ToMethod(c =>
-            {
-                var log = c.Kernel.Get<ILog>();
-                var telemetryClient = c.Kernel.Get<TelemetryClient>();
+            kernel.Bind<HttpMessageHandler>()
+                  .ToMethod(c =>
+                  {
+                      var log = c.Kernel.Get<ILog>();
+                      var telemetryClient = c.Kernel.Get<TelemetryClient>();
 
-                return CreateSteamWebApiClientHandler(new WebRequestHandler(), log, telemetryClient);
-            }).WhenInjectedInto(typeof(SteamWebApiClient)).InParentScope();
-            kernel.Bind<ISteamWebApiClient>().To<SteamWebApiClient>().When(r =>
-            {
-                var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
+                      return CreateSteamWebApiClientHandler(new WebRequestHandler(), log, telemetryClient);
+                  })
+                  .WhenInjectedInto(typeof(SteamWebApiClient))
+                  .InParentScope();
+            kernel.Bind<ISteamWebApiClient>()
+                  .To<SteamWebApiClient>()
+                  .WhenSteamWebApiKeyIsSet()
+                  .InParentScope()
+                  .WithPropertyValue(
+                      nameof(SteamWebApiClient.SteamWebApiKey),
+                      c => c.Kernel.Get<IReplaysSettings>().SteamWebApiKey.Decrypt());
 
-                return settings.SteamWebApiKey != null;
-            }).InParentScope().WithPropertyValue(nameof(SteamWebApiClient.SteamWebApiKey), c =>
-            {
-                var settings = c.Kernel.Get<IReplaysSettings>();
-
-                return settings.SteamWebApiKey.Decrypt();
-            });
-            kernel.Bind<ISteamWebApiClient>().To<FakeSteamWebApiClient>().InParentScope();
+            kernel.Bind<ISteamWebApiClient>()
+                  .To<FakeSteamWebApiClient>()
+                  .InParentScope();
         }
 
         internal static HttpMessageHandler CreateSteamWebApiClientHandler(HttpMessageHandler innerHandler, ILog log, TelemetryClient telemetryClient)
@@ -157,19 +177,27 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             });
         }
 
+        #endregion
+
+        #region UgcHttpClient
+
         private static void RegisterUgcHttpClient(StandardKernel kernel)
         {
-            kernel.Bind<HttpMessageHandler>().ToMethod(c =>
-            {
-                return CreateUgcHttpClientHandler(new WebRequestHandler());
-            }).WhenInjectedInto(typeof(UgcHttpClient)).InParentScope();
-            kernel.Bind<IUgcHttpClient>().To<UgcHttpClient>().When(r =>
-            {
-                var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
+            kernel.Bind<HttpMessageHandler>()
+                  .ToMethod(c =>
+                  {
+                      return CreateUgcHttpClientHandler(new WebRequestHandler());
+                  })
+                  .WhenInjectedInto(typeof(UgcHttpClient))
+                  .InParentScope();
+            kernel.Bind<IUgcHttpClient>()
+                  .To<UgcHttpClient>()
+                  .WhenSteamWebApiKeyIsSet()
+                  .InParentScope();
 
-                return settings.SteamWebApiKey != null;
-            }).InParentScope();
-            kernel.Bind<IUgcHttpClient>().To<FakeUgcHttpClient>().InParentScope();
+            kernel.Bind<IUgcHttpClient>()
+                  .To<FakeUgcHttpClient>()
+                  .InParentScope();
         }
 
         internal static HttpMessageHandler CreateUgcHttpClientHandler(HttpMessageHandler innerHandler)
@@ -180,6 +208,16 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 new GZipHandler(),
                 new HttpErrorHandler(),
             });
+        }
+
+        #endregion
+    }
+
+    internal static class IBindingWhenSyntaxExtensions
+    {
+        public static IBindingInNamedWithOrOnSyntax<T> WhenSteamWebApiKeyIsSet<T>(this IBindingWhenSyntax<T> binding)
+        {
+            return binding.When(r => r.ParentContext.Kernel.Get<IReplaysSettings>().SteamWebApiKey != null);
         }
     }
 }
