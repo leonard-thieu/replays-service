@@ -128,17 +128,19 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         {
             public IntegrationTests()
             {
-                connectionString = DatabaseHelper.GetConnectionString();
+                var connectionString = DatabaseHelper.GetConnectionString();
                 db = new LeaderboardsContext(connectionString);
                 db.Database.Delete(); // Make sure it really dropped - needed for dirty database
                 db.Database.Initialize(force: true);
+                storeClient = new LeaderboardsStoreClient(connectionString);
             }
 
-            private readonly string connectionString;
             private readonly LeaderboardsContext db;
+            private readonly ILeaderboardsStoreClient storeClient;
 
             public void Dispose()
             {
+                storeClient.Dispose();
                 db.Database.Delete();
                 db.Dispose();
             }
@@ -363,12 +365,6 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var account = CloudStorageAccount.DevelopmentStorageAccount;
                 var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
                 var directoryFactory = new CloudBlobDirectoryFactory(blobClient);
-
-                #region LeaderboardsStoreClient
-
-                var storeClient = new LeaderboardsStoreClient(connectionString);
-
-                #endregion
 
                 var replaysWorker = new ReplaysWorker(247080, db, steamWebApiClient, ugcHttpClient, directoryFactory, storeClient, telemetryClient);
                 var limit = 60;
