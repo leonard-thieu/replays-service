@@ -2,7 +2,13 @@
 <?include ..\Installer\Code\Configuration.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define ComponentRules="OneToOne"?>
+  <!--
+    Workaround to get Files and Folders support in IsWix. IsWix does not support WiX variables so the path to 
+    the Debug TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
+    custom variable so SourceDir can be redefined to the correct directory for building.
+  -->
   <?define SourceDir="..\ReplaysService\bin\Debug"?>
+  <?undef SourceDir?>
   <?define SourceDir="$(var.ReplaysService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
     <Package Id="f3260955-a738-4bb3-b92a-a40154bad09a" Manufacturer="$(var.Manufacturer)" InstallerVersion="200" />
@@ -443,6 +449,376 @@
         <Component Id="owcA7F14B92BF14E49E415FC6F1AC7796A2" Guid="f16a8a22-10ca-5f30-9422-812b051b2353">
           <File Id="owfA7F14B92BF14E49E415FC6F1AC7796A2" Source="$(var.SourceDir)\toofz.Services.pdb" KeyPath="yes" />
         </Component>
+        <Directory Id="owd0C64711E243FE4E29D1B4BF4C9D29858" Name="Data">
+          <Directory Id="owdB0A2BA891FA0D5816C027810646795DB" Name="SteamWebApi">
+            <Directory Id="owd54B3BEE644E621BF203DC23A8C5099EC" Name="UgcFileDetails">
+              <Component Id="owc3A8C336E82552696C35197BE653B847A" Guid="f6b22f13-396a-a0de-89ac-fcae029e1b2d">
+                <File Id="owf3A8C336E82552696C35197BE653B847A" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491868906872.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc0A2A181060A35AFECDBEF80306AD508C" Guid="45d0c5ce-d8f9-0a01-be47-2f2b8971289b">
+                <File Id="owf0A2A181060A35AFECDBEF80306AD508C" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491869017664.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc14FEEAF9E9421488D00150047B27C0F3" Guid="47d016ce-06c6-d6a7-ec0e-27c65a3a558c">
+                <File Id="owf14FEEAF9E9421488D00150047B27C0F3" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491869491330.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1593A301879AF465A564FCDC7CA25CE9" Guid="7acc8879-bd86-6ca1-b463-cab954b2e62c">
+                <File Id="owf1593A301879AF465A564FCDC7CA25CE9" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491870241304.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcBD98DB859E108D47AB949FAAF7B12BCA" Guid="8ea8e432-1f97-76d3-9d8f-cccf99a580be">
+                <File Id="owfBD98DB859E108D47AB949FAAF7B12BCA" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491870331554.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc582F793A078A4C7DF6A77C6FB27432BC" Guid="c399440b-8916-4808-4772-8f0d96fcd5b0">
+                <File Id="owf582F793A078A4C7DF6A77C6FB27432BC" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491870405519.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcB8D88B9459BB6A36A220D274F4D4F934" Guid="7b9890fc-f9f6-f12c-7239-ba5c1dfa3ce5">
+                <File Id="owfB8D88B9459BB6A36A220D274F4D4F934" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491870610561.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc5526BCB5B6E63358DBCEA38102C360C6" Guid="3c40b1d5-4e76-a2cd-1771-34b924b454d8">
+                <File Id="owf5526BCB5B6E63358DBCEA38102C360C6" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491872648304.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc2F7A39E0A3E416BE4E97D5B5ED90E5D7" Guid="dabd383e-a325-755a-5ce9-225411f96ab1">
+                <File Id="owf2F7A39E0A3E416BE4E97D5B5ED90E5D7" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491877488241.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc2E02C654830BB0C857C70BD4DCE6E971" Guid="d16aecc5-7744-229a-f2c3-41985babe581">
+                <File Id="owf2E02C654830BB0C857C70BD4DCE6E971" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491877738939.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc2BC500D927C14BA354DEA4209A7A1D85" Guid="324f0add-5fda-56ee-b372-6c430837b826">
+                <File Id="owf2BC500D927C14BA354DEA4209A7A1D85" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491879883091.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcD734116010545055A0304DC5B3875205" Guid="39f87fce-a175-5d38-5fd8-73c1da40b669">
+                <File Id="owfD734116010545055A0304DC5B3875205" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491884099974.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc16F822FDB3889EF5419BD382F14EF5DB" Guid="b2d0f5f2-c414-c4ff-7d08-5f74cf40758f">
+                <File Id="owf16F822FDB3889EF5419BD382F14EF5DB" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491884754161.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc6DE804DE2AD83977B42C71FC8242AF99" Guid="b367949d-0e8f-eaf0-d2c3-ddbf5c3d768b">
+                <File Id="owf6DE804DE2AD83977B42C71FC8242AF99" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491884849895.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcBC4CD8A62F2520FC8EB66373FDD02717" Guid="0d62eaff-58e1-430e-ced0-f1322fe27144">
+                <File Id="owfBC4CD8A62F2520FC8EB66373FDD02717" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491887253679.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc466421E8506F18FCC4DE83516F0EC220" Guid="a6ea5b8a-ebb9-d3a2-0446-17a4d3f6fbc5">
+                <File Id="owf466421E8506F18FCC4DE83516F0EC220" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491889011698.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc6952D2DFEB6C1D3D28E75B2D6A009847" Guid="fde67695-0a71-1963-9887-750e80a6be21">
+                <File Id="owf6952D2DFEB6C1D3D28E75B2D6A009847" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491889094045.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc81C579626CA4FCC1FB1E7B985A0F393A" Guid="0b75a086-e1f0-5099-422c-dc484bd304dd">
+                <File Id="owf81C579626CA4FCC1FB1E7B985A0F393A" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491889909795.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcF007054E120D85CE1712FDF81D274D6B" Guid="fd5d43b6-c4bd-d383-de1b-c358fbae1294">
+                <File Id="owfF007054E120D85CE1712FDF81D274D6B" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491890953115.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc7B6F81E5497841A04AC037DBC5E68914" Guid="6997ca39-c156-db35-840b-8baed8f2c51a">
+                <File Id="owf7B6F81E5497841A04AC037DBC5E68914" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491891357339.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcF3940212C688DF012908E4AECC5D7551" Guid="32345e25-0b07-e2d7-77e5-968934e5a310">
+                <File Id="owfF3940212C688DF012908E4AECC5D7551" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491891768477.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1B7DB7B1B79DF2394E9B50C9438F44AF" Guid="ae48a607-bb1c-9fa9-ba7b-9727f954b0cc">
+                <File Id="owf1B7DB7B1B79DF2394E9B50C9438F44AF" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491891769941.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcE92245805876B72746A02A19F816A0AB" Guid="7f551b12-8313-a083-6bf7-9949c819c45c">
+                <File Id="owfE92245805876B72746A02A19F816A0AB" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491894453006.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc90DEB08A172467B954B777F528F42FA1" Guid="8e680fca-b09d-0ca3-a69d-68326155118a">
+                <File Id="owf90DEB08A172467B954B777F528F42FA1" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491894992452.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcADAEE7CD9F386EC2C14BA23B2D6D3066" Guid="3b989dce-b4de-cf18-e7b6-797c572a71d7">
+                <File Id="owfADAEE7CD9F386EC2C14BA23B2D6D3066" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491895288752.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcADA49084FB54481E99DFED2FF8DF392B" Guid="e3c444c9-2555-9b7b-3f4c-b9fa952dc341">
+                <File Id="owfADA49084FB54481E99DFED2FF8DF392B" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491895364444.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcC7D14090A14D5FC0BDDF696B30CF5177" Guid="f38f014b-f223-f171-507d-9345ed9604f2">
+                <File Id="owfC7D14090A14D5FC0BDDF696B30CF5177" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491897444745.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcAA6D00E58A48537CC1B63D614071A0B1" Guid="02b0d1b0-0f57-5bca-450f-4d4a49e2af77">
+                <File Id="owfAA6D00E58A48537CC1B63D614071A0B1" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491898363170.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc0FED542F1E151861180F39A0D6E977B0" Guid="26f2b155-0c6a-f5d4-221d-7f5a3aea9c6e">
+                <File Id="owf0FED542F1E151861180F39A0D6E977B0" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491898532216.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc9A469510C047305E50C52A51D7823B83" Guid="80008a7e-cdaa-6f3e-0a1c-3e8af9dce1d4">
+                <File Id="owf9A469510C047305E50C52A51D7823B83" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491899301194.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc6FCCD2C7B8C48F4803039D49F7B7A6CE" Guid="d968b3ec-9320-ba3e-b7da-ff3a04e8d70c">
+                <File Id="owf6FCCD2C7B8C48F4803039D49F7B7A6CE" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491899885615.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc30F51A187DB847B01E293AC6DC4DB8C5" Guid="bb6f5d80-caab-f2f3-5470-002cb702fbf9">
+                <File Id="owf30F51A187DB847B01E293AC6DC4DB8C5" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491900267849.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcBFBF6854533A903BAE5ABCD24B0672E3" Guid="5a4be6ef-ed25-f988-91ee-f63d8f7fffc2">
+                <File Id="owfBFBF6854533A903BAE5ABCD24B0672E3" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491901082876.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc03BE115AED29FD8F314AEC286E799668" Guid="b303be1d-2fe7-5f8b-90c8-54c7f3cf9fbc">
+                <File Id="owf03BE115AED29FD8F314AEC286E799668" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491901858234.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc516703D297997B5C43630B5CBBD7A795" Guid="9b41bc5a-3818-2a35-98e3-7ab3f26db13d">
+                <File Id="owf516703D297997B5C43630B5CBBD7A795" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491902519883.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc93FC98387CC0FC23D760459B8942E9BC" Guid="4a5a7394-52e6-ac94-0e86-908eac2588f2">
+                <File Id="owf93FC98387CC0FC23D760459B8942E9BC" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491903529749.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcE2FECF9A379ECCA269012E243565696E" Guid="04c5b637-f677-a1b1-0b95-4782b33f9d0d">
+                <File Id="owfE2FECF9A379ECCA269012E243565696E" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491903883885.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc8D82CBA00ADB69C0CE27310A8CB650C4" Guid="8eb0957d-2051-3e69-5116-e7ae65374035">
+                <File Id="owf8D82CBA00ADB69C0CE27310A8CB650C4" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491905043101.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1AABEEF236413061573A5691921AE829" Guid="ca2f610e-61b3-e990-6f45-b9aedd35bbd1">
+                <File Id="owf1AABEEF236413061573A5691921AE829" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491905325173.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcE03B8C8EE8D47BAA5BDB921E2951DE1A" Guid="01edab57-30e0-7c56-131a-677cf1d01d6f">
+                <File Id="owfE03B8C8EE8D47BAA5BDB921E2951DE1A" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491905572789.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc9C472CFEDA16C4C0A8B291DEA88D7639" Guid="2392296e-90db-b991-845f-b99e3225cbb2">
+                <File Id="owf9C472CFEDA16C4C0A8B291DEA88D7639" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491907604639.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc3B2C8311E83A7C7E7DA0D60FEF7BC5D0" Guid="5b2da04e-032a-b1c1-eb84-9faa73750163">
+                <File Id="owf3B2C8311E83A7C7E7DA0D60FEF7BC5D0" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491909909658.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc9523ACB3ED75001884963EE642437F55" Guid="d2e0122c-c225-c097-13a7-293df477b627">
+                <File Id="owf9523ACB3ED75001884963EE642437F55" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491912106681.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcF4E45787DF869B5FAB40E6EE436F7C59" Guid="428d0616-2ecc-cafe-2129-a836ecd6853c">
+                <File Id="owfF4E45787DF869B5FAB40E6EE436F7C59" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491912446754.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc4BAFFCDFF94671B45382BF138C039CFC" Guid="cbdd2c03-92a5-499b-41a9-63c5545f0d0f">
+                <File Id="owf4BAFFCDFF94671B45382BF138C039CFC" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491914317433.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcB0E75B8D39DEF2BD0498E0CA7EE879CA" Guid="be0e2990-5b31-47df-2a9d-190998a0238b">
+                <File Id="owfB0E75B8D39DEF2BD0498E0CA7EE879CA" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491915332210.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc484F614462FD5C181590CA5E05C8512E" Guid="d587401f-cdbd-54f6-3a8e-ff34f1eea5e0">
+                <File Id="owf484F614462FD5C181590CA5E05C8512E" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491918126065.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc82A419892764456AE868A1F2FBCE62D5" Guid="9b149438-564c-7e66-fa21-10d8b5688aac">
+                <File Id="owf82A419892764456AE868A1F2FBCE62D5" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491919732717.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc9F5B7A6FADCF53F64E29A8985BEF7596" Guid="2d44c70f-15c5-077b-b81b-71d4d37a9bc1">
+                <File Id="owf9F5B7A6FADCF53F64E29A8985BEF7596" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491919945195.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1612D93ADA952F20ADEB50465149025F" Guid="bcb36a9a-d7be-9df2-a7e6-a88570520d82">
+                <File Id="owf1612D93ADA952F20ADEB50465149025F" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491920505129.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc7B46D0DA8C78802BAFB3FD0E1963ACAD" Guid="58c8f520-a987-b84e-8ea1-1a6bc8408967">
+                <File Id="owf7B46D0DA8C78802BAFB3FD0E1963ACAD" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491920755629.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc72EC0FF1B6F3E02C999CE288A7FC4752" Guid="cacdd640-6db5-e16a-bda1-155736ab4831">
+                <File Id="owf72EC0FF1B6F3E02C999CE288A7FC4752" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491921253841.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc7C7966F1F438C54B565C6C211547C078" Guid="5aad87ad-4642-cfae-9194-bc4890c4e0a1">
+                <File Id="owf7C7966F1F438C54B565C6C211547C078" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491921345564.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcF4D25B77720C4E65B919F76C39806E39" Guid="d14a5c94-e632-db9e-3587-f84a46bb5b22">
+                <File Id="owfF4D25B77720C4E65B919F76C39806E39" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491921700026.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcB9633233776BC7DC3CD047647B1C0927" Guid="856dd681-c54a-a8a5-4a03-ec345793c507">
+                <File Id="owfB9633233776BC7DC3CD047647B1C0927" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491921917871.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc5C7DE93BE927FC031F7594EF035A68E9" Guid="6f24e42b-f476-eaef-590a-f1c6582f0c96">
+                <File Id="owf5C7DE93BE927FC031F7594EF035A68E9" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491922638744.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc6E035681D328B4161E253995EB7950EB" Guid="03f43d71-e015-1456-e7ea-b68e14c69027">
+                <File Id="owf6E035681D328B4161E253995EB7950EB" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491925116220.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owcC90D62A5E0F20AA47AABC5D807618A17" Guid="dc7ba04d-f599-bffe-7be3-ae8a006e0069">
+                <File Id="owfC90D62A5E0F20AA47AABC5D807618A17" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491926194991.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc301AE9098B102003579D5735B6E345ED" Guid="aa43ab2c-6f98-87b5-6292-f7754d45b7de">
+                <File Id="owf301AE9098B102003579D5735B6E345ED" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491927058068.json" KeyPath="yes" />
+              </Component>
+              <Component Id="owc7197753091A498ADE8E160B190029102" Guid="a992ce53-fcf6-821a-a33a-63a3174247c4">
+                <File Id="owf7197753091A498ADE8E160B190029102" Source="$(var.SourceDir)\Data\SteamWebApi\UgcFileDetails\22840491927141510.json" KeyPath="yes" />
+              </Component>
+            </Directory>
+          </Directory>
+          <Directory Id="owd613664F50023897C7C72237374CA0D1C" Name="SteamWorkshop">
+            <Directory Id="owdB9E0875B6719823C6F35070DBA4A4CCD" Name="Replays">
+              <Component Id="owc3E7F621FC1D458B225B46627987E0CE1" Guid="2d1a590b-545b-ca56-8e71-9df6af723b42">
+                <File Id="owf3E7F621FC1D458B225B46627987E0CE1" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491868906872.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcD065FB16CDA4685D04F5CAFF27A3312A" Guid="8410c74c-af95-49c2-cc27-4f3445b715ae">
+                <File Id="owfD065FB16CDA4685D04F5CAFF27A3312A" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491869017664.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcC78B98ECE019E2D2C57DD01E84019236" Guid="a1a7b26d-a252-14b2-f05d-96cd58d7a7b7">
+                <File Id="owfC78B98ECE019E2D2C57DD01E84019236" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491869491330.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcCEB625254EED1E8C04E9CF4A70B2231F" Guid="4e43ecb6-f714-f67a-2f45-2ffc40e4c4d8">
+                <File Id="owfCEB625254EED1E8C04E9CF4A70B2231F" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491870241304.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcCF0CD7D4ECE1EFBE28D847B9BA21FDEB" Guid="76e68971-2ec9-0d6a-a497-d8c488393390">
+                <File Id="owfCF0CD7D4ECE1EFBE28D847B9BA21FDEB" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491870331554.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc2E88C588F771D0C976B8D99A9F301291" Guid="da999ac2-ce71-5ced-04e4-ec5c1be83d88">
+                <File Id="owf2E88C588F771D0C976B8D99A9F301291" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491870405519.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc9D6D4BBC5B06225470D219820F7FD2BD" Guid="591a64fa-e22f-774e-f7f7-a8eb579f2e7b">
+                <File Id="owf9D6D4BBC5B06225470D219820F7FD2BD" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491870610561.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1268D0032696F48EB2564FE312132215" Guid="ab2eab13-fdb1-772c-65ad-104cae72a868">
+                <File Id="owf1268D0032696F48EB2564FE312132215" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491872648304.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc0F7140FA1EB946162BA0CC9A1FD7D2A5" Guid="2a72fbcd-33ae-2c4c-5a94-a2b5f1f0b960">
+                <File Id="owf0F7140FA1EB946162BA0CC9A1FD7D2A5" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491877488241.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc3A70C63EF4C5ECAB4007F56A3D6943FA" Guid="61a88c5f-1390-f866-e7ad-619396a869bd">
+                <File Id="owf3A70C63EF4C5ECAB4007F56A3D6943FA" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491877738939.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc37B90FBA6EDC98628634D3B1EC1C1A36" Guid="e95fbe1f-a525-d5ff-aa0f-e8d2c859570b">
+                <File Id="owf37B90FBA6EDC98628634D3B1EC1C1A36" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491879883091.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc00935C2C0D3A45E4F7455B2B789F2853" Guid="6b3a412d-7164-74cb-9a03-7362cb5c472d">
+                <File Id="owf00935C2C0D3A45E4F7455B2B789F2853" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491884099974.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc8435384857120D5B2EDDF0D626F4C76A" Guid="c161df5e-7e0c-4fb3-22ae-63ba3be7fa01">
+                <File Id="owf8435384857120D5B2EDDF0D626F4C76A" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491884754161.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc8564FEF263B532AF1A16426FA444D9BC" Guid="4f0c3c69-2eb0-996c-c54b-8dbd0426d543">
+                <File Id="owf8564FEF263B532AF1A16426FA444D9BC" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491884849895.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc47312E8E458D8A00EFF9CEBE8A1CCBC0" Guid="98116b26-7a2c-16db-6d34-90aedeb84294">
+                <File Id="owf47312E8E458D8A00EFF9CEBE8A1CCBC0" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491887253679.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc06C81232EAA8EE67FA428290F10D4266" Guid="00ffd9e5-5c73-45f7-77bc-8a6e3796324e">
+                <File Id="owf06C81232EAA8EE67FA428290F10D4266" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491889011698.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcFDD16FD268E0D57319B9F94DC6278DA0" Guid="bff6af16-67cf-a049-752e-b72401b1fd32">
+                <File Id="owfFDD16FD268E0D57319B9F94DC6278DA0" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491889094045.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc7F5FDD572D0EEA29637ABA1621F74A06" Guid="e4d961b0-6b89-3348-d549-3c900729bb5a">
+                <File Id="owf7F5FDD572D0EEA29637ABA1621F74A06" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491889909795.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcB9A06C3ED3BFD9ECF86278D58A40B489" Guid="6cfaf169-694c-fe5b-ae49-0be662fc7c49">
+                <File Id="owfB9A06C3ED3BFD9ECF86278D58A40B489" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491890953115.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1EF884377EEC1B3EC98F3A00770AA523" Guid="5e92570b-f1e4-834f-2493-8a4912465f94">
+                <File Id="owf1EF884377EEC1B3EC98F3A00770AA523" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491891357339.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc92A9237489B95714BDD873074E3569D8" Guid="6e051569-fd89-7d44-e1cb-e326e11a6968">
+                <File Id="owf92A9237489B95714BDD873074E3569D8" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491891768477.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc5C2C56BDDA97CDD22A05F6C00FAB3B43" Guid="7e515400-697e-53c2-8aa7-1813d0fa820b">
+                <File Id="owf5C2C56BDDA97CDD22A05F6C00FAB3B43" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491891769941.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcE285BA147477AA842B99E8C403C66F01" Guid="a10d8c9c-b8e3-6280-bd0c-c26c0e40d71a">
+                <File Id="owfE285BA147477AA842B99E8C403C66F01" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491894453006.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc91082A93254638719FDD62518C060C82" Guid="c6f180b6-c949-ef8a-1414-7aa34a85a48b">
+                <File Id="owf91082A93254638719FDD62518C060C82" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491894992452.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc530690DF0682E480989C10541CA84DA5" Guid="38e1ade9-991f-24c1-e745-81df0b612273">
+                <File Id="owf530690DF0682E480989C10541CA84DA5" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491895288752.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcFD262944502808F59BFE444790F9C6F2" Guid="9ec3e1d1-84da-0298-af14-c607ea85fb06">
+                <File Id="owfFD262944502808F59BFE444790F9C6F2" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491895364444.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcD0711B060681ED9D6A9A8AF054AB3721" Guid="2f69cccc-f53b-04c6-2175-b233d7f70c9d">
+                <File Id="owfD0711B060681ED9D6A9A8AF054AB3721" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491897444745.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcECBDEE727B84EF028047E1E954B69A46" Guid="45c2a732-7f4b-ecc5-36c4-613fd2a71290">
+                <File Id="owfECBDEE727B84EF028047E1E954B69A46" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491898363170.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcD1DA68A768752D426334A4ADC49385D4" Guid="74eea448-7c28-3cec-080e-8b75dcecd933">
+                <File Id="owfD1DA68A768752D426334A4ADC49385D4" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491898532216.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc3227DA43A94D39CB7FF0970E1C190DE8" Guid="b3a144dd-f2ac-f235-82cc-27e2f99c467a">
+                <File Id="owf3227DA43A94D39CB7FF0970E1C190DE8" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491899301194.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc09678B751911CA1E92125C72876B19A3" Guid="1b7273ea-aefb-83c6-588c-8888e109db46">
+                <File Id="owf09678B751911CA1E92125C72876B19A3" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491899885615.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc5AE1B380BB2A705C1F9515F440CD05C8" Guid="e0afbaf4-cbf4-abd2-a76c-f74ca6d38fea">
+                <File Id="owf5AE1B380BB2A705C1F9515F440CD05C8" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491900267849.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcABD9F7EF9C39B008EE59E41B93FB7798" Guid="3e584f3b-8a9e-4ea5-6d79-7d3b7f5ef022">
+                <File Id="owfABD9F7EF9C39B008EE59E41B93FB7798" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491901082876.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcDFCBD433740488A799A5591563E1EF96" Guid="f6b9e0a2-cc7a-ef81-1212-d120e3dc9c7c">
+                <File Id="owfDFCBD433740488A799A5591563E1EF96" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491901858234.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcF4B5906E2B6DF78733EF056360A97282" Guid="65af5de5-72ba-ed53-78b4-34056baf851a">
+                <File Id="owfF4B5906E2B6DF78733EF056360A97282" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491902519883.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcA7DCF41900211AB825C95109D33D74E4" Guid="edf866df-5564-1878-6196-5bd250a3c156">
+                <File Id="owfA7DCF41900211AB825C95109D33D74E4" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491903529749.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc68C8545FA9E83359372E5195FDA458B3" Guid="4891fd46-8359-5106-da28-c98fa054a214">
+                <File Id="owf68C8545FA9E83359372E5195FDA458B3" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491903883885.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc94490762A14DCD4E95DB5210BF7EA57F" Guid="18caf9f7-d89f-25f3-0c53-19b75a03ec56">
+                <File Id="owf94490762A14DCD4E95DB5210BF7EA57F" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491905043101.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc6085DBB3E22453FD44167A8497316F50" Guid="b4f5e742-d72b-b815-8777-30f1546c5b26">
+                <File Id="owf6085DBB3E22453FD44167A8497316F50" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491905325173.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc8A04DE3E8E06317FD499BC5B08C8ED28" Guid="d90d771b-24ce-c61e-a024-f238185c79c8">
+                <File Id="owf8A04DE3E8E06317FD499BC5B08C8ED28" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491905572789.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcFA041130F6F2D4C11633DA0D06FE7E15" Guid="593d9659-08b7-f175-ac60-1ab5e5a538ff">
+                <File Id="owfFA041130F6F2D4C11633DA0D06FE7E15" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491907604639.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc27A2865BA71D448A17F352E0CBE8081E" Guid="bf6772da-a999-364c-d68a-e6064ef6a70e">
+                <File Id="owf27A2865BA71D448A17F352E0CBE8081E" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491909909658.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcCA9C573A4D179933272DAD1144868D3E" Guid="8149f5e6-61b7-92f4-e1fd-39e3a8f11fbf">
+                <File Id="owfCA9C573A4D179933272DAD1144868D3E" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491912106681.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc2C44BDC98C2E890778D5D11988C8F4D3" Guid="609cda9e-654c-bbdc-747d-a740e755db64">
+                <File Id="owf2C44BDC98C2E890778D5D11988C8F4D3" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491912446754.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc69481EDCCD324248D0A2F94464F71416" Guid="f7475aba-1cc0-594a-67b9-94b3d04a83f6">
+                <File Id="owf69481EDCCD324248D0A2F94464F71416" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491914317433.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcD3A97FA2B11CA98A9E79F94596606869" Guid="8e924a00-096e-706b-417a-372a40e71ff3">
+                <File Id="owfD3A97FA2B11CA98A9E79F94596606869" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491915332210.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcCC577BC672B99F6EB3B40F0D8C26418C" Guid="c37de291-85c8-4d97-3739-842a2ac2041d">
+                <File Id="owfCC577BC672B99F6EB3B40F0D8C26418C" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491918126065.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc5D7FD818E3C6B35A65295C48CDC42789" Guid="8f3b09fb-ab8b-ef8c-1181-f370523610f3">
+                <File Id="owf5D7FD818E3C6B35A65295C48CDC42789" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491919732717.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc857407C77B46C28574C7ADFEB1AFD146" Guid="6e674e90-a0bb-f9d5-1281-9e5edb97339c">
+                <File Id="owf857407C77B46C28574C7ADFEB1AFD146" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491919945195.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc95A5A56A2D1B79F811656B37DB28911E" Guid="411c24c5-ae43-12d8-31f7-93bb67528b6c">
+                <File Id="owf95A5A56A2D1B79F811656B37DB28911E" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491920505129.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc3B175A28452E08FB9FF3461C675E4AE7" Guid="0247c08d-db1a-5605-f24f-e85e6c629c43">
+                <File Id="owf3B175A28452E08FB9FF3461C675E4AE7" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491920755629.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc30F293770CB49930CAFB6F5E17683115" Guid="fae9bddb-0183-505e-d3a7-9e039f4d6eb7">
+                <File Id="owf30F293770CB49930CAFB6F5E17683115" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491921253841.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc0B9D5793D0B92F7E6A942768CDF712DB" Guid="2c31ea90-f8b8-0ca3-7514-697c5966403b">
+                <File Id="owf0B9D5793D0B92F7E6A942768CDF712DB" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491921345564.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcB0DA9D0F4567C0BA189A8BC285F5BF6C" Guid="c3d200dd-1c54-d679-7393-b92ba11ad824">
+                <File Id="owfB0DA9D0F4567C0BA189A8BC285F5BF6C" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491921700026.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcC938D6A570386DF580DE809CA03635AC" Guid="402fc5e3-b07e-4bbf-61a8-8d15f5143c8b">
+                <File Id="owfC938D6A570386DF580DE809CA03635AC" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491921917871.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcD3452A09394E32CAF2A96F3EFC45D325" Guid="44d262fc-65a3-dcd6-f853-2374b01b87a7">
+                <File Id="owfD3452A09394E32CAF2A96F3EFC45D325" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491922638744.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc28CCFF4C083CFC62215D62B507A1ECFA" Guid="8325ea7c-9572-66dd-63dd-08c8015b5758">
+                <File Id="owf28CCFF4C083CFC62215D62B507A1ECFA" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491925116220.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc1989EFDD9AFCEE192216FB312AB1B222" Guid="567055aa-5f3d-9c3f-3ba7-c790ab6da9de">
+                <File Id="owf1989EFDD9AFCEE192216FB312AB1B222" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491926194991.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owcF517F167DFC21F67A62B40814F5EA033" Guid="33973db8-281b-bf91-3735-ab496db91e2c">
+                <File Id="owfF517F167DFC21F67A62B40814F5EA033" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491927058068.dat" KeyPath="yes" />
+              </Component>
+              <Component Id="owc2110948488E86A953B7A5BF569047C0C" Guid="bb550c2c-29f4-165b-5905-87e3f8f885c7">
+                <File Id="owf2110948488E86A953B7A5BF569047C0C" Source="$(var.SourceDir)\Data\SteamWorkshop\Replays\22840491927141510.dat" KeyPath="yes" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
       </Directory>
     </Directory>
   </Module>
