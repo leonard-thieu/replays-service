@@ -28,11 +28,16 @@ artifacts:
 
 install:
   - nuget update -Self
+  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild 8)
+  - npm install --global npm@5.3.0
+  - node --version
+  - npm --version
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
-  - ps: .\Scripts\Install-AzureStorageEmulator.ps1
 
 before_build:
   - appveyor-retry nuget restore -Verbosity quiet
+  - npm install
+  - npm run azurite-blob
 build:
   project: $(PROJECT).sln
   verbosity: minimal

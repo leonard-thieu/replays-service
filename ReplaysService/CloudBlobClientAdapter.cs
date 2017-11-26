@@ -2,8 +2,15 @@
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
+    /// <summary>
+    /// Wraps a <see cref="CloudBlobClient"/>.
+    /// </summary>
     internal sealed class CloudBlobClientAdapter : ICloudBlobClient
     {
+        /// <summary>
+        /// Initializes an instance of the <see cref="CloudBlobClientAdapter"/> class.
+        /// </summary>
+        /// <param name="cloudBlobClient">The <see cref="CloudBlobClient"/> to wrap.</param>
         public CloudBlobClientAdapter(CloudBlobClient cloudBlobClient)
         {
             this.cloudBlobClient = cloudBlobClient;

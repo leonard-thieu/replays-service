@@ -75,7 +75,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 var mockDirectory = new Mock<ICloudBlobDirectory>();
                 mockDirectory.Setup(d => d.GetBlockBlobReference(It.IsAny<string>())).Returns(mockBlob.Object);
 
-                mockDirectoryFactory.Setup(f => f.GetCloudBlobDirectoryAsync("crypt", "replays", cancellationToken)).ReturnsAsync(mockDirectory.Object);
+                mockDirectoryFactory.Setup(f => f.GetCloudBlobDirectoryAsync("replays", cancellationToken)).ReturnsAsync(mockDirectory.Object);
             }
 
             private readonly List<Replay> replays = new List<Replay>();
@@ -121,26 +121,33 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             }
         }
 
-        [Trait("Category", "Uses Azure Storage Emulator")]
-        [Collection(AzureStorageCollection.Name)]
+        [Trait("Category", "Uses Azurite")]
         [Trait("Category", "Uses SQL Server")]
         public class IntegrationTests : IDisposable
         {
             public IntegrationTests()
             {
                 var connectionString = DatabaseHelper.GetConnectionString();
+
                 db = new LeaderboardsContext(connectionString);
                 db.Database.Delete(); // Make sure it really dropped - needed for dirty database
                 db.Database.Initialize(force: true);
+
+                var account = CloudStorageAccount.DevelopmentStorageAccount;
+                var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+                container = blobClient.GetContainerReference("test_crypt");
+
                 storeClient = new LeaderboardsStoreClient(connectionString);
             }
 
             private readonly LeaderboardsContext db;
+            private readonly ICloudBlobContainer container;
             private readonly ILeaderboardsStoreClient storeClient;
 
             public void Dispose()
             {
                 storeClient.Dispose();
+                container.DeleteIfExists();
                 db.Database.Delete();
                 db.Dispose();
             }
@@ -362,9 +369,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
 
                 #endregion
 
-                var account = CloudStorageAccount.DevelopmentStorageAccount;
-                var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
-                var directoryFactory = new CloudBlobDirectoryFactory(blobClient);
+                var directoryFactory = new CloudBlobDirectoryFactory(container);
 
                 var replaysWorker = new ReplaysWorker(247080, db, steamWebApiClient, ugcHttpClient, directoryFactory, storeClient, telemetryClient);
                 var limit = 60;
