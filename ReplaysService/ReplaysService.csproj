@@ -136,6 +136,7 @@
     <Compile Include="ReplaysArgsParser.cs" />
     <Compile Include="ReplaysOptions.cs" />
     <Compile Include="ReplaysWorker.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="WorkerRole.cs">
       <SubType>Component</SubType>
     </Compile>

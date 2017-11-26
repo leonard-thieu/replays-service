@@ -87,9 +87,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
             }
@@ -109,9 +109,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
             }
