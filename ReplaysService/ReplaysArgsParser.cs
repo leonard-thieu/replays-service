@@ -44,7 +44,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             #region SteamWebApiKey
 
             var steamWebApiKey = options.SteamWebApiKey;
-            if (ShouldPromptForRequiredSetting(steamWebApiKey, settings.SteamWebApiKey))
+            if (ShouldPrompt(steamWebApiKey))
             {
                 steamWebApiKey = ReadOption("Steam Web API key");
             }

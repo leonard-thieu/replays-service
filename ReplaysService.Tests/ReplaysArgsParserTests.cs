@@ -113,24 +113,6 @@ options:
             }
 
             [Fact]
-            public void ApikeyFlagIsNotSpecifiedAndSteamWebApiKeyIsNotSet_PromptsUserForApikeyAndSetsSteamWebApiKey()
-            {
-                // Arrange
-                string[] args = { };
-                settings.SteamWebApiKey = null;
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myApiKey");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myApiKey", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.SteamWebApiKey.Decrypt());
-            }
-
-            [Fact]
             public void ApikeyFlagIsNotSpecifiedAndSteamWebApiKeyIsSet_DoesNotSetSteamWebApiKey()
             {
                 // Arrange

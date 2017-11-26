@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
@@ -58,7 +59,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 var settings = c.Kernel.Get<IReplaysSettings>();
 
                 if (settings.LeaderboardsConnectionString == null)
-                    throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
+                {
+                    var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
+                    using (var connection = connectionFactory.CreateConnection("NecroDancer"))
+                    {
+                        settings.LeaderboardsConnectionString = new EncryptedSecret(connection.ConnectionString, settings.KeyDerivationIterations);
+                        settings.Save();
+                    }
+                }
 
                 return settings.LeaderboardsConnectionString.Decrypt();
             }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
@@ -80,11 +88,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 var settings = c.Kernel.Get<IReplaysSettings>();
 
                 if (settings.AzureStorageConnectionString == null)
-                    throw new InvalidOperationException($"{nameof(Settings.AzureStorageConnectionString)} is not set.");
+                {
+                    var azureStorageConnectionString = CloudStorageAccount.DevelopmentStorageAccount.ToString(exportSecrets: true);
+                    settings.AzureStorageConnectionString = new EncryptedSecret(azureStorageConnectionString, settings.KeyDerivationIterations);
+                    settings.Save();
+                }
 
-                var azureStorageConnectionString = settings.AzureStorageConnectionString.Decrypt();
-                var account = CloudStorageAccount.Parse(azureStorageConnectionString);
-
+                var account = CloudStorageAccount.Parse(settings.AzureStorageConnectionString.Decrypt());
                 var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
 
                 return blobClient.GetContainerReference("crypt");
