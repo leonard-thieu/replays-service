@@ -208,8 +208,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="AzureStorageCollection.cs" />
-    <Compile Include="AzureStorageFixture.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="MockedRequestExtensions.cs" />
     <Compile Include="MockHttpMessageHandlerExtensions.cs" />

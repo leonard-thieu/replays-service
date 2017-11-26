@@ -1,5 +1,8 @@
 ﻿namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
+    /// <summary>
+    /// Represents a <see cref="Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient"/>
+    /// </summary>
     internal interface ICloudBlobClient
     {
         /// <summary>

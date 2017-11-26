@@ -74,7 +74,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             {
                 try
                 {
-                    var directory = await directoryFactory.GetCloudBlobDirectoryAsync("crypt", "replays", cancellationToken).ConfigureAwait(false);
+                    var directory = await directoryFactory.GetCloudBlobDirectoryAsync("replays", cancellationToken).ConfigureAwait(false);
                     var replayNetwork = new ReplayDataflowNetwork(appId, steamWebApiClient, ugcHttpClient, directory, cancellationToken);
 
                     foreach (var replay in replays)

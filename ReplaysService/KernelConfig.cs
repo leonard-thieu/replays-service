@@ -3,7 +3,6 @@ using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Ninject;
 using Ninject.Extensions.NamedScope;
 using Polly;
@@ -70,7 +69,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             RegisterSteamWebApiClient(kernel);
             RegisterUgcHttpClient(kernel);
 
-            kernel.Bind<CloudBlobClient>().ToMethod(c =>
+            kernel.Bind<ICloudBlobContainer>().ToMethod(c =>
             {
                 var settings = c.Kernel.Get<IReplaysSettings>();
 
@@ -80,9 +79,10 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 var azureStorageConnectionString = settings.AzureStorageConnectionString.Decrypt();
                 var account = CloudStorageAccount.Parse(azureStorageConnectionString);
 
-                return account.CreateCloudBlobClient();
-            });
-            kernel.Bind<ICloudBlobClient>().To<CloudBlobClientAdapter>().InParentScope();
+                var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
+
+                return blobClient.GetContainerReference("crypt");
+            }).InParentScope();
             kernel.Bind<ICloudBlobDirectoryFactory>().To<CloudBlobDirectoryFactory>().InParentScope();
 
             kernel.Bind<ReplaysWorker>().ToSelf().InScope(c => c);
