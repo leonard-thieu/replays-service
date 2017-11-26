@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.WindowsAzure.Storage;
 using Mono.Options;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.Services;
@@ -9,7 +10,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
     internal sealed class ReplaysArgsParser : ArgsParser<ReplaysOptions, IReplaysSettings>
     {
-        internal const string DefaultAzureStorageConnectionString = "UseDevelopmentStorage=true";
+        internal static readonly string DefaultAzureStorageConnectionString = CloudStorageAccount.DevelopmentStorageAccount.ToString(exportSecrets: true);
 
         public ReplaysArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) : base(inReader, outWriter, errorWriter) { }
 
