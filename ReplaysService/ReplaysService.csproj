@@ -473,6 +473,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeLeaderboardsContext.cs" />
     <Compile Include="FakeLeaderboardsStoreClient.cs" />
     <Compile Include="FakeSteamWebApiClient.cs" />
     <Compile Include="FakeUgcHttpClient.cs" />

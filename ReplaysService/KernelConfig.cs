@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
@@ -71,7 +72,15 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 return settings.LeaderboardsConnectionString.Decrypt();
             }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
-            kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>().InParentScope();
+            kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>().When(r =>
+            {
+                using (var db = r.ParentContext.Kernel.Get<LeaderboardsContext>())
+                {
+                    return db.Replays.Any();
+                }
+            }).InParentScope();
+            kernel.Bind<ILeaderboardsContext>().To<FakeLeaderboardsContext>().InParentScope();
+
             kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>().When(r =>
             {
                 var settings = r.ParentContext.Kernel.Get<IReplaysSettings>();
