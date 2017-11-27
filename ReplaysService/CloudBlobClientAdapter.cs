@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage.Blob;
+﻿using System;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
@@ -17,6 +18,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         }
 
         private readonly CloudBlobClient cloudBlobClient;
+
+        /// <summary>
+        /// Gets the base URI for the Blob service client at the primary location.
+        /// </summary>
+        public Uri BaseUri => cloudBlobClient.BaseUri;
 
         /// <summary>
         /// Returns a reference to a <see cref="ICloudBlobContainer"/> object with the specified name.

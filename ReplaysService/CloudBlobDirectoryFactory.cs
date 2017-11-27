@@ -1,5 +1,8 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
@@ -31,15 +34,43 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         /// </returns>
         public async Task<ICloudBlobDirectory> GetCloudBlobDirectoryAsync(string relativeAddress, CancellationToken cancellationToken)
         {
-            var containerExists = await container.ExistsAsync(cancellationToken).ConfigureAwait(false);
-            if (!containerExists)
+            try
             {
-                await container.CreateAsync(cancellationToken).ConfigureAwait(false);
-            }
-            var permissions = new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob };
-            await container.SetPermissionsAsync(permissions, cancellationToken).ConfigureAwait(false);
+                var containerExists = await container.ExistsAsync(cancellationToken).ConfigureAwait(false);
+                if (!containerExists)
+                {
+                    await container.CreateAsync(cancellationToken).ConfigureAwait(false);
+                }
+                var permissions = new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob };
+                await container.SetPermissionsAsync(permissions, cancellationToken).ConfigureAwait(false);
 
-            return container.GetDirectoryReference(relativeAddress);
+                return container.GetDirectoryReference(relativeAddress);
+            }
+            catch (StorageException ex)
+                when (IsDevelopmentStorageConnectFailure(ex))
+            {
+                throw new WebException(
+                    "Could not connect to development storage. Ensure Azurite or Azure Storage Emulator is running.",
+                    ex,
+                    WebExceptionStatus.ConnectFailure,
+                    response: null);
+            }
+
+            bool IsDevelopmentStorageConnectFailure(StorageException ex)
+            {
+                var webEx = ex.InnerException as WebException;
+                if (webEx != null)
+                {
+                    var socketEx = webEx.InnerException as SocketException;
+                    if (socketEx != null)
+                    {
+                        return (socketEx.SocketErrorCode == SocketError.ConnectionRefused) &&
+                            (container.ServiceClient.BaseUri == CloudStorageAccount.DevelopmentStorageAccount.BlobEndpoint);
+                    }
+                }
+
+                return false;
+            }
         }
     }
 }

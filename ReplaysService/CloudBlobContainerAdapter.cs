@@ -17,9 +17,15 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         public CloudBlobContainerAdapter(CloudBlobContainer container)
         {
             this.container = container;
+            ServiceClient = new CloudBlobClientAdapter(container.ServiceClient);
         }
 
         readonly CloudBlobContainer container;
+
+        /// <summary>
+        /// Gets the Blob service client for the container.
+        /// </summary>
+        public ICloudBlobClient ServiceClient { get; }
 
         /// <summary>
         /// Initiates an asynchronous operation that creates a container.

@@ -11,6 +11,11 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     internal interface ICloudBlobContainer
     {
         /// <summary>
+        /// Gets the Blob service client for the container.
+        /// </summary>
+        ICloudBlobClient ServiceClient { get; }
+
+        /// <summary>
         /// Initiates an asynchronous operation that creates a container.
         /// </summary>
         /// <param name="cancellationToken">
