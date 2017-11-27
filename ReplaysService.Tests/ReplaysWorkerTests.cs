@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using RichardSzalay.MockHttp;
@@ -127,13 +126,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
         {
             public IntegrationTests()
             {
-                var connectionString = DatabaseHelper.GetConnectionString();
+                var connectionString = StorageHelper.GetDatabaseConnectionString();
 
                 db = new LeaderboardsContext(connectionString);
                 db.Database.Delete(); // Make sure it really dropped - needed for dirty database
                 db.Database.Initialize(force: true);
 
-                var account = CloudStorageAccount.DevelopmentStorageAccount;
+                var account = StorageHelper.GetCloudStorageAccount();
                 var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
                 container = blobClient.GetContainerReference("test_crypt");
 
