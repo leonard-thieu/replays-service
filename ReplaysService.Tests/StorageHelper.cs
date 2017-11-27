@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data.Entity.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
@@ -8,7 +9,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
     {
         public static string GetDatabaseConnectionString()
         {
-            return GetConnectionString(nameof(LeaderboardsContext));
+            var connectionString = GetConnectionString(nameof(LeaderboardsContext));
+            if (connectionString != null) { return connectionString; }
+
+            var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
+            using (var connection = connectionFactory.CreateConnection("TestReplaysService"))
+            {
+                return connection.ConnectionString;
+            }
         }
 
         public static CloudStorageAccount GetCloudStorageAccount()
