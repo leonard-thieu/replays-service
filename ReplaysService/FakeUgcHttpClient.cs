@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using toofz.NecroDancer.Leaderboards.Steam;
+using toofz.NecroDancer.Leaderboards.Steam.Workshop;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {

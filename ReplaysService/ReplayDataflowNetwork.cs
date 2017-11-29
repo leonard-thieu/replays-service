@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using log4net;
-using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
+using toofz.NecroDancer.Leaderboards.Steam.Workshop;
 using toofz.NecroDancer.Replays;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService

@@ -10,8 +10,8 @@ using Ninject.Extensions.NamedScope;
 using Ninject.Syntax;
 using Polly;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
+using toofz.NecroDancer.Leaderboards.Steam.Workshop;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
