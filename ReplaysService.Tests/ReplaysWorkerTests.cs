@@ -109,14 +109,14 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             {
                 // Arrange
                 mockStoreClient
-                    .Setup(c => c.BulkUpsertAsync(replays, cancellationToken))
+                    .Setup(c => c.BulkUpsertAsync(replays, null, cancellationToken))
                     .ReturnsAsync(replays.Count);
 
                 // Act
                 await worker.StoreReplaysAsync(replays, cancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(c => c.BulkUpsertAsync(replays, cancellationToken), Times.Once);
+                mockStoreClient.Verify(c => c.BulkUpsertAsync(replays, null, cancellationToken), Times.Once);
             }
         }
 
