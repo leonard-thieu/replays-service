@@ -35,11 +35,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Moq">
+      <Version>4.7.145</Version>
+    </PackageReference>
     <PackageReference Include="RichardSzalay.MockHttp">
       <Version>3.2.1</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.TestsShared">
-      <Version>5.0.3</Version>
     </PackageReference>
     <PackageReference Include="xunit.assert">
       <Version>2.3.1</Version>

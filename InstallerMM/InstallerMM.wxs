@@ -425,6 +425,12 @@
         <Component Id="owc823C38AF0EE140773F7661CF707A5A8C" Guid="e13968a8-f94d-877d-cdc0-16e19eade6df">
           <File Id="owf823C38AF0EE140773F7661CF707A5A8C" Source="$(var.SourceDir)\toofz.ExceptionRenderer.pdb" KeyPath="yes" />
         </Component>
+        <Component Id="owc9B7FA249C984A9090A483A689F1BF92D" Guid="21fc8963-4876-3bc0-8d29-79bcd5159526">
+          <File Id="owf9B7FA249C984A9090A483A689F1BF92D" Source="$(var.SourceDir)\toofz.FakeDbSet.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcA21A1E54C6F57331EF5D9325C85C1E71" Guid="8ff69b2a-e77c-69f9-3402-610b28aaa8ba">
+          <File Id="owfA21A1E54C6F57331EF5D9325C85C1E71" Source="$(var.SourceDir)\toofz.FakeDbSet.pdb" KeyPath="yes" />
+        </Component>
         <Component Id="owc18A2A5D8F057A6D1BC7451C1145ED01D" Guid="30a8fd01-692c-cce5-2778-d8972a397d93">
           <File Id="owf18A2A5D8F057A6D1BC7451C1145ED01D" Source="$(var.SourceDir)\toofz.NecroDancer.dll" KeyPath="yes" />
         </Component>

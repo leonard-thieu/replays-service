@@ -15,7 +15,6 @@ using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
-using toofz.TestsShared;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
@@ -51,8 +50,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
             public async Task ReturnsReplays()
             {
                 // Arrange
-                var mockDbReplays = new MockDbSet<Replay>();
-                mockDb.Setup(d => d.Replays).Returns(mockDbReplays.Object);
+                var dbReplaysInner = new List<Replay>();
+                var dbReplays = new FakeDbSet<Replay>(dbReplaysInner);
+                mockDb.Setup(d => d.Replays).Returns(dbReplays);
                 var limit = 20;
 
                 // Act
