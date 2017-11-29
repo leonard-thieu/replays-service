@@ -57,9 +57,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             var broadcastReplayDataflowContext = new BroadcastBlock<ReplayDataflowContext>(context => context, GetDefaultDataflowBlockOptions());
 
-            var storeUgcFile = new ActionBlock<ReplayDataflowContext>(
-                StoreUgcFileAsync,
-                GetNetworkBoundExecutionDataflowBlockOptions());
+            var storeUgcFile = new ActionBlock<ReplayDataflowContext>(StoreUgcFileAsync, GetNetworkBoundExecutionDataflowBlockOptions());
 
             getReplayDataflowContext.LinkTo(getUgcFileDetails, GetDefaultDataflowLinkOptions());
 
