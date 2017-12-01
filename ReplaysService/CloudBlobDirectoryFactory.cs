@@ -46,8 +46,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                 return container.GetDirectoryReference(relativeAddress);
             }
-            catch (StorageException ex)
-                when (IsDevelopmentStorageConnectFailure(ex))
+            catch (StorageException ex) when (IsDevelopmentStorageConnectFailure(ex))
             {
                 throw new WebException(
                     "Could not connect to development storage. Ensure Azurite or Azure Storage Emulator is running.",
