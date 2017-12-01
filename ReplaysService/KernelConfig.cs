@@ -204,6 +204,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         #endregion
 
+        #region CloudBlobContainer
+
         private static ICloudBlobContainer GetCloudBlobContainer(IContext c)
         {
             var settings = c.Kernel.Get<IReplaysSettings>();
@@ -215,10 +217,17 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 settings.Save();
             }
 
-            var account = CloudStorageAccount.Parse(settings.AzureStorageConnectionString.Decrypt());
+            return CreateCloudBlobContainer(settings.AzureStorageConnectionString.Decrypt(), "crypt");
+        }
+
+        internal static ICloudBlobContainer CreateCloudBlobContainer(string connectionString, string containerName)
+        {
+            var account = CloudStorageAccount.Parse(connectionString);
             var blobClient = new CloudBlobClientAdapter(account.CreateCloudBlobClient());
 
-            return blobClient.GetContainerReference("crypt");
+            return blobClient.GetContainerReference(containerName);
         }
+
+        #endregion
     }
 }
