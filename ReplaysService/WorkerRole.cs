@@ -49,11 +49,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
             }
         }
 
@@ -77,11 +73,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                     log.Error("Failed to complete run due to an error.", ex);
                     operation.Telemetry.Success = false;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
                 finally
                 {
                     kernel.Release(worker);

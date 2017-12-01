@@ -501,12 +501,12 @@
       <DependentUpon>ICloudBlockBlob.cs</DependentUpon>
     </Compile>
     <Compile Include="KernelConfig.cs" />
+    <Compile Include="OperationTelemetryExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ReplayDataflowNetwork.cs" />
     <Compile Include="ReplaysArgsParser.cs" />
     <Compile Include="ReplaysOptions.cs" />
     <Compile Include="ReplaysWorker.cs" />
-    <Compile Include="Util.cs" />
     <Compile Include="WorkerRole.cs">
       <SubType>Component</SubType>
     </Compile>
