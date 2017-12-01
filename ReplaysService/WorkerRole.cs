@@ -6,6 +6,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
+using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
@@ -68,7 +69,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (HttpRequestStatusException ex)
+                catch (HttpRequestStatusException ex) when (SteamWebApiClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);
                     log.Error("Failed to complete run due to an error.", ex);
