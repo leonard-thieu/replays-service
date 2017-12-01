@@ -58,14 +58,12 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
             bool IsDevelopmentStorageConnectFailure(StorageException ex)
             {
-                var webEx = ex.InnerException as WebException;
-                if (webEx != null)
+                if (ex.InnerException is WebException webEx)
                 {
-                    var socketEx = webEx.InnerException as SocketException;
-                    if (socketEx != null)
+                    if (webEx.InnerException is SocketException socketEx)
                     {
                         return (socketEx.SocketErrorCode == SocketError.ConnectionRefused) &&
-                            (container.ServiceClient.BaseUri == CloudStorageAccount.DevelopmentStorageAccount.BlobEndpoint);
+                               (container.ServiceClient.BaseUri == CloudStorageAccount.DevelopmentStorageAccount.BlobEndpoint);
                     }
                 }
 
