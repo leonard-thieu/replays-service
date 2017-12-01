@@ -14,7 +14,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : this(settings, telemetryClient, runOnce: false, kernel: null, log: null) { }
+        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient)
+            : this(settings, telemetryClient, runOnce: false, kernel: null, log: null) { }
 
         internal WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient, bool runOnce, IKernel kernel, ILog log) :
             base("replays", settings, telemetryClient, runOnce)
@@ -81,14 +82,27 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
             }
         }
 
+        #region IDisposable Implementation
+
+        private bool disposed;
+
         protected override void Dispose(bool disposing)
         {
+            if (disposed) { return; }
+
             if (disposing)
             {
-                kernel.Dispose();
+                try
+                {
+                    kernel.Dispose();
+                }
+                catch (Exception) { }
             }
+            disposed = true;
 
             base.Dispose(disposing);
         }
+
+        #endregion
     }
 }
