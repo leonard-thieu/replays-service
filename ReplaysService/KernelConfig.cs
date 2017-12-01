@@ -192,11 +192,13 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         internal static HttpMessageHandler CreateUgcHttpClientHandler(HttpMessageHandler innerHandler)
         {
+            var policy = Policy.NoOpAsync();
+
             return HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
             {
                 new LoggingHandler(),
                 new GZipHandler(),
-                new HttpErrorHandler(),
+                new TransientFaultHandler(policy),
             });
         }
 
