@@ -106,7 +106,9 @@
         </Component>
         <Component Id="owcCD62D949CF4EB05A6A3ED5BCFE52C978" Guid="f0e13060-9d4e-b205-3cde-dfeb91bbee29">
           <File Id="owfCD62D949CF4EB05A6A3ED5BCFE52C978" Source="$(var.SourceDir)\ReplaysService.exe" KeyPath="yes" />
-          <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
+          <ServiceInstall Id="si00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves, parses, and stores Crypt of the NecroDancer replay data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes">
+            <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension" FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="none" ResetPeriodInDays="1" RestartServiceDelayInSeconds="120" />
+          </ServiceInstall>
           <ServiceControl Id="sc00053F5D2667FBB6583E1D208507FBEF" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
           <File Id="owf91FCC4586B173E3BCA775794089C4F29" Source="$(var.SourceDir)\ReplaysService.exe.config" CompanionFile="owfCD62D949CF4EB05A6A3ED5BCFE52C978" />
         </Component>
@@ -115,6 +117,9 @@
         </Component>
         <Component Id="owc473279DC6169D7140DB32234B99BB2BB" Guid="f6143307-7474-3a97-42aa-250ef28429a3">
           <File Id="owf473279DC6169D7140DB32234B99BB2BB" Source="$(var.SourceDir)\SteamKit2.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc418CB93F7EC92B98862CA02711BE5C7F" Guid="b47b833c-0858-841b-f285-491d74af0ee4">
+          <File Id="owf418CB93F7EC92B98862CA02711BE5C7F" Source="$(var.SourceDir)\SteamKit2.pdb" KeyPath="yes" />
         </Component>
         <Component Id="owc25FBE4153F32A5634B0ADA8A6954CC89" Guid="6c98bea6-1304-2fb8-4ce3-709ad7fb9601">
           <File Id="owf25FBE4153F32A5634B0ADA8A6954CC89" Source="$(var.SourceDir)\System.AppContext.dll" KeyPath="yes" />
