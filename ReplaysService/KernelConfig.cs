@@ -162,8 +162,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
         internal static HttpMessageHandler CreateSteamWebApiClientHandler(HttpMessageHandler innerHandler, ILog log, TelemetryClient telemetryClient)
         {
-            var policy = SteamWebApiClient
-                .GetRetryStrategy()
+            var policy = Policy
+                .Handle<Exception>(SteamWebApiClient.IsTransient)
                 .WaitAndRetryAsync(
                     3,
                     ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),

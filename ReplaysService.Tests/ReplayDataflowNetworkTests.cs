@@ -326,8 +326,8 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
                 steamWebApiClientHandler
                     .When("http://localhost/")
                     .Respond(HttpStatusCode.NotFound, new StringContent(Resources.UgcFileDetails_847096111522125255_NotFound, Encoding.UTF8, "application/json"));
-                var steamWebApiClientRetryPolicy = SteamWebApiClient
-                    .GetRetryStrategy()
+                var steamWebApiClientRetryPolicy = Policy
+                    .Handle<Exception>(SteamWebApiClient.IsTransient)
                     .RetryAsync();
                 var steamWebApiClientHandlers = HttpClientFactory.CreatePipeline(steamWebApiClientHandler, new DelegatingHandler[]
                 {
