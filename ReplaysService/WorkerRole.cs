@@ -14,24 +14,34 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : base("replays", settings, telemetryClient)
+        public WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient) : this(settings, telemetryClient, kernel: null, log: null) { }
+
+        internal WorkerRole(IReplaysSettings settings, TelemetryClient telemetryClient, IKernel kernel, ILog log) : base("replays", settings, telemetryClient)
         {
-            kernel = KernelConfig.CreateKernel(settings, telemetryClient);
+            kernel = kernel ?? KernelConfig.CreateKernel();
+            kernel.Bind<IReplaysSettings>()
+                  .ToConstant(settings);
+            kernel.Bind<TelemetryClient>()
+                  .ToConstant(telemetryClient);
+            this.kernel = kernel;
+
+            this.log = log ?? Log;
         }
 
         private readonly IKernel kernel;
+        private readonly ILog log;
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update replays cycle"))
-            using (new UpdateActivity(Log, "replays cycle"))
+            using (new UpdateActivity(log, "replays cycle"))
             {
                 try
                 {
                     if (Settings.SteamWebApiKey == null)
                     {
-                        Log.Warn("Using test data for calls to Steam Web API. Set your Steam Web API key to use the actual Steam Web API.");
-                        Log.Warn("Run this application with --help to find out how to set your Steam Web API key.");
+                        log.Warn("Using test data for calls to Steam Web API. Set your Steam Web API key to use the actual Steam Web API.");
+                        log.Warn("Run this application with --help to find out how to set your Steam Web API key.");
                     }
 
                     await UpdateReplaysAsync(cancellationToken).ConfigureAwait(false);
@@ -50,7 +60,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
         {
             var worker = kernel.Get<ReplaysWorker>();
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update replays"))
-            using (new UpdateActivity(Log, "replays"))
+            using (new UpdateActivity(log, "replays"))
             {
                 try
                 {
@@ -63,7 +73,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
                 catch (HttpRequestStatusException ex)
                 {
                     TelemetryClient.TrackException(ex);
-                    Log.Error("Failed to complete run due to an error.", ex);
+                    log.Error("Failed to complete run due to an error.", ex);
                     operation.Telemetry.Success = false;
                 }
                 catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
