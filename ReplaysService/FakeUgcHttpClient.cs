@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using toofz.NecroDancer.Leaderboards.Steam.Workshop;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
-    // This fake technically isn't necessary because Steam Workshop does not require an API key.
+    [ExcludeFromCodeCoverage]
     internal sealed class FakeUgcHttpClient : IUgcHttpClient
     {
         public FakeUgcHttpClient()

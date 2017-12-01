@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class FakeLeaderboardsContext : ILeaderboardsContext
     {
         public FakeLeaderboardsContext()

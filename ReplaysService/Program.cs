@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using log4net;
 using Microsoft.ApplicationInsights;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
@@ -6,6 +7,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {
+    [ExcludeFromCodeCoverage]
     internal static class Program
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
