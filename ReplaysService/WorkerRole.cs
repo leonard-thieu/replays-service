@@ -69,7 +69,9 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (HttpRequestStatusException ex) when (SteamWebApiClient.IsTransient(ex))
+                catch (HttpRequestStatusException ex)
+                    when (SteamWebApiClient.IsTransient(ex) ||
+                          LeaderboardsStoreClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);
                     log.Error("Failed to complete run due to an error.", ex);
