@@ -23,6 +23,8 @@ artifacts:
   - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
     name: $(PROJECT)
 
+init:
+  - git config --global core.autocrlf input
 install:
   - nuget update -Self
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild 8)
