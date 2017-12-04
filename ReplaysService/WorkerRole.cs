@@ -69,7 +69,7 @@ namespace toofz.NecroDancer.Leaderboards.ReplaysService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (HttpRequestStatusException ex)
+                catch (Exception ex)
                     when (SteamWebApiClient.IsTransient(ex) ||
                           LeaderboardsStoreClient.IsTransient(ex))
                 {
