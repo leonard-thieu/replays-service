@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using Moq;
-using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.Services;
+using toofz.Services.ReplaysService.Properties;
 using Xunit;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
+namespace toofz.Services.ReplaysService.Tests
 {
     public class ReplaysArgsParserTests
     {

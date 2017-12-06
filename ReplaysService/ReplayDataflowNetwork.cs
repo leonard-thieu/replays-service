@@ -11,7 +11,7 @@ using toofz.Steam.WebApi;
 using toofz.Steam.WebApi.ISteamRemoteStorage;
 using toofz.Steam.Workshop;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     internal sealed class ReplayDataflowNetwork
     {

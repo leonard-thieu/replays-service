@@ -6,12 +6,11 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
 using toofz.Data;
-using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.Services;
+using toofz.Services.ReplaysService.Properties;
 using toofz.Steam.WebApi;
 using toofz.Steam.Workshop;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     internal class WorkerRole : WorkerRoleBase<IReplaysSettings>
     {

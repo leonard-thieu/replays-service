@@ -3,10 +3,9 @@ using System.IO;
 using System.Reflection;
 using Microsoft.WindowsAzure.Storage;
 using Mono.Options;
-using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.Services;
+using toofz.Services.ReplaysService.Properties;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     internal sealed class ReplaysArgsParser : ArgsParser<ReplaysOptions, IReplaysSettings>
     {

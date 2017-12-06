@@ -7,7 +7,7 @@
     <ProjectGuid>{A1DCEC28-3283-4953-BD44-105DCCBB04CE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>toofz.NecroDancer.Leaderboards.ReplaysService</RootNamespace>
+    <RootNamespace>toofz.Services.ReplaysService</RootNamespace>
     <AssemblyName>ReplaysService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using toofz.Steam.Workshop;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     [ExcludeFromCodeCoverage]
     internal sealed class FakeUgcHttpClient : IUgcHttpClient

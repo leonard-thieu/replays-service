@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Data.Entity.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
+namespace toofz.Services.ReplaysService.Tests
 {
     internal static class StorageHelper
     {

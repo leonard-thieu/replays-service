@@ -2,7 +2,7 @@
 using System.Text;
 using RichardSzalay.MockHttp;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
+namespace toofz.Services.ReplaysService.Tests
 {
     internal static class MockedRequestExtensions
     {

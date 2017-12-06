@@ -1,7 +1,6 @@
 ﻿using System.Configuration;
-using toofz.Services;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties
+namespace toofz.Services.ReplaysService.Properties
 {
     [SettingsProvider(typeof(ServiceSettingsProvider))]
     partial class Settings : IReplaysSettings { }

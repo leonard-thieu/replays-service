@@ -3,11 +3,10 @@ using System.Configuration;
 using System.Data.Entity;
 using System.IO;
 using toofz.Data;
-using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.Services;
+using toofz.Services.ReplaysService.Properties;
 using Xunit;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
+namespace toofz.Services.ReplaysService.Tests
 {
     [Trait("Category", "Uses SQL Server")]
     [Trait("Category", "Uses Azure Storage")]

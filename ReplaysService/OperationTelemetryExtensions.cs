@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     /// <summary>
     /// Contains extension methods for <see cref="OperationTelemetry"/>.

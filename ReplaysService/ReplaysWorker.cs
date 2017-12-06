@@ -12,7 +12,7 @@ using toofz.NecroDancer.Replays;
 using toofz.Steam.WebApi;
 using toofz.Steam.Workshop;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     internal sealed class ReplaysWorker
     {

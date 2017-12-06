@@ -1,6 +1,4 @@
-﻿using toofz.Services;
-
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+﻿namespace toofz.Services.ReplaysService
 {
     internal sealed class ReplaysOptions : Options
     {

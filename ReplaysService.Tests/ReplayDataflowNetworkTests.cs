@@ -11,16 +11,15 @@ using Moq;
 using Polly;
 using RichardSzalay.MockHttp;
 using toofz.Data;
-using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Replays;
-using toofz.Services;
+using toofz.Services.ReplaysService.Tests.Properties;
 using toofz.Steam;
 using toofz.Steam.WebApi;
 using toofz.Steam.WebApi.ISteamRemoteStorage;
 using toofz.Steam.Workshop;
 using Xunit;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
+namespace toofz.Services.ReplaysService.Tests
 {
     public class ReplayDataflowNetworkTests
     {

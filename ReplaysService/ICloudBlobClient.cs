@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace toofz.NecroDancer.Leaderboards.ReplaysService
+namespace toofz.Services.ReplaysService
 {
     /// <summary>
     /// Represents a <see cref="Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient"/>

@@ -1,6 +1,4 @@
-﻿using toofz.Services;
-
-namespace toofz.NecroDancer.Leaderboards.ReplaysService.Properties
+﻿namespace toofz.Services.ReplaysService.Properties
 {
     internal interface IReplaysSettings : ISettings
     {
