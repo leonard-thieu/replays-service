@@ -445,12 +445,6 @@
         <Component Id="owc6D1A546067A0BA37B86853545156313E" Guid="ea336c39-098e-1d70-5ac3-a8e9f4f8e0fa">
           <File Id="owf6D1A546067A0BA37B86853545156313E" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.pdb" KeyPath="yes" />
         </Component>
-        <Component Id="owcDDA9626CD9162B10D303FBA6E1A1DBC8" Guid="c9f28c3d-e59e-bc52-569c-23de5f900d9d">
-          <File Id="owfDDA9626CD9162B10D303FBA6E1A1DBC8" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="owcA38711247352318801BB7F0FCE638289" Guid="972c7dd6-17c2-71c7-2950-cf0d48facda8">
-          <File Id="owfA38711247352318801BB7F0FCE638289" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.pdb" KeyPath="yes" />
-        </Component>
         <Component Id="owc5A2061CFCAA5BE60BFE47CBCB372FE37" Guid="5e1b41e2-b77e-5654-ba8c-817795b1506f">
           <File Id="owf5A2061CFCAA5BE60BFE47CBCB372FE37" Source="$(var.SourceDir)\toofz.NecroDancer.pdb" KeyPath="yes" />
         </Component>
@@ -459,6 +453,12 @@
         </Component>
         <Component Id="owcA7F14B92BF14E49E415FC6F1AC7796A2" Guid="f16a8a22-10ca-5f30-9422-812b051b2353">
           <File Id="owfA7F14B92BF14E49E415FC6F1AC7796A2" Source="$(var.SourceDir)\toofz.Services.pdb" KeyPath="yes" />
+        </Component>
+        <Component Id="owcA8FA0068DCB82CDF79B19C8D8F738510" Guid="eb442845-bf13-5e64-788a-1a327548183f">
+          <File Id="owfA8FA0068DCB82CDF79B19C8D8F738510" Source="$(var.SourceDir)\toofz.Steam.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc41E70CA9139284A8EBC520F5E684B71D" Guid="e8c63ba6-98fe-1958-05c8-1417528cdf09">
+          <File Id="owf41E70CA9139284A8EBC520F5E684B71D" Source="$(var.SourceDir)\toofz.Steam.pdb" KeyPath="yes" />
         </Component>
         <Directory Id="owd0C64711E243FE4E29D1B4BF4C9D29858" Name="Data">
           <Directory Id="owdB0A2BA891FA0D5816C027810646795DB" Name="SteamWebApi">

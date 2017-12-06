@@ -5,9 +5,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamUser;
+using toofz.Steam.WebApi;
+using toofz.Steam.WebApi.ISteamRemoteStorage;
+using toofz.Steam.WebApi.ISteamUser;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {

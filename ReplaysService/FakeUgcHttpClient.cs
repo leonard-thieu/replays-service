@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using toofz.NecroDancer.Leaderboards.Steam.Workshop;
+using toofz.Steam.Workshop;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {

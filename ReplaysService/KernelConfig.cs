@@ -11,9 +11,10 @@ using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
 using Polly;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi;
-using toofz.NecroDancer.Leaderboards.Steam.Workshop;
 using toofz.Services;
+using toofz.Steam;
+using toofz.Steam.WebApi;
+using toofz.Steam.Workshop;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {

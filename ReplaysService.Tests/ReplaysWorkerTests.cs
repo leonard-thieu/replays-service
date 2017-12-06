@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
-using toofz.NecroDancer.Leaderboards.Steam.Workshop;
+using toofz.Steam.WebApi;
+using toofz.Steam.WebApi.ISteamRemoteStorage;
+using toofz.Steam.Workshop;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests

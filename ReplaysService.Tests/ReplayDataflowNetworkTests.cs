@@ -11,11 +11,12 @@ using Moq;
 using Polly;
 using RichardSzalay.MockHttp;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi.ISteamRemoteStorage;
-using toofz.NecroDancer.Leaderboards.Steam.Workshop;
 using toofz.NecroDancer.Replays;
 using toofz.Services;
+using toofz.Steam;
+using toofz.Steam.WebApi;
+using toofz.Steam.WebApi.ISteamRemoteStorage;
+using toofz.Steam.Workshop;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService.Tests
