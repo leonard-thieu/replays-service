@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using toofz.Data;
 
 namespace toofz.NecroDancer.Leaderboards.ReplaysService
 {

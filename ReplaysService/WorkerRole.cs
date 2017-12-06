@@ -5,6 +5,7 @@ using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
+using toofz.Data;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.Services;
 using toofz.Steam.WebApi;

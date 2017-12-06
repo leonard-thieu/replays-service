@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using toofz.Data;
 using toofz.NecroDancer.Replays;
 using toofz.Steam.WebApi;
 using toofz.Steam.Workshop;

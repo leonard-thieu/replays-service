@@ -424,6 +424,12 @@
         <Component Id="owc3DB53B2906C145586B6B72A09D1A0258" Guid="5c15e329-3e8c-a000-86f1-a8a8f4f89384">
           <File Id="owf3DB53B2906C145586B6B72A09D1A0258" Source="$(var.SourceDir)\toofz.ActivityTracing.pdb" KeyPath="yes" />
         </Component>
+        <Component Id="owcFB822A131C20A0331063BA97786290E7" Guid="83f17df4-2490-a708-394c-8a63f64faf68">
+          <File Id="owfFB822A131C20A0331063BA97786290E7" Source="$(var.SourceDir)\toofz.Data.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc8E6EE74B72B86ECE1DEC983DFF898219" Guid="220ec6dd-a6d1-82d8-88f2-0a805249ef75">
+          <File Id="owf8E6EE74B72B86ECE1DEC983DFF898219" Source="$(var.SourceDir)\toofz.Data.pdb" KeyPath="yes" />
+        </Component>
         <Component Id="owc33F0D99DD7C4188BDD78532D39650910" Guid="23099e66-0afa-bb58-a24c-929a6bcfdc10">
           <File Id="owf33F0D99DD7C4188BDD78532D39650910" Source="$(var.SourceDir)\toofz.ExceptionRenderer.dll" KeyPath="yes" />
         </Component>
@@ -438,12 +444,6 @@
         </Component>
         <Component Id="owc18A2A5D8F057A6D1BC7451C1145ED01D" Guid="30a8fd01-692c-cce5-2778-d8972a397d93">
           <File Id="owf18A2A5D8F057A6D1BC7451C1145ED01D" Source="$(var.SourceDir)\toofz.NecroDancer.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="owc6DBF3F730463E4CD3778833878E38A25" Guid="71ab8460-d5cc-f346-f9d3-ca5d3a3b0d56">
-          <File Id="owf6DBF3F730463E4CD3778833878E38A25" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="owc6D1A546067A0BA37B86853545156313E" Guid="ea336c39-098e-1d70-5ac3-a8e9f4f8e0fa">
-          <File Id="owf6D1A546067A0BA37B86853545156313E" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.pdb" KeyPath="yes" />
         </Component>
         <Component Id="owc5A2061CFCAA5BE60BFE47CBCB372FE37" Guid="5e1b41e2-b77e-5654-ba8c-817795b1506f">
           <File Id="owf5A2061CFCAA5BE60BFE47CBCB372FE37" Source="$(var.SourceDir)\toofz.NecroDancer.pdb" KeyPath="yes" />

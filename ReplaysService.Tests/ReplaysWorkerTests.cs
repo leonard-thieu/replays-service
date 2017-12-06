@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
+using toofz.Data;
 using toofz.Steam.WebApi;
 using toofz.Steam.WebApi.ISteamRemoteStorage;
 using toofz.Steam.Workshop;

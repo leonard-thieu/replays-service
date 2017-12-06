@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data.Entity;
 using System.IO;
+using toofz.Data;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.Services;
 using Xunit;

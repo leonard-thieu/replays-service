@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using Polly;
 using RichardSzalay.MockHttp;
+using toofz.Data;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Tests.Properties;
 using toofz.NecroDancer.Replays;
 using toofz.Services;

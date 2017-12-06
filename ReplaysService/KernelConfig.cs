@@ -10,6 +10,7 @@ using Ninject;
 using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
 using Polly;
+using toofz.Data;
 using toofz.NecroDancer.Leaderboards.ReplaysService.Properties;
 using toofz.Services;
 using toofz.Steam;
