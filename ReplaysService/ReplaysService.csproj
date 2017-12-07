@@ -110,7 +110,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="log.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
