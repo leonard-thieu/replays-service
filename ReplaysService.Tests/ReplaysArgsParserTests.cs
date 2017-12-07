@@ -32,7 +32,7 @@ namespace toofz.Services.ReplaysService.Tests
 
             private readonly IReplaysSettings settings = new StubReplaysSettings();
 
-            [Fact]
+            [DisplayFact]
             public void HelpFlagIsSpecified_ShowUsageInformation()
             {
                 // Arrange
@@ -63,7 +63,7 @@ options:
 
             #region ReplaysPerUpdate
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.ReplaysPerUpdate))]
             public void ReplaysIsSpecified_SetsReplaysPerUpdate()
             {
                 // Arrange
@@ -80,7 +80,7 @@ options:
 
             #region SteamWebApiKey
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.SteamWebApiKey))]
             public void ApikeyIsSpecified_SetsSteamWebApiKey()
             {
                 // Arrange
@@ -94,7 +94,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.SteamWebApiKey.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.SteamWebApiKey))]
             public void ApikeyFlagIsSpecified_PromptsUserForApikeyAndSetsSteamWebApiKey()
             {
                 // Arrange
@@ -111,7 +111,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.SteamWebApiKey.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.SteamWebApiKey))]
             public void ApikeyFlagIsNotSpecifiedAndSteamWebApiKeyIsSet_DoesNotSetSteamWebApiKey()
             {
                 // Arrange
@@ -128,7 +128,7 @@ options:
 
             #region AzureStorageConnectionString
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.AzureStorageConnectionString))]
             public void StorageIsSpecified_SetsAzureStorageConnectionString()
             {
                 // Arrange
@@ -142,7 +142,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.AzureStorageConnectionString.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.AzureStorageConnectionString))]
             public void StorageFlagIsSpecified_PromptsUserForStorageAndSetsAzureStorageConnectionString()
             {
                 // Arrange
@@ -159,7 +159,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.AzureStorageConnectionString.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.AzureStorageConnectionString))]
             public void StorageFlagIsNotSpecifiedAndAzureStorageConnectionStringIsNotSet_SetsAzureStorageConnectionStringToDefault()
             {
                 // Arrange
@@ -174,7 +174,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.AzureStorageConnectionString.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(IReplaysSettings.AzureStorageConnectionString))]
             public void StorageFlagIsNotSpecifiedAndAzureStorageConnectionStringIsSet_DoesNotSetAzureStorageConnectionString()
             {
                 // Arrange

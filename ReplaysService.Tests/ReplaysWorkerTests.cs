@@ -40,7 +40,7 @@ namespace toofz.Services.ReplaysService.Tests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task ReturnsReplays()
             {
                 // Arrange
@@ -75,7 +75,7 @@ namespace toofz.Services.ReplaysService.Tests
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
 
-            [Fact]
+            [DisplayFact]
             public async Task UpdatesReplays()
             {
                 // Arrange
@@ -98,7 +98,7 @@ namespace toofz.Services.ReplaysService.Tests
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresReplays()
             {
                 // Arrange
