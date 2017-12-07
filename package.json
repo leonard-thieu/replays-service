@@ -4,7 +4,7 @@
     "forever": "0.15.3"
   },
   "scripts": {
-    "start-azurite-blob": "forever start ./node_modules/azurite/bin/blob -l blobs",
+    "start-azurite-blob": "forever start --minUptime 1000 --spinSleepTime 1000 ./node_modules/azurite/bin/blob --location blobs",
     "stop-azurite-blob": "forever stop ./node_modules/azurite/bin/blob"
   },
   "repository": {
