@@ -18,6 +18,7 @@ using toofz.Steam.WebApi;
 using toofz.Steam.WebApi.ISteamRemoteStorage;
 using toofz.Steam.Workshop;
 using Xunit;
+using ReplayDataflowContext = toofz.Services.ReplaysService.ReplayDataflowNetwork.ReplayDataflowContext;
 
 namespace toofz.Services.ReplaysService.Tests
 {
@@ -45,7 +46,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class Constructor
         {
-            [Fact]
+            [DisplayFact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -65,7 +66,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class SendAsyncMethod : ReplayDataflowNetworkTests
         {
-            [Fact]
+            [DisplayFact]
             public async Task AcceptsItem()
             {
                 // Arrange
@@ -81,7 +82,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class CompleteMethod : ReplayDataflowNetworkTests
         {
-            [Fact]
+            [DisplayFact]
             public async Task SignalsCompletion()
             {
                 // Arrange -> Act
@@ -96,7 +97,10 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class GetUgcFileDetailsAsyncMethod : ReplayDataflowNetworkTests
         {
-            [Fact]
+            [DisplayFact(
+                nameof(ISteamWebApiClient.GetUgcFileDetailsAsync),
+                nameof(HttpRequestStatusException),
+                nameof(ReplayDataflowContext.UgcFileDetailsException))]
             public async Task GetUgcFileDetailsAsyncThrowsHttpRequestStatusException_SetsUgcFileDetailsException()
             {
                 // Arrange
@@ -105,7 +109,7 @@ namespace toofz.Services.ReplaysService.Tests
                     .Setup(s => s.GetUgcFileDetailsAsync(appId, ugcId, It.IsAny<IProgress<long>>(), cancellationToken))
                     .ThrowsAsync(new HttpRequestStatusException(HttpStatusCode.BadRequest, new Uri("http://example.org")));
                 var replay = new Replay { ReplayId = ugcId };
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay);
+                var context = new ReplayDataflowContext(replay);
 
                 // Act
                 var context2 = await network.GetUgcFileDetailsAsync(context);
@@ -116,7 +120,7 @@ namespace toofz.Services.ReplaysService.Tests
                 Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
             }
 
-            [Fact]
+            [DisplayFact(nameof(ReplayDataflowContext.UgcFileDetails))]
             public async Task SetsUgcFileDetails()
             {
                 // Arrange
@@ -133,7 +137,7 @@ namespace toofz.Services.ReplaysService.Tests
                         },
                     });
                 var replay = new Replay { ReplayId = ugcId };
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay);
+                var context = new ReplayDataflowContext(replay);
 
                 // Act
                 var context2 = await network.GetUgcFileDetailsAsync(context);
@@ -145,7 +149,10 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class GetUgcFileAsyncMethod : ReplayDataflowNetworkTests
         {
-            [Fact]
+            [DisplayFact(
+                nameof(IUgcHttpClient.GetUgcFileAsync),
+                nameof(HttpRequestStatusException),
+                nameof(ReplayDataflowContext.UgcFileException))]
             public async Task GetUgcFileAsyncThrowsHttpRequestStatusException_SetsUgcFileException()
             {
                 // Arrange
@@ -165,7 +172,7 @@ namespace toofz.Services.ReplaysService.Tests
                         Size = 999,
                     },
                 };
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { UgcFileDetails = ugcFileDetails };
+                var context = new ReplayDataflowContext(replay) { UgcFileDetails = ugcFileDetails };
 
                 // Act
                 var context2 = await network.GetUgcFileAsync(context);
@@ -176,7 +183,7 @@ namespace toofz.Services.ReplaysService.Tests
                 Assert.Equal(HttpStatusCode.BadRequest, ex.StatusCode);
             }
 
-            [Fact]
+            [DisplayFact(nameof(ReplayDataflowContext.UgcFile))]
             public async Task SetsUgcFile()
             {
                 // Arrange
@@ -196,7 +203,7 @@ namespace toofz.Services.ReplaysService.Tests
                         Size = 999,
                     },
                 };
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { UgcFileDetails = ugcFileDetails };
+                var context = new ReplayDataflowContext(replay) { UgcFileDetails = ugcFileDetails };
 
                 // Act
                 var context2 = await network.GetUgcFileAsync(context);
@@ -208,14 +215,14 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class ReadReplayDataMethod
         {
-            [Fact]
+            [DisplayFact(nameof(ReplayDataflowContext.ReplayData))]
             public void SetsReplayData()
             {
                 // Arrange
                 var ugcId = 849347241492683863;
                 var replay = new Replay { ReplayId = ugcId };
                 var rawReplayData = Resources.RawReplayData;
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { UgcFile = rawReplayData };
+                var context = new ReplayDataflowContext(replay) { UgcFile = rawReplayData };
 
                 // Act
                 var context2 = ReplayDataflowNetwork.ReadReplayData(context);
@@ -228,7 +235,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class CreateReplayMethod
         {
-            [Fact]
+            [DisplayFact(nameof(ReplayDataflowContext.Replay))]
             public void SetsReplay()
             {
                 // Arrange
@@ -239,7 +246,7 @@ namespace toofz.Services.ReplaysService.Tests
                     Version = 94,
                     KilledBy = "LIGHT MINOTAUR",
                 };
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { ReplayData = replayData };
+                var context = new ReplayDataflowContext(replay) { ReplayData = replayData };
 
                 // Act
                 var context2 = ReplayDataflowNetwork.UpdateReplay(context);
@@ -251,7 +258,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class CreateReplayWithoutUgcFileDetailsMethod
         {
-            [Fact]
+            [DisplayFact(nameof(ReplayDataflowContext.Replay), nameof(Replay.ErrorCode))]
             public void SetsReplayWithErrorCodeSetTo1xxx()
             {
                 // Arrange
@@ -259,7 +266,7 @@ namespace toofz.Services.ReplaysService.Tests
                 var replay = new Replay { ReplayId = ugcId };
                 var requestUri = new Uri("http://localhost/");
                 var httpEx = new HttpRequestStatusException(HttpStatusCode.NotFound, requestUri);
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { UgcFileDetailsException = httpEx };
+                var context = new ReplayDataflowContext(replay) { UgcFileDetailsException = httpEx };
 
                 // Act
                 var context2 = ReplayDataflowNetwork.OnUgcFileDetailsError(context);
@@ -273,7 +280,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class CreateReplayWithoutUgcFileMethod
         {
-            [Fact]
+            [DisplayFact(nameof(ReplayDataflowContext.Replay), nameof(Replay.ErrorCode))]
             public void SetsReplayWithErrorCodeSetTo2xxx()
             {
                 // Arrange
@@ -281,7 +288,7 @@ namespace toofz.Services.ReplaysService.Tests
                 var replay = new Replay { ReplayId = ugcId };
                 var requestUri = new Uri("http://localhost/");
                 var httpEx = new HttpRequestStatusException(HttpStatusCode.NotFound, requestUri);
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { UgcFileException = httpEx };
+                var context = new ReplayDataflowContext(replay) { UgcFileException = httpEx };
 
                 // Act
                 var context2 = ReplayDataflowNetwork.OnUgcFileError(context);
@@ -295,7 +302,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class StoreUgcFileAsyncMethod : ReplayDataflowNetworkTests
         {
-            [Fact]
+            [DisplayFact]
             public async Task StoresUgcFile()
             {
                 // Arrange
@@ -307,7 +314,7 @@ namespace toofz.Services.ReplaysService.Tests
                 var ugcId = 849347241492683863;
                 var replay = new Replay { ReplayId = ugcId };
                 var replayData = new ReplayData();
-                var context = new ReplayDataflowNetwork.ReplayDataflowContext(replay) { ReplayData = replayData };
+                var context = new ReplayDataflowContext(replay) { ReplayData = replayData };
 
                 // Act
                 await network.StoreUgcFileAsync(context);
@@ -319,7 +326,7 @@ namespace toofz.Services.ReplaysService.Tests
 
         public class IntegrationTests
         {
-            [Fact]
+            [DisplayFact]
             public async Task UgcFileDetailsNotFound_DoesNotHang()
             {
                 // Arrange
