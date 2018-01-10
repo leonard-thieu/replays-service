@@ -4,10 +4,10 @@
   <?define ComponentRules="OneToOne"?>
   <!--
     Workaround to get Files and Folders support in IsWix. IsWix does not support WiX variables so the path to 
-    the Debug TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
+    the Release TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
     custom variable so SourceDir can be redefined to the correct directory for building.
   -->
-  <?define SourceDir="..\ReplaysService\bin\Debug"?>
+  <?define SourceDir="..\ReplaysService\bin\Release\net461"?>
   <?undef SourceDir?>
   <?define SourceDir="$(var.ReplaysService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">

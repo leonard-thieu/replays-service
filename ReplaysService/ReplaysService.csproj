@@ -1,522 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A1DCEC28-3283-4953-BD44-105DCCBB04CE}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net461</TargetFramework>
     <RootNamespace>toofz.Services.ReplaysService</RootNamespace>
-    <AssemblyName>ReplaysService</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <OutputType>Exe</OutputType>
     <LangVersion>latest</LangVersion>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+
+  <PropertyGroup>
+    <Title>toofz Replays Service</Title>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- DebugSymbols is set to true so that dependency symbols are copied into the output directory. -->
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1591</NoWarn>
-    <DocumentationFile>bin\Release\ReplaysService.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.ServiceProcess" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="GitInfo">
-      <Version>2.0.8</Version>
-      <PrivateAssets>all</PrivateAssets>
+    <PackageReference Include="Microsoft.ApplicationInsights.Log4NetAppender" Version="2.4.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.4.1" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Ninject.Extensions.NamedScope" Version="3.3.0" />
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.8.0" />
+    <PackageReference Include="toofz.ActivityTracing" Version="1.1.1" />
+    <PackageReference Include="toofz.Build" Version="2.4.0">
+      <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights.Log4NetAppender">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="Ninject">
-      <Version>3.3.4</Version>
-    </PackageReference>
-    <PackageReference Include="Ninject.Extensions.NamedScope">
-      <Version>3.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Threading.Tasks.Dataflow">
-      <Version>4.8.0</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.ActivityTracing">
-      <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.Data">
-      <Version>9.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.ExceptionRenderer">
-      <Version>1.5.0</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.FakeDbSet">
-      <Version>1.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.NecroDancer">
-      <Version>5.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.Services">
-      <Version>15.0.8</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.Steam">
-      <Version>26.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAzure.Storage">
-      <Version>8.6.0</Version>
-    </PackageReference>
+    <PackageReference Include="toofz.Data" Version="9.0.0" />
+    <PackageReference Include="toofz.ExceptionRenderer" Version="1.5.0" />
+    <PackageReference Include="toofz.FakeDbSet" Version="1.1.5" />
+    <PackageReference Include="toofz.NecroDancer" Version="5.0.4" />
+    <PackageReference Include="toofz.Services" Version="15.0.8" />
+    <PackageReference Include="toofz.Steam" Version="26.0.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.6.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\IReplaysSettings.cs">
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.cs">
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="log.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491868906872.json">
+    <None Update="Data\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491869017664.json">
+    <None Update="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491869491330.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491870241304.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491870331554.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491870405519.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491870610561.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491872648304.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491877488241.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491877738939.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491879883091.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491884099974.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491884754161.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491884849895.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491887253679.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491889011698.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491889094045.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491889909795.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491890953115.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491891357339.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491891768477.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491891769941.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491894453006.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491894992452.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491895288752.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491895364444.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491897444745.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491898363170.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491898532216.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491899301194.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491899885615.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491900267849.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491901082876.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491901858234.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491902519883.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491903529749.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491903883885.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491905043101.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491905325173.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491905572789.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491907604639.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491909909658.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491912106681.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491912446754.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491914317433.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491915332210.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491918126065.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491919732717.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491919945195.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491920505129.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491920755629.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491921253841.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491921345564.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491921700026.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491921917871.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491922638744.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491925116220.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491926194991.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491927058068.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWebApi\UgcFileDetails\22840491927141510.json">
+    <None Update="log.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\SteamWorkshop\Replays\22840491868906872.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491869017664.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491869491330.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491870241304.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491870331554.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491870405519.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491870610561.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491872648304.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491877488241.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491877738939.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491879883091.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491884099974.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491884754161.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491884849895.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491887253679.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491889011698.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491889094045.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491889909795.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491890953115.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491891357339.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491891768477.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491891769941.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491894453006.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491894992452.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491895288752.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491895364444.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491897444745.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491898363170.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491898532216.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491899301194.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491899885615.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491900267849.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491901082876.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491901858234.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491902519883.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491903529749.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491903883885.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491905043101.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491905325173.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491905572789.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491907604639.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491909909658.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491912106681.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491912446754.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491914317433.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491915332210.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491918126065.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491919732717.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491919945195.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491920505129.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491920755629.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491921253841.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491921345564.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491921700026.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491921917871.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491922638744.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491925116220.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491926194991.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491927058068.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\SteamWorkshop\Replays\22840491927141510.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="FakeLeaderboardsContext.cs" />
-    <Compile Include="FakeLeaderboardsStoreClient.cs" />
-    <Compile Include="FakeSteamWebApiClient.cs" />
-    <Compile Include="FakeUgcHttpClient.cs" />
-    <Compile Include="ICloudBlobClient.cs" />
-    <Compile Include="CloudBlobClientAdapter.cs">
-      <DependentUpon>ICloudBlobClient.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ICloudBlobContainer.cs" />
-    <Compile Include="CloudBlobContainerAdapter.cs">
-      <DependentUpon>ICloudBlobContainer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ICloudBlobDirectory.cs" />
-    <Compile Include="CloudBlobDirectoryAdapter.cs">
-      <DependentUpon>ICloudBlobDirectory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ICloudBlobDirectoryFactory.cs" />
-    <Compile Include="CloudBlobDirectoryFactory.cs">
-      <DependentUpon>ICloudBlobDirectoryFactory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ICloudBlockBlob.cs" />
-    <Compile Include="CloudBlockBlobAdapter.cs">
-      <DependentUpon>ICloudBlockBlob.cs</DependentUpon>
-    </Compile>
-    <Compile Include="KernelConfig.cs" />
-    <Compile Include="OperationTelemetryExtensions.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="ReplayDataflowNetwork.cs" />
-    <Compile Include="ReplaysArgsParser.cs" />
-    <Compile Include="ReplaysOptions.cs" />
-    <Compile Include="ReplaysWorker.cs" />
-    <Compile Include="WorkerRole.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="IndexSource" AfterTargets="CopyFilesToOutputDirectory" Condition=" '$(APPVEYOR_REPO_NAME)' != '' ">
-    <Exec Command="nuget install SourceLink -ExcludeVersion -SolutionDirectory $(ProjectDir) -Verbosity quiet" />
-    <Exec Command="$(ProjectDir)packages\SourceLink\tools\SourceLink.exe index --proj $(ProjectPath) --proj-prop Configuration $(Configuration) --proj-prop Platform $(Platform) --url %22https://raw.githubusercontent.com/$(APPVEYOR_REPO_NAME)/{0}/%25%25var2%25%25%22 --repo $(GitRoot)" />
-  </Target>
 </Project>
