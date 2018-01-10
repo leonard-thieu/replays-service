@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReplaysService\ReplaysService.csproj" />
+    <ProjectReference Include="..\..\src\ReplaysService\ReplaysService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

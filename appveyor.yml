@@ -34,7 +34,7 @@ before_test:
   - npm run start-azurite-blob
 test_script:
   - ps: |
-      $projectPath = Resolve-Path .\ReplaysService.Tests\ReplaysService.Tests.csproj
+      $projectPath = Resolve-Path .\test\ReplaysService.Tests\ReplaysService.Tests.csproj
       msbuild $projectPath /nologo /verbosity:minimal `
           /target:Build `
           /target:Test `
@@ -42,7 +42,7 @@ test_script:
           /property:DebugType=full
       
 artifacts:
-  - path: \Installer\bin\$(Configuration)\*.msi
+  - path: \src\Installer\bin\$(Configuration)\*.msi
     name: ReplaysService
 
 deploy:
