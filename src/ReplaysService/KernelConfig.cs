@@ -170,6 +170,7 @@ namespace toofz.Services.ReplaysService
         private static void InitializeNecroDancerContext(NecroDancerContext context)
         {
             context.Database.Migrate();
+            context.EnsureSeedData();
         }
 
         private static void EnsureDevSeedData(NecroDancerContext context)
