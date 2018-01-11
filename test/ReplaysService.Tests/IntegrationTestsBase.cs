@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.Entity;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.WindowsAzure.Storage;
 using toofz.Data;
 using toofz.Services.ReplaysService.Properties;
 using Xunit;
@@ -14,10 +15,18 @@ namespace toofz.Services.ReplaysService.Tests
     [Collection("Uses SQL Server, Azure Storage, and file system")]
     public abstract class IntegrationTestsBase : IDisposable
     {
+        public static CloudStorageAccount GetCloudStorageAccount()
+        {
+            var connectionString = StorageHelper.GetConnectionString($"{Constants.ProjectName}AzureStorage");
+
+            return connectionString != null ?
+                CloudStorageAccount.Parse(connectionString) :
+                CloudStorageAccount.DevelopmentStorageAccount;
+        }
+
         public IntegrationTestsBase()
         {
             settings = Settings.Default;
-            settingsFileName = Path.GetTempFileName();
             // Should only loop once
             foreach (SettingsProvider provider in settings.Providers)
             {
@@ -26,21 +35,24 @@ namespace toofz.Services.ReplaysService.Tests
                 ssp.GetSettingsWriter = () => File.CreateText(settingsFileName);
             }
 
-            db = new LeaderboardsContext(databaseConnectionString);
-            db.Database.Delete(); // Make sure it really dropped - needed for dirty database
-            Database.SetInitializer(new LeaderboardsContextInitializer());
-            db.Database.Initialize(force: true);
-            Database.SetInitializer(new NullDatabaseInitializer<LeaderboardsContext>());
+            var options = new DbContextOptionsBuilder<NecroDancerContext>()
+                .UseSqlServer(databaseConnectionString)
+                .Options;
 
-            var storageConnectionString = StorageHelper.GetCloudStorageAccount().ToString(exportSecrets: true);
+            db = new NecroDancerContext(options);
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
+            db.EnsureSeedData();
+
+            var storageConnectionString = GetCloudStorageAccount().ToString(exportSecrets: true);
             cloudBlobContainer = KernelConfig.CreateCloudBlobContainer(storageConnectionString, "test_crypt");
             cloudBlobContainer.DeleteIfExists();
         }
 
         internal readonly Settings settings;
-        private readonly string settingsFileName;
-        protected readonly string databaseConnectionString = StorageHelper.GetDatabaseConnectionString(nameof(LeaderboardsContext));
-        protected readonly LeaderboardsContext db;
+        private readonly string settingsFileName = Path.GetTempFileName();
+        protected readonly string databaseConnectionString = StorageHelper.GetDatabaseConnectionString(Constants.NecroDancerContextName);
+        protected readonly NecroDancerContext db;
         internal readonly ICloudBlobContainer cloudBlobContainer;
 
         public void Dispose()
@@ -53,7 +65,8 @@ namespace toofz.Services.ReplaysService.Tests
             if (disposing)
             {
                 if (File.Exists(settingsFileName)) { File.Delete(settingsFileName); }
-                db.Database.Delete();
+                db.Database.EnsureDeleted();
+                db.Dispose();
                 cloudBlobContainer.DeleteIfExists();
             }
         }

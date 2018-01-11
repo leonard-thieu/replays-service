@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.EntityFrameworkCore;
 using toofz.Data;
 using toofz.NecroDancer.Replays;
 using toofz.Steam.WebApi;
@@ -55,7 +55,7 @@ namespace toofz.Services.ReplaysService
                     where r.ErrorCode == null
                     orderby r.ReplayId
                     select r)
-                    .Take(() => limit)
+                    .Take(limit)
                     .ToListAsync(cancellationToken);
         }
 

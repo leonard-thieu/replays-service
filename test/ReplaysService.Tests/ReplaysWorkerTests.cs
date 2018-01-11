@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using toofz.Data;
@@ -17,9 +18,11 @@ namespace toofz.Services.ReplaysService.Tests
     {
         public ReplaysWorkerTests()
         {
+            var context = new NecroDancerContext(necroDancerContextOptions);
+
             worker = new ReplaysWorker(
                 appId,
-                mockDb.Object,
+                context,
                 mockSteamWebApiClient.Object,
                 mockUgcHttpClient.Object,
                 mockDirectoryFactory.Object,
@@ -36,6 +39,10 @@ namespace toofz.Services.ReplaysService.Tests
         private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly ReplaysWorker worker;
 
+        private readonly DbContextOptions<NecroDancerContext> necroDancerContextOptions = new DbContextOptionsBuilder<NecroDancerContext>()
+            .UseInMemoryDatabase(databaseName: Constants.NecroDancerContextName)
+            .Options;
+
         public class GetReplaysAsyncMethod : ReplaysWorkerTests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
@@ -44,9 +51,6 @@ namespace toofz.Services.ReplaysService.Tests
             public async Task ReturnsReplays()
             {
                 // Arrange
-                var dbReplaysInner = new List<Replay>();
-                var dbReplays = new FakeDbSet<Replay>(dbReplaysInner);
-                mockDb.Setup(d => d.Replays).Returns(dbReplays);
                 var limit = 20;
 
                 // Act

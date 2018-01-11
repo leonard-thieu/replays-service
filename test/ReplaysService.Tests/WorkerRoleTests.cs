@@ -36,15 +36,7 @@ namespace toofz.Services.ReplaysService.Tests
 
                 kernel.Rebind<string>()
                       .ToConstant(databaseConnectionString)
-                      .WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
-
-                kernel.Rebind<ILeaderboardsContext>()
-                      .To<LeaderboardsContext>()
-                      .InParentScope();
-
-                kernel.Rebind<ILeaderboardsStoreClient>()
-                      .To<LeaderboardsStoreClient>()
-                      .InParentScope();
+                      .WhenInjectedInto(typeof(NecroDancerContextOptionsBuilder), typeof(LeaderboardsStoreClient));
 
                 kernel.Rebind<ISteamWebApiClient>()
                       .To<FakeSteamWebApiClient>()
