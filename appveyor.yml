@@ -24,10 +24,7 @@ build:
   verbosity: minimal
   
 before_test:
-  - ps: |
-      nuget install -Verbosity quiet -OutputDirectory packages -ExcludeVersion Azurite -Version 1.8.3
-      $azuriteBlobPath = Resolve-Path .\packages\Azurite\tools\blob.exe
-      Start-Process $azuriteBlobPath
+  - Start-Azurite.bat
 test_script:
   - ps: |
       $projectPath = Resolve-Path .\test\ReplaysService.Tests\ReplaysService.Tests.csproj
