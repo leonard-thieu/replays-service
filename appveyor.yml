@@ -16,22 +16,16 @@ notifications:
   - provider: Slack
     incoming_webhook:
       secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
-  
-install:
-  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild 8)
-  - npm install --global npm@5.3.0
-  - node --version
-  - npm --version
 
-before_build:
-  - nuget restore -Verbosity quiet
-  - npm install
 build:
   project: ReplaysService.sln
   verbosity: minimal
   
 before_test:
-  - npm run start-azurite-blob
+  - ps: |
+      nuget install Azurite -Version 1.8.3 -OutputDirectory packages -ExcludeVersion
+      $azuriteBlobPath = Resolve-Path '.\packages\Azurite\tools\blob.exe'
+      Start-Process $azuriteBlobPath
 test_script:
   - ps: |
       $projectPath = Resolve-Path .\test\ReplaysService.Tests\ReplaysService.Tests.csproj
