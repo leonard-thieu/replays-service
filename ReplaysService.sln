@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		NuGet.Config = NuGet.Config
 		README.md = README.md
+		Start-Azurite.ps1 = Start-Azurite.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9D5A3DA7-711A-4CF5-B9B0-CB32722AD2AC}"
