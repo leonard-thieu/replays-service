@@ -25,8 +25,8 @@ build:
   
 before_test:
   - ps: |
-      nuget install Azurite -Version 1.8.3 -OutputDirectory packages -ExcludeVersion
-      $azuriteBlobPath = Resolve-Path '.\packages\Azurite\tools\blob.exe'
+      nuget install -Verbosity quiet -OutputDirectory packages -ExcludeVersion Azurite -Version 1.8.3
+      $azuriteBlobPath = Resolve-Path .\packages\Azurite\tools\blob.exe
       Start-Process $azuriteBlobPath
 test_script:
   - ps: |
