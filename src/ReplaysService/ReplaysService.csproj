@@ -29,10 +29,8 @@
     <PackageReference Include="toofz.Build" Version="2.4.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="toofz.Data" Version="9.0.0" />
+    <PackageReference Include="toofz.Data" Version="10.0.4" />
     <PackageReference Include="toofz.ExceptionRenderer" Version="1.5.0" />
-    <PackageReference Include="toofz.FakeDbSet" Version="1.1.5" />
-    <PackageReference Include="toofz.NecroDancer" Version="5.0.4" />
     <PackageReference Include="toofz.Services" Version="15.0.8" />
     <PackageReference Include="toofz.Steam" Version="26.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.6.0" />
