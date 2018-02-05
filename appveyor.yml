@@ -29,7 +29,7 @@ test_script:
   - ps: |
       $projectPath = Resolve-Path .\test\ReplaysService.Tests\ReplaysService.Tests.csproj
       msbuild $projectPath /nologo /verbosity:minimal `
-          /target:Build `
+          /target:Rebuild `
           /target:Test `
           /property:Configuration=Coverage `
           /property:DebugType=full
